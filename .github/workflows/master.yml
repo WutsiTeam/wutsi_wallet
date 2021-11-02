@@ -1,0 +1,30 @@
+name: master
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+
+  #--------------------------
+  # BUILD
+  #--------------------------
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - uses: subosito/flutter-action@v1
+        with:
+          flutter-version: 2.5.2
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build
+        run: |
+          flutter analyze
+          flutter test
