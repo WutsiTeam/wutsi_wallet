@@ -28,3 +28,10 @@ jobs:
         run: |
           flutter analyze
           flutter test
+          flutter build apk --no-tree-shake-icons
+
+      - name: Upload APK
+          uses: actions/upload-artifact@v1
+          with:
+            name: apk
+            path: build/app/outputs/flutter-apk/app-release.apk
