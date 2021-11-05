@@ -4,6 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wutsi_wallet/src/device.dart';
 import 'package:wutsi_wallet/src/http.dart';
 
+String onboardBaseUrl = 'https://wutsi-onboard-bff-test.herokuapp.com';
+String appBaseUrl = 'https://wutsi-cash-bff-test.herokuapp.com';
 bool? onboarded;
 
 void main() async {
@@ -12,7 +14,7 @@ void main() async {
   Http.getInstance().interceptors = [
     HttpJsonInterceptor(),
     HttpInternationalizationInterceptor(),
-    HttpTracingInterceptor("demo", await Device().id())
+    HttpTracingInterceptor('wutsi-wallet', await Device().id())
   ];
 
   onboarded = (await SharedPreferences.getInstance())
@@ -22,11 +24,7 @@ void main() async {
 }
 
 class WutsiApp extends StatelessWidget {
-  final String baseUrl;
-
-  const WutsiApp(
-      {this.baseUrl = 'https://wutsi-onboard-bff-test.herokuapp.com', Key? key})
-      : super(key: key);
+  const WutsiApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -34,14 +32,11 @@ class WutsiApp extends StatelessWidget {
     return MaterialApp(
       title: 'Wutsi Wallet',
       debugShowCheckedModeBanner: false,
-
-      // initialRoute: onboarded == true ? "/" : "/onboard",
-      initialRoute: "/",
+      initialRoute: onboarded == true ? '/' : '/onboard',
       routes: {
         '/': (context) => const HomeScreen(),
         '/onboard': (context) => DynamicRoute(
-            provider:
-                HttpRouteContentProvider('$baseUrl/app/onboard/screens/home')),
+            provider: HttpRouteContentProvider('$onboardBaseUrl/screens/home')),
       },
     );
   }
@@ -51,12 +46,5 @@ class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Error'),
-        ),
-        body: const Center(
-          child: Text('HOME'),
-        ),
-      );
+  Widget build(BuildContext context) => const Center(child: Text('HOME'));
 }
