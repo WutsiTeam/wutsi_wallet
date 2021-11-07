@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sdui/sdui.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
+
+import 'access_token.dart';
 
 /// Interceptor that add tracing information into the request headers.
 /// The tracing information added are:
@@ -29,22 +30,6 @@ class HttpTracingInterceptor extends HttpInterceptor {
   void onResponse(ResponseTemplate response) {}
 }
 
-/// HTTP interceptor that stored into the share preferences the response header `x-onboarded`,
-/// to indicate that the user has been onboarded.
-class HttpOnboardingInterceptor extends HttpInterceptor {
-  static const String headerOnboarded = 'x-onboarded';
-
-  @override
-  void onRequest(RequestTemplate request) {}
-
-  @override
-  void onResponse(ResponseTemplate response) async {
-    if (response.headers[headerOnboarded] != null) {
-      (await SharedPreferences.getInstance()).setBool(headerOnboarded, true);
-    }
-  }
-}
-
 /// HTTP interceptor that set the request header `Accept-Language` to the current user language
 class HttpInternationalizationInterceptor extends HttpInterceptor {
   @override
@@ -61,22 +46,19 @@ class HttpInternationalizationInterceptor extends HttpInterceptor {
 
 /// HTTP interceptor that adds Authorization header
 class HttpAuthorizationInterceptor extends HttpInterceptor {
-  static const String headerAccessToken = 'x-access-token';
-  static const String headerAuthorization = 'Authorization';
-
   @override
   void onRequest(RequestTemplate request) async {
-    String? token =
-        (await SharedPreferences.getInstance()).getString(headerAccessToken);
+    String? token = await AccessToken.get();
     if (token != null) {
-      request.headers[headerAuthorization] = 'Bearer $token';
+      request.headers['Authorization'] = 'Bearer $token';
     }
   }
 
   @override
   void onResponse(ResponseTemplate response) async {
-    if (response.headers[headerAccessToken] != null) {
-      (await SharedPreferences.getInstance()).setBool(headerAccessToken, true);
+    String? accessToken = response.headers['x-access-token'];
+    if (accessToken != null) {
+      AccessToken.set(accessToken);
     }
   }
 }

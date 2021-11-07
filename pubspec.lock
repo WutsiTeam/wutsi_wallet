@@ -316,7 +316,7 @@ packages:
       name: sdui
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.29"
+    version: "0.0.31"
   shared_preferences:
     dependency: "direct main"
     description:

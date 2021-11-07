@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:logger/logger.dart';
 import 'package:sdui/sdui.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wutsi_wallet/src/access_token.dart';
 import 'package:wutsi_wallet/src/device.dart';
 import 'package:wutsi_wallet/src/http.dart';
 
 String onboardBaseUrl = 'https://wutsi-onboard-bff-test.herokuapp.com';
 String loginBaseUrl = 'https://wutsi-login-bff-test.herokuapp.com';
+// String loginBaseUrl = 'http://localhost:8080';
 String cashBaseUrl = 'https://wutsi-cash-bff-test.herokuapp.com';
 
-bool? onboarded;
 String? accessToken;
-Logger logger = Logger();
+Logger logger = LoggerFactory.create('main');
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,11 +23,7 @@ void main() async {
     HttpAuthorizationInterceptor()
   ];
 
-  onboarded = (await SharedPreferences.getInstance())
-      .getBool(HttpOnboardingInterceptor.headerOnboarded);
-  accessToken = (await SharedPreferences.getInstance())
-      .getString(HttpAuthorizationInterceptor.headerAccessToken);
-  logger.i('STARTING APP. onboarded=$onboarded - accessToken=$accessToken');
+  accessToken = await AccessToken.get();
 
   runApp(const WutsiApp());
 }
@@ -55,11 +50,10 @@ class WutsiApp extends StatelessWidget {
   }
 
   String _initialRoute() {
-    if (onboarded != null) {
-      return '/onboard';
-    } else {
-      return accessToken == null ? '/login' : '/';
-    }
+    String initialRoute = accessToken == null ? '/onboard' : '/';
+
+    logger.i('access_token=$accessToken initial_route=$initialRoute');
+    return initialRoute;
   }
 }
 
@@ -69,9 +63,10 @@ class LoginContentProvider implements RouteContentProvider {
   const LoginContentProvider(this.context);
 
   @override
-  Future<String> getContent() async => Http.getInstance().post(_url(), null);
+  Future<String> getContent() async =>
+      Http.getInstance().post(await _url(), null);
 
-  String _url() {
+  Future<String> _url() async {
     Object? args = ModalRoute.of(context)?.settings.arguments;
     if (args is Map<String, dynamic>) {
       logger.i('Login with arguments: $args');
@@ -91,12 +86,14 @@ class LoginContentProvider implements RouteContentProvider {
       if (query.isNotEmpty) {
         return loginBaseUrl + "?$query";
       }
-    } else if (accessToken != null) {
-      Map<String, dynamic> token = JwtDecoder.decode(accessToken!);
-      logger.i('Login with JWT: $token');
-      String? phone = token['phone_number'];
-      if (phone == null) {
-        return loginBaseUrl + "?phone=$phone";
+    } else {
+      Map<String, dynamic>? token = await AccessToken.decode();
+      if (token != null) {
+        logger.i('Login with JWT: $token');
+        String? phone = token['phone_number'];
+        if (phone == null) {
+          return loginBaseUrl + "?phone=$phone";
+        }
       }
     }
     return onboardBaseUrl;
