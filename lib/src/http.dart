@@ -58,3 +58,25 @@ class HttpInternationalizationInterceptor extends HttpInterceptor {
   String _language() =>
       WidgetsBinding.instance?.window.locale.languageCode ?? 'en';
 }
+
+/// HTTP interceptor that adds Authorization header
+class HttpAuthorizationInterceptor extends HttpInterceptor {
+  static const String headerAccessToken = 'x-access-token';
+  static const String headerAuthorization = 'Authorization';
+
+  @override
+  void onRequest(RequestTemplate request) async {
+    String? token =
+        (await SharedPreferences.getInstance()).getString(headerAccessToken);
+    if (token != null) {
+      request.headers[headerAuthorization] = 'Bearer $token';
+    }
+  }
+
+  @override
+  void onResponse(ResponseTemplate response) async {
+    if (response.headers[headerAccessToken] != null) {
+      (await SharedPreferences.getInstance()).setBool(headerAccessToken, true);
+    }
+  }
+}
