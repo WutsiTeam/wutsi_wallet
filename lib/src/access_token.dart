@@ -29,7 +29,12 @@ class AccessToken {
       return null;
     } else {
       try {
-        return JwtDecoder.decode(token);
+        DateTime expires = JwtDecoder.getExpirationDate(token);
+        if (expires.isAfter(DateTime.now())) {
+          return JwtDecoder.decode(token);
+        } else {
+          return null;
+        }
       } catch (e) {
         return null;
       }

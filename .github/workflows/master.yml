@@ -30,12 +30,21 @@ jobs:
           flutter test
           flutter build apk --no-tree-shake-icons
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v1
-        with:
-          name: apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+      - name: S3-Deploy-Test
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+        run: |
+          aws s3 sync \
+            --acl public-read \
+            --region us-east-1 \
+            build/app/outputs/flutter-apk/ s3://int-wutsi/releases
 
+#      - name: Upload-APK
+#        uses: actions/upload-artifact@v1
+#        with:
+#          name: apk
+#          path: build/app/outputs/flutter-apk/app-release.apk
 #      - name: Download APK from build
 #        uses: actions/download-artifact@v1
 #        with:

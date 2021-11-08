@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:sdui/sdui.dart';
 import 'package:uuid/uuid.dart';
@@ -34,7 +36,7 @@ class HttpTracingInterceptor extends HttpInterceptor {
 class HttpInternationalizationInterceptor extends HttpInterceptor {
   @override
   void onRequest(RequestTemplate request) {
-    request.headers['Accept-Language'] = _language();
+    request.headers[HttpHeaders.acceptLanguageHeader] = _language();
   }
 
   @override
@@ -50,7 +52,7 @@ class HttpAuthorizationInterceptor extends HttpInterceptor {
   void onRequest(RequestTemplate request) async {
     String? token = await AccessToken.get();
     if (token != null) {
-      request.headers['Authorization'] = 'Bearer $token';
+      request.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
     }
   }
 
