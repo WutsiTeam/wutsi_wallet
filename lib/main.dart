@@ -97,9 +97,8 @@ class LoginContentProvider implements RouteContentProvider {
         url = loginBaseUrl + "?$query";
       }
     } else {
-      AccessToken? token = await AccessToken.get();
-      if (token != null) {
-        return loginBaseUrl + "?phone=${token.phoneNumber()}";
+      if (accessToken.exists()) {
+        return loginBaseUrl + "?phone=${accessToken.phoneNumber()}";
       }
     }
 
