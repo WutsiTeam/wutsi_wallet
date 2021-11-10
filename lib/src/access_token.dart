@@ -1,43 +1,51 @@
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:logger/logger.dart';
+import 'package:sdui/sdui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AccessToken {
   static const String _key = "com.wutsi.access_token";
-  static String? _accessToken;
+  static final Logger _logger = LoggerFactory.create('AccessToken');
 
-  static Future<String?> get() async {
+  String? value;
+  Map<String, dynamic> _claims;
+
+  AccessToken(this.value, this._claims);
+
+  static Future<AccessToken> get() async {
     try {
-      if (_accessToken == null) {
-        SharedPreferences preferences = await SharedPreferences.getInstance();
-        _accessToken = preferences.getString(_key);
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      String? token = preferences.getString(_key);
+      if (token == null) {
+        return AccessToken(null, {});
+      } else {
+        return AccessToken(token, JwtDecoder.decode(token));
       }
-      return _accessToken;
-    } catch (e) {
-      return null;
+    } catch (e, stackTrace) {
+      _logger.e('Unable to resolve the access_token', e, stackTrace);
+      return AccessToken(null, {});
     }
   }
 
-  static void set(String value) async {
-    _accessToken = value;
+  void set(String value) async {
+    // Store
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString(_key, value);
+    _claims = JwtDecoder.decode(value);
   }
 
-  static Future<Map<String, dynamic>?> decode() async {
-    String? token = await get();
-    if (token == null) {
-      return null;
+  bool exists() => value != null;
+
+  bool expired() {
+    if (value == null) {
+      return true;
     } else {
-      try {
-        DateTime expires = JwtDecoder.getExpirationDate(token);
-        if (expires.isAfter(DateTime.now())) {
-          return JwtDecoder.decode(token);
-        } else {
-          return null;
-        }
-      } catch (e) {
-        return null;
-      }
+      DateTime expires = JwtDecoder.getExpirationDate(value!);
+      return expires.isBefore(DateTime.now());
     }
   }
+
+  String? phoneNumber() => _claims['phone_number'];
+
+  String? subject() => _claims['subject'];
 }

@@ -48,19 +48,22 @@ class HttpInternationalizationInterceptor extends HttpInterceptor {
 
 /// HTTP interceptor that adds Authorization header
 class HttpAuthorizationInterceptor extends HttpInterceptor {
+  final AccessToken _accessToken;
+
+  HttpAuthorizationInterceptor(this._accessToken);
+
   @override
-  void onRequest(RequestTemplate request) async {
-    String? token = await AccessToken.get();
-    if (token != null) {
-      request.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
+  void onRequest(RequestTemplate request) {
+    if (_accessToken.value != null) {
+      request.headers['Authorization'] = 'Bearer ${_accessToken.value}';
     }
   }
 
   @override
-  void onResponse(ResponseTemplate response) async {
-    String? accessToken = response.headers['x-access-token'];
-    if (accessToken != null) {
-      AccessToken.set(accessToken);
+  void onResponse(ResponseTemplate response) {
+    String? value = response.headers['x-access-token'];
+    if (value != null) {
+      _accessToken.set(value);
     }
   }
 }

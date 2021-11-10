@@ -2,15 +2,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 class Device {
-  final String _preferenceName = 'duid';
+  static const String _preferenceName = 'com.wutsi.device_id';
+  final String id;
 
-  Future<String> id() async {
+  Device(this.id);
+
+  static Future<Device> get() async {
     final prefs = await SharedPreferences.getInstance();
     var deviceId = prefs.getString(_preferenceName);
     if (deviceId == null || deviceId.isEmpty) {
       deviceId = const Uuid().v1();
       prefs.setString(_preferenceName, deviceId);
     }
-    return deviceId;
+    return Device(deviceId);
   }
 }

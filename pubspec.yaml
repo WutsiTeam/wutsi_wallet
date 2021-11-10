@@ -36,8 +36,8 @@ dependencies:
     cupertino_icons: ^1.0.2
 
     jwt_decoder: ^2.0.1
-    logging: ^1.0.2
-    sdui: ^0.0.37
+    logger: ^1.1.0
+    sdui: ^0.0.38
     shared_preferences: ^2.0.8
     uuid: ^3.0.5
 

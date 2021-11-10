@@ -9,20 +9,23 @@ String onboardBaseUrl = 'https://wutsi-onboard-bff-test.herokuapp.com';
 String loginBaseUrl = 'https://wutsi-login-bff-test.herokuapp.com';
 String homeBaseUrl = 'https://wutsi-home-bff-test.herokuapp.com';
 
-String? accessToken;
+Device device = Device('');
+AccessToken accessToken = AccessToken(null, {});
 Logger logger = LoggerFactory.create('main');
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  device = await Device.get();
+  accessToken = await AccessToken.get();
+  logger.i('device-id=${device.id} access-token=${accessToken.value}');
+
   Http.getInstance().interceptors = [
     HttpJsonInterceptor(),
+    HttpAuthorizationInterceptor(accessToken),
+    HttpTracingInterceptor('wutsi-wallet', device.id),
     HttpInternationalizationInterceptor(),
-    HttpTracingInterceptor('wutsi-wallet', await Device().id()),
-    HttpAuthorizationInterceptor()
   ];
-
-  accessToken = await AccessToken.get();
 
   runApp(const WutsiApp());
 }
@@ -49,10 +52,15 @@ class WutsiApp extends StatelessWidget {
   }
 
   String _initialRoute() {
-    String initialRoute = accessToken == null ? '/onboard' : '/';
-
-    logger.i('access_token=$accessToken initial_route=$initialRoute');
-    return initialRoute;
+    String url = '/';
+    if (!accessToken.exists()) {
+      url = '/onboard';
+    } else if (accessToken.expired() == true) {
+      logger.i('access_token has expired');
+      url = '/login';
+    }
+    logger.i('initial-route=$url');
+    return url;
   }
 }
 
@@ -66,35 +74,36 @@ class LoginContentProvider implements RouteContentProvider {
       Http.getInstance().post(await _url(), null);
 
   Future<String> _url() async {
+    String url = onboardBaseUrl;
     Object? args = ModalRoute.of(context)?.settings.arguments;
     if (args is Map<String, dynamic>) {
       logger.i('Login with arguments: $args');
-      var phone = args['phone'];
-      var title = args['title'];
-      var subTitle = args['sub-title'];
+
       var query = '';
-      if (phone != null) {
+      var phone = args['phone']?.toString().trim();
+      if (phone != null && phone.isNotEmpty) {
         query += '&phone=$phone&';
-      }
-      if (title != null) {
-        query += '&title=$title';
-      }
-      if (subTitle != null) {
-        query += '&sub-title=$subTitle';
-      }
-      if (query.isNotEmpty) {
-        return loginBaseUrl + "?$query";
+
+        var title = args['title'];
+        if (title != null && title.isNotEmpty) {
+          query += '&title=$title';
+        }
+
+        var subTitle = args['sub-title'];
+        if (subTitle != null && subTitle.isNotEmpty) {
+          query += '&sub-title=$subTitle';
+        }
+
+        url = loginBaseUrl + "?$query";
       }
     } else {
-      Map<String, dynamic>? token = await AccessToken.decode();
+      AccessToken? token = await AccessToken.get();
       if (token != null) {
-        logger.i('Login with JWT: $token');
-        String? phone = token['phone_number'];
-        if (phone == null) {
-          return loginBaseUrl + "?phone=$phone";
-        }
+        return loginBaseUrl + "?phone=${token.phoneNumber()}";
       }
     }
-    return onboardBaseUrl;
+
+    logger.i('login-url=$url');
+    return url;
   }
 }
