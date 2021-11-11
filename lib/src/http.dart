@@ -12,20 +12,18 @@ import 'access_token.dart';
 /// - `X-Trace-ID`: ID that represent the interfaction trace
 /// - `X-Client-ID`: Identification of the client application
 class HttpTracingInterceptor extends HttpInterceptor {
-  static const String headerDeviceId = 'X-Device-ID';
-  static const String headerTraceId = 'X-Trace-ID';
-  static const String headerClientId = 'X-Client-ID';
+  final String clientId;
+  final String deviceId;
+  final int tenantId;
 
-  String clientId = '';
-  String deviceId = '';
-
-  HttpTracingInterceptor(this.clientId, this.deviceId);
+  HttpTracingInterceptor(this.clientId, this.deviceId, this.tenantId);
 
   @override
   void onRequest(RequestTemplate request) async {
-    request.headers[headerClientId] = clientId;
-    request.headers[headerTraceId] = const Uuid().v1();
-    request.headers[headerDeviceId] = deviceId;
+    request.headers['X-Device-ID'] = clientId;
+    request.headers['X-Trace-ID'] = const Uuid().v1();
+    request.headers['X-Device-ID'] = deviceId;
+    request.headers['X-Tenant-ID'] = tenantId.toString();
   }
 
   @override

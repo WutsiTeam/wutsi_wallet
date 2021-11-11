@@ -1,3 +1,7 @@
+## 0.0.4
+### Updated
+- Added set tenant-id in http header
+
 ## 0.0.3
 ### Updated
 - Upgraded to sdui-0.0.39 to fix the phone number length limitation

@@ -23,7 +23,7 @@ void main() async {
   Http.getInstance().interceptors = [
     HttpJsonInterceptor(),
     HttpAuthorizationInterceptor(accessToken),
-    HttpTracingInterceptor('wutsi-wallet', device.id),
+    HttpTracingInterceptor('wutsi-wallet', device.id, 1),
     HttpInternationalizationInterceptor(),
   ];
 
@@ -55,7 +55,7 @@ class WutsiApp extends StatelessWidget {
     String url = '/';
     if (!accessToken.exists()) {
       url = '/onboard';
-    } else if (accessToken.expired() == true) {
+    } else if (accessToken.expired()) {
       logger.i('access_token has expired');
       url = '/login';
     }
