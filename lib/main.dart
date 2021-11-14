@@ -7,7 +7,7 @@ import 'package:wutsi_wallet/src/http.dart';
 
 String onboardBaseUrl = 'https://wutsi-onboard-bff-test.herokuapp.com';
 String loginBaseUrl = 'https://wutsi-login-bff-test.herokuapp.com';
-String homeBaseUrl = 'https://wutsi-home-bff-test.herokuapp.com';
+String shellBaseUrl = 'https://wutsi-shell-bff-test.herokuapp.com';
 
 Device device = Device('');
 AccessToken accessToken = AccessToken(null, {});
@@ -42,7 +42,7 @@ class WutsiApp extends StatelessWidget {
       initialRoute: _initialRoute(),
       routes: {
         '/': (context) =>
-            DynamicRoute(provider: HttpRouteContentProvider(homeBaseUrl)),
+            DynamicRoute(provider: HttpRouteContentProvider(shellBaseUrl)),
         '/login': (context) =>
             DynamicRoute(provider: LoginContentProvider(context)),
         '/onboard': (context) =>

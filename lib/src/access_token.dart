@@ -27,11 +27,15 @@ class AccessToken {
     }
   }
 
-  void set(String value) async {
+  Future<AccessToken> set(String value) async {
+    this.value = value;
+    _claims = JwtDecoder.decode(value);
+
     // Store
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString(_key, value);
-    _claims = JwtDecoder.decode(value);
+
+    return this;
   }
 
   bool exists() => value != null;

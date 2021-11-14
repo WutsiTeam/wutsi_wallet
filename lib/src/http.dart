@@ -58,10 +58,10 @@ class HttpAuthorizationInterceptor extends HttpInterceptor {
   }
 
   @override
-  void onResponse(ResponseTemplate response) {
+  void onResponse(ResponseTemplate response) async {
     String? value = response.headers['x-access-token'];
     if (value != null) {
-      _accessToken.set(value);
+      await _accessToken.set(value);
     }
   }
 }
