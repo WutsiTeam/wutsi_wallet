@@ -1,3 +1,10 @@
+# CHANGELOG
+
+## 0.0.5
+### Updated
+- Upgraded to sdui-0.0.44 to fix the phone number length limitation
+- Add the application navigationObserver
+
 ## 0.0.4
 ### Updated
 - Added set tenant-id in http header
