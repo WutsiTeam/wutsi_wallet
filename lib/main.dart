@@ -1,3 +1,8 @@
+import 'dart:async';
+import 'dart:isolate';
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:sdui/sdui.dart';
@@ -14,20 +19,49 @@ AccessToken accessToken = AccessToken(null, {});
 Logger logger = LoggerFactory.create('main');
 
 void main() async {
+  runZonedGuarded<Future<void>>(() async {
+    _launch();
+  }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
+}
+
+void _launch() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   device = await Device.get();
   accessToken = await AccessToken.get();
   logger.i('device-id=${device.id} access-token=${accessToken.value}');
 
+  logger.i('Initializing HTTP');
+  _initHttp();
+
+  logger.i('Initializing Crashlytics');
+  _initCrashlytics();
+
+  runApp(const WutsiApp());
+}
+
+void _initHttp() {
   Http.getInstance().interceptors = [
     HttpJsonInterceptor(),
     HttpAuthorizationInterceptor(accessToken),
     HttpTracingInterceptor('wutsi-wallet', device.id, 1),
     HttpInternationalizationInterceptor(),
   ];
+}
 
-  runApp(const WutsiApp());
+void _initCrashlytics() async {
+  await Firebase.initializeApp();
+
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+  FirebaseCrashlytics.instance.setCustomKey("device_id", device.id);
+
+  Isolate.current.addErrorListener(RawReceivePort((pair) async {
+    final List<dynamic> errorAndStacktrace = pair;
+    await FirebaseCrashlytics.instance.recordError(
+      errorAndStacktrace.first,
+      errorAndStacktrace.last,
+    );
+  }).sendPort);
 }
 
 class WutsiApp extends StatelessWidget {

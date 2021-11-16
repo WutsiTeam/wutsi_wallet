@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.0.6
+### Addded
+- Crashilytics
+
 ## 0.0.5
 ### Updated
 - Upgraded to sdui-0.0.44 to fix the phone number length limitation
