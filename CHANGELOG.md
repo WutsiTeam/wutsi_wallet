@@ -3,6 +3,7 @@
 ## 0.0.6
 ### Addded
 - Crashalytics
+- Force login on startup
 
 ## 0.0.5
 ### Updated

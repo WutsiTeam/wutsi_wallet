@@ -93,6 +93,8 @@ class WutsiApp extends StatelessWidget {
     } else if (accessToken.expired()) {
       logger.i('access_token has expired');
       url = '/login';
+    } else {
+      url = '/login';
     }
     logger.i('initial-route=$url');
     return url;
