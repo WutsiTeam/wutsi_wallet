@@ -2,7 +2,7 @@
 
 ## 0.0.6
 ### Addded
-- Crashilytics
+- Crashalytics
 
 ## 0.0.5
 ### Updated
