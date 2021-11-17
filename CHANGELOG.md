@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.0.7
+### Addded
+- Fix button color
+
 ## 0.0.6
 ### Addded
 - Crashalytics
