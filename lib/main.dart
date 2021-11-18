@@ -87,13 +87,12 @@ class WutsiApp extends StatelessWidget {
   }
 
   String _initialRoute() {
-    String url = '/';
+    String url = '/login';
+
     if (!accessToken.exists()) {
       url = '/onboard';
     } else if (accessToken.expired()) {
       logger.i('access_token has expired');
-      url = '/login';
-    } else {
       url = '/login';
     }
     logger.i('initial-route=$url');
