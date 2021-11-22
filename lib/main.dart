@@ -31,16 +31,14 @@ void _launch() async {
   accessToken = await AccessToken.get();
   logger.i('device-id=${device.id} access-token=${accessToken.value}');
 
-  logger.i('Initializing HTTP');
   _initHttp();
-
-  logger.i('Initializing Crashlytics');
   _initCrashlytics();
 
   runApp(const WutsiApp());
 }
 
 void _initHttp() {
+  logger.i('Initializing HTTP');
   Http.getInstance().interceptors = [
     HttpJsonInterceptor(),
     HttpAuthorizationInterceptor(accessToken),
@@ -50,6 +48,8 @@ void _initHttp() {
 }
 
 void _initCrashlytics() async {
+  logger.i('Initializing Crashlytics');
+
   await Firebase.initializeApp();
 
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
