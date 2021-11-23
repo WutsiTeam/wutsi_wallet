@@ -9,6 +9,7 @@ import 'package:sdui/sdui.dart';
 import 'package:wutsi_wallet/src/access_token.dart';
 import 'package:wutsi_wallet/src/device.dart';
 import 'package:wutsi_wallet/src/http.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 
 String onboardBaseUrl = 'https://wutsi-onboard-bff-test.herokuapp.com';
 String loginBaseUrl = 'https://wutsi-login-bff-test.herokuapp.com';
@@ -21,7 +22,11 @@ Logger logger = LoggerFactory.create('main');
 void main() async {
   runZonedGuarded<Future<void>>(() async {
     _launch();
-  }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
+  }, (error, stack) => {
+    if (FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled) {
+      FirebaseCrashlytics.instance.recordError(error, stack)
+    }
+  });
 }
 
 void _launch() async {
@@ -48,20 +53,29 @@ void _initHttp() {
 }
 
 void _initCrashlytics() async {
-  logger.i('Initializing Crashlytics');
+  if (kDebugMode) {
+    logger.i('Running in debug mode. Crashlytics disabled');
 
-  await Firebase.initializeApp();
+    // Force disable Crashlytics collection while doing every day development.
+    // Temporarily toggle this to true if you want to test crash reporting in your app.
+    await FirebaseCrashlytics.instance
+        .setCrashlyticsCollectionEnabled(false);
+  } else {
+    logger.i('Initializing Crashlytics');
 
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-  FirebaseCrashlytics.instance.setCustomKey("device_id", device.id);
+    await Firebase.initializeApp();
 
-  Isolate.current.addErrorListener(RawReceivePort((pair) async {
-    final List<dynamic> errorAndStacktrace = pair;
-    await FirebaseCrashlytics.instance.recordError(
-      errorAndStacktrace.first,
-      errorAndStacktrace.last,
-    );
-  }).sendPort);
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+    FirebaseCrashlytics.instance.setCustomKey("device_id", device.id);
+
+    Isolate.current.addErrorListener(RawReceivePort((pair) async {
+      final List<dynamic> errorAndStacktrace = pair;
+      await FirebaseCrashlytics.instance.recordError(
+        errorAndStacktrace.first,
+        errorAndStacktrace.last,
+      );
+    }).sendPort);
+  }
 }
 
 class WutsiApp extends StatelessWidget {
