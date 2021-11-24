@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.0.8
+### Addded
+- Improve Crashlytics integration
+
 ## 0.0.7
 ### Addded
 - Fix button color

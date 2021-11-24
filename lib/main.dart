@@ -49,18 +49,11 @@ void _initHttp() {
     HttpAuthorizationInterceptor(accessToken),
     HttpTracingInterceptor('wutsi-wallet', device.id, 1),
     HttpInternationalizationInterceptor(),
+    HttpCrashlyticsInterceptor(accessToken),
   ];
 }
 
 void _initCrashlytics() async {
-  if (kDebugMode) {
-    logger.i('Running in debug mode. Crashlytics disabled');
-
-    // Force disable Crashlytics collection while doing every day development.
-    // Temporarily toggle this to true if you want to test crash reporting in your app.
-    await FirebaseCrashlytics.instance
-        .setCrashlyticsCollectionEnabled(false);
-  } else {
     logger.i('Initializing Crashlytics');
 
     await Firebase.initializeApp();
@@ -75,7 +68,15 @@ void _initCrashlytics() async {
         errorAndStacktrace.last,
       );
     }).sendPort);
-  }
+
+    if (kDebugMode) {
+      logger.i('Running in debug mode. Crashlytics disabled');
+
+      // Force disable Crashlytics collection while doing every day development.
+      // Temporarily toggle this to true if you want to test crash reporting in your app.
+      await FirebaseCrashlytics.instance
+          .setCrashlyticsCollectionEnabled(false);
+    }
 }
 
 class WutsiApp extends StatelessWidget {
