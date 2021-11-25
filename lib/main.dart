@@ -1,16 +1,15 @@
 import 'dart:async';
-import 'dart:isolate';
 
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:sdui/sdui.dart';
 import 'package:wutsi_wallet/src/access_token.dart';
+import 'package:wutsi_wallet/src/analytics.dart';
+import 'package:wutsi_wallet/src/crashlytics.dart';
 import 'package:wutsi_wallet/src/device.dart';
 import 'package:wutsi_wallet/src/http.dart';
 import 'package:wutsi_wallet/src/loading.dart';
-import 'package:flutter/foundation.dart' show kDebugMode;
 
 const String onboardBaseUrl = 'https://wutsi-onboard-bff-test.herokuapp.com';
 const String loginBaseUrl = 'https://wutsi-login-bff-test.herokuapp.com';
@@ -23,11 +22,11 @@ AccessToken accessToken = AccessToken(null, {});
 void main() async {
   runZonedGuarded<Future<void>>(() async {
     _launch();
-  }, (error, stack) => {
-    if (FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled) {
-      FirebaseCrashlytics.instance.recordError(error, stack)
-    }
-  });
+  },
+      (error, stack) => {
+            if (FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled)
+              {FirebaseCrashlytics.instance.recordError(error, stack)}
+          });
 }
 
 void _launch() async {
@@ -41,37 +40,15 @@ void _launch() async {
   initHttp('wutsi-wallet', accessToken, device);
 
   logger.i('Initializing Crashlytics');
-  _initCrashlytics();
+  initCrashlytics(device);
+
+  logger.i('Initializing Analytics');
+  initAnalytics(accessToken, device);
 
   logger.i('Initializing Loading State');
   initLoadingState();
 
   runApp(const WutsiApp());
-}
-
-
-void _initCrashlytics() async {
-    await Firebase.initializeApp();
-
-    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-    FirebaseCrashlytics.instance.setCustomKey("device_id", device.id);
-
-    Isolate.current.addErrorListener(RawReceivePort((pair) async {
-      final List<dynamic> errorAndStacktrace = pair;
-      await FirebaseCrashlytics.instance.recordError(
-        errorAndStacktrace.first,
-        errorAndStacktrace.last,
-      );
-    }).sendPort);
-
-    if (kDebugMode) {
-      logger.i('Running in debug mode. Crashlytics disabled');
-
-      // Force disable Crashlytics collection while doing every day development.
-      // Temporarily toggle this to true if you want to test crash reporting in your app.
-      await FirebaseCrashlytics.instance
-          .setCrashlyticsCollectionEnabled(false);
-    }
 }
 
 class WutsiApp extends StatelessWidget {
@@ -84,14 +61,14 @@ class WutsiApp extends StatelessWidget {
       title: 'Wutsi Wallet',
       debugShowCheckedModeBanner: false,
       initialRoute: _initialRoute(),
-      navigatorObservers: [sduiRouteObserver],
+      navigatorObservers: [sduiRouteObserver, analyticsObserver],
       routes: {
-        '/': (context) =>
-            const DynamicRoute(provider: HttpRouteContentProvider(shellBaseUrl)),
+        '/': (context) => const DynamicRoute(
+            provider: HttpRouteContentProvider(shellBaseUrl)),
         '/login': (context) =>
             DynamicRoute(provider: LoginContentProvider(context)),
-        '/onboard': (context) =>
-            const DynamicRoute(provider: HttpRouteContentProvider(onboardBaseUrl)),
+        '/onboard': (context) => const DynamicRoute(
+            provider: HttpRouteContentProvider(onboardBaseUrl)),
       },
     );
   }
