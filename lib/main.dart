@@ -84,7 +84,7 @@ class WutsiApp extends StatelessWidget {
       title: 'Wutsi Wallet',
       debugShowCheckedModeBanner: false,
       initialRoute: _initialRoute(),
-      navigatorObservers: [routeObserver],
+      navigatorObservers: [sduiRouteObserver],
       routes: {
         '/': (context) =>
             const DynamicRoute(provider: HttpRouteContentProvider(shellBaseUrl)),

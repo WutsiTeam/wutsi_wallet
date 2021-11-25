@@ -39,7 +39,7 @@ dependencies:
     flutter_spinkit: ^5.1.0
     jwt_decoder: ^2.0.1
     logger: ^1.1.0
-    sdui: ^0.0.54
+    sdui: ^0.0.55
     shared_preferences: ^2.0.8
     uuid: ^3.0.5
 
