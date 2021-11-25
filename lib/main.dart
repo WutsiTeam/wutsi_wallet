@@ -9,15 +9,16 @@ import 'package:sdui/sdui.dart';
 import 'package:wutsi_wallet/src/access_token.dart';
 import 'package:wutsi_wallet/src/device.dart';
 import 'package:wutsi_wallet/src/http.dart';
+import 'package:wutsi_wallet/src/loading.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 
-String onboardBaseUrl = 'https://wutsi-onboard-bff-test.herokuapp.com';
-String loginBaseUrl = 'https://wutsi-login-bff-test.herokuapp.com';
-String shellBaseUrl = 'https://wutsi-shell-bff-test.herokuapp.com';
+const String onboardBaseUrl = 'https://wutsi-onboard-bff-test.herokuapp.com';
+const String loginBaseUrl = 'https://wutsi-login-bff-test.herokuapp.com';
+const String shellBaseUrl = 'https://wutsi-shell-bff-test.herokuapp.com';
 
+final Logger logger = LoggerFactory.create('main');
 Device device = Device('');
 AccessToken accessToken = AccessToken(null, {});
-Logger logger = LoggerFactory.create('main');
 
 void main() async {
   runZonedGuarded<Future<void>>(() async {
@@ -36,26 +37,20 @@ void _launch() async {
   accessToken = await AccessToken.get();
   logger.i('device-id=${device.id} access-token=${accessToken.value}');
 
-  _initHttp();
+  logger.i('Initializing HTTP');
+  initHttp('wutsi-wallet', accessToken, device);
+
+  logger.i('Initializing Crashlytics');
   _initCrashlytics();
+
+  logger.i('Initializing Loading State');
+  initLoadingState();
 
   runApp(const WutsiApp());
 }
 
-void _initHttp() {
-  logger.i('Initializing HTTP');
-  Http.getInstance().interceptors = [
-    HttpJsonInterceptor(),
-    HttpAuthorizationInterceptor(accessToken),
-    HttpTracingInterceptor('wutsi-wallet', device.id, 1),
-    HttpInternationalizationInterceptor(),
-    HttpCrashlyticsInterceptor(accessToken),
-  ];
-}
 
 void _initCrashlytics() async {
-    logger.i('Initializing Crashlytics');
-
     await Firebase.initializeApp();
 
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
@@ -92,11 +87,11 @@ class WutsiApp extends StatelessWidget {
       navigatorObservers: [routeObserver],
       routes: {
         '/': (context) =>
-            DynamicRoute(provider: HttpRouteContentProvider(shellBaseUrl)),
+            const DynamicRoute(provider: HttpRouteContentProvider(shellBaseUrl)),
         '/login': (context) =>
             DynamicRoute(provider: LoginContentProvider(context)),
         '/onboard': (context) =>
-            DynamicRoute(provider: HttpRouteContentProvider(onboardBaseUrl)),
+            const DynamicRoute(provider: HttpRouteContentProvider(onboardBaseUrl)),
       },
     );
   }

@@ -4,9 +4,19 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sdui/sdui.dart';
 import 'package:uuid/uuid.dart';
+import 'package:wutsi_wallet/src/device.dart';
 
 import 'access_token.dart';
 
+void initHttp(String clientId, AccessToken accessToken, Device device) {
+  Http.getInstance().interceptors = [
+    HttpJsonInterceptor(),
+    HttpAuthorizationInterceptor(accessToken),
+    HttpTracingInterceptor(clientId, device.id, 1),
+    HttpInternationalizationInterceptor(),
+    HttpCrashlyticsInterceptor(accessToken),
+  ];
+}
 /// Interceptor that add tracing information into the request headers.
 /// The tracing information added are:
 /// - `X-Device-ID`: ID of the device
