@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.13
+- CHANGED: Disable crashlytics and analytics in debug mode
+
 ## 0.0.12
 - CHANGED: Update dependency of sdui v0.0.61
 - FIXED: configure analytics in the web

@@ -14,7 +14,7 @@ void initAnalytics(AccessToken accessToken, Device device) async {
 
   if (kDebugMode) {
     // Force disable Analytics collection while doing every day development.
-    // analytics.setAnalyticsCollectionEnabled(false);
+    analytics.setAnalyticsCollectionEnabled(false);
   }
 }
 
