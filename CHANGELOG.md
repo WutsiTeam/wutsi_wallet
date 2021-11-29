@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.0.12
+- CHANGED: Update dependency of sdui v0.0.61
+- FIXED: configure analytics in the web
+
 ## 0.0.11
 - CHANGED: Update dependency of sdui v0.0.60
 
