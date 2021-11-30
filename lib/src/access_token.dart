@@ -51,5 +51,5 @@ class AccessToken {
 
   String? phoneNumber() => _claims['phone_number'];
 
-  String? subject() => _claims['subject'];
+  String? subject() => _claims['sub'];
 }

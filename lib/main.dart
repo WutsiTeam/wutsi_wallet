@@ -6,6 +6,7 @@ import 'package:logger/logger.dart';
 import 'package:sdui/sdui.dart';
 import 'package:wutsi_wallet/src/access_token.dart';
 import 'package:wutsi_wallet/src/analytics.dart';
+import 'package:wutsi_wallet/src/contact.dart';
 import 'package:wutsi_wallet/src/crashlytics.dart';
 import 'package:wutsi_wallet/src/device.dart';
 import 'package:wutsi_wallet/src/http.dart';
@@ -47,6 +48,9 @@ void _launch() async {
 
   logger.i('Initializing Loading State');
   initLoadingState();
+
+  logger.i('Initializing Contacts');
+  initContacts('$shellBaseUrl/commands/sync-contacts');
 
   runApp(const WutsiApp());
 }

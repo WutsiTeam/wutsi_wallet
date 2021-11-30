@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:sdui/sdui.dart';
 import 'package:uuid/uuid.dart';
 import 'package:wutsi_wallet/src/device.dart';
+import 'package:wutsi_wallet/src/event.dart';
 
 import 'access_token.dart';
 
@@ -17,6 +18,7 @@ void initHttp(String clientId, AccessToken accessToken, Device device) {
     HttpCrashlyticsInterceptor(accessToken),
   ];
 }
+
 /// Interceptor that add tracing information into the request headers.
 /// The tracing information added are:
 /// - `X-Device-ID`: ID of the device
@@ -69,10 +71,12 @@ class HttpAuthorizationInterceptor extends HttpInterceptor {
   }
 
   @override
-  void onResponse(ResponseTemplate response) async {
+  void onResponse(ResponseTemplate response) {
     String? value = response.headers['x-access-token'];
     if (value != null) {
-      await _accessToken.set(value);
+      _accessToken
+          .set(value)
+          .then((value) => eventBus.fire(UserLoggedInEvent(_accessToken)));
     }
   }
 }
@@ -84,13 +88,13 @@ class HttpCrashlyticsInterceptor extends HttpInterceptor {
   HttpCrashlyticsInterceptor(this._accessToken);
 
   @override
-  void onRequest(RequestTemplate request) {
-  }
+  void onRequest(RequestTemplate request) {}
 
   @override
   void onResponse(ResponseTemplate response) async {
     var crashlytics = FirebaseCrashlytics.instance;
-    if (crashlytics.isCrashlyticsCollectionEnabled && response.statusCode/100 > 2) {
+    if (crashlytics.isCrashlyticsCollectionEnabled &&
+        response.statusCode / 100 > 2) {
       String? userId = _accessToken.subject();
       if (userId != null) {
         crashlytics.setCustomKey("user_id", userId);
