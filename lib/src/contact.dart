@@ -14,7 +14,7 @@ void initContacts(String syncUrl) {
 class ContactSynchronizer {
   static const String _preferenceName = 'com.wutsi.last_contact_sync';
   final Logger _logger = LoggerFactory.create('ContactSynchronizer');
-  final int _syncDelay = 86400; // 1 days in milliseconds
+  final int _syncDelay = 0; //86400; // 1 days in milliseconds
   final String _syncUrl;
 
   ContactSynchronizer(this._syncUrl);
@@ -49,8 +49,10 @@ class ContactSynchronizer {
     }
 
     _logger.i('sync_url=$_syncUrl phones=$phoneNumbers');
-    Http.getInstance().post(
-        _syncUrl, {'phoneNumbers': phoneNumbers}).then((value) => _synced());
+    if (phoneNumbers.isNotEmpty) {
+      Http.getInstance().post(
+          _syncUrl, {'phoneNumbers': phoneNumbers}).then((value) => _synced());
+    }
   }
 
   void _synced() async {
