@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.0.14
+- CHANGED: Update dependency of sdui v0.0.62
+- Integrate event_bus for syncronizing the contats asyncronously
+
 ## 0.0.13
 - CHANGED: Disable crashlytics and analytics in debug mode
 
