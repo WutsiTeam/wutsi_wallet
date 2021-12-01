@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sdui/sdui.dart';
 import 'package:uuid/uuid.dart';
+import 'package:wutsi_wallet/src/crashlytics.dart';
 import 'package:wutsi_wallet/src/device.dart';
 import 'package:wutsi_wallet/src/event.dart';
 
@@ -33,8 +33,8 @@ class HttpTracingInterceptor extends HttpInterceptor {
 
   @override
   void onRequest(RequestTemplate request) async {
-    request.headers['X-Device-ID'] = clientId;
-    request.headers['X-Trace-ID'] = const Uuid().v1();
+    request.headers['X-Client-ID'] = clientId;
+    request.headers['X-Trace-ID'] = const Uuid().v1().toString();
     request.headers['X-Device-ID'] = deviceId;
     request.headers['X-Tenant-ID'] = tenantId.toString();
   }
@@ -77,36 +77,6 @@ class HttpAuthorizationInterceptor extends HttpInterceptor {
       _accessToken
           .set(value)
           .then((value) => eventBus.fire(UserLoggedInEvent(_accessToken)));
-    }
-  }
-}
-
-/// HTTP interceptor for Crashlytics integration
-class HttpCrashlyticsInterceptor extends HttpInterceptor {
-  final AccessToken _accessToken;
-
-  HttpCrashlyticsInterceptor(this._accessToken);
-
-  @override
-  void onRequest(RequestTemplate request) {}
-
-  @override
-  void onResponse(ResponseTemplate response) async {
-    var crashlytics = FirebaseCrashlytics.instance;
-    if (crashlytics.isCrashlyticsCollectionEnabled &&
-        response.statusCode / 100 > 2) {
-      String? userId = _accessToken.subject();
-      if (userId != null) {
-        crashlytics.setCustomKey("user_id", userId);
-      }
-
-      crashlytics.setCustomKey("http_url", response.request.url);
-      crashlytics.setCustomKey("http_method", response.request.method);
-      crashlytics.setCustomKey("http_status_code", response.statusCode);
-      crashlytics.setCustomKey("http_response", response.body);
-      if (response.request.body != null) {
-        crashlytics.setCustomKey("http_request", response.request.body!);
-      }
     }
   }
 }

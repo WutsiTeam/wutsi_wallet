@@ -4,6 +4,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:sdui/sdui.dart';
+import 'package:wutsi_wallet/src/access_token.dart';
 import 'package:wutsi_wallet/src/device.dart';
 
 void initCrashlytics(Device device) async {
@@ -22,6 +25,55 @@ void initCrashlytics(Device device) async {
 
   if (kDebugMode) {
     // Force disable Crashlytics collection while doing every day development.
-    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
+    // awaixt FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
+  }
+}
+
+/// HTTP interceptor for Crashlytics integration
+class HttpCrashlyticsInterceptor extends HttpInterceptor {
+  final Logger logger = LoggerFactory.create('HttpCrashlyticsInterceptor');
+  final AccessToken _accessToken;
+
+  HttpCrashlyticsInterceptor(this._accessToken);
+
+  @override
+  void onRequest(RequestTemplate request) {
+    try {
+      var crashlytics = FirebaseCrashlytics.instance;
+      if (crashlytics.isCrashlyticsCollectionEnabled) {
+        _setCustomKeyFromHeader(request, 'X-Trace-ID', 'trace_id');
+        _setCustomKeyFromHeader(request, 'X-Tenant-ID', 'tenant_id');
+        _setCustomKey('request_body', request.body?.toString());
+        _setCustomKey("user_id", _accessToken.subject());
+      }
+    } catch (e) {
+      logger.e('Unable to initialize Crashlytics with request information', e);
+    }
+  }
+
+  @override
+  void onResponse(ResponseTemplate response) async {
+    var crashlytics = FirebaseCrashlytics.instance;
+    if (crashlytics.isCrashlyticsCollectionEnabled &&
+        response.statusCode / 100 > 2) {
+      _setCustomKey("http_url", response.request.url);
+      _setCustomKey("http_method", response.request.method);
+      _setCustomKey("http_status_code", response.statusCode.toString());
+      _setCustomKey("http_response", response.body);
+    }
+  }
+
+  void _setCustomKeyFromHeader(
+      RequestTemplate request, String header, String name) {
+    String? value = request.headers[name];
+    if (value != null) {
+      _setCustomKey(name, value);
+    }
+  }
+
+  void _setCustomKey(String name, String? value) {
+    if (value != null) {
+      FirebaseCrashlytics.instance.setCustomKey(name, value.toString());
+    }
   }
 }

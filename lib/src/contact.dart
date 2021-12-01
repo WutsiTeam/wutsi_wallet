@@ -13,8 +13,8 @@ void initContacts(String syncUrl) {
 
 class ContactSynchronizer {
   static const String _preferenceName = 'com.wutsi.last_contact_sync';
+  static const int _syncDelay = 86400000; // 1 days in milliseconds
   final Logger _logger = LoggerFactory.create('ContactSynchronizer');
-  final int _syncDelay = 0; //86400; // 1 days in milliseconds
   final String _syncUrl;
 
   ContactSynchronizer(this._syncUrl);
