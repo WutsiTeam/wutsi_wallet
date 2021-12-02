@@ -19,10 +19,12 @@ class ContactSynchronizer {
   ContactSynchronizer(this._syncUrl);
 
   void sync() async {
-    _getSyncedPhones().then((phones) => _sync(phones == null ? [] : phones));
+    _getSyncedPhones().then((phones) => _sync(phones));
   }
 
-  void _sync(List<String> phones) async {
+  void _sync(List<String>? phones) async {
+    if (phones == null) return;
+
     ContactsService.getContacts(withThumbnails: false)
         .then((contacts) => _syncContacts(phones, contacts));
   }
