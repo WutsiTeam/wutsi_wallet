@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.16
+- CHANGED: Store synced contact locally, to optimize the contact sync
+
 ## 0.0.15
 - CHANGED: Improve crashlytics integration
 - FIXED: Trace-ID UUID
