@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.17
+- CHANGED: Change picture
+
 ## 0.0.16
 - CHANGED: Store synced contact locally, to optimize the contact sync
 
