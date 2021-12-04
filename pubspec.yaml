@@ -43,7 +43,7 @@ dependencies:
     jwt_decoder: ^2.0.1
     logger: ^1.1.0
     permission_handler: ^8.2.5
-    sdui: ^0.0.62
+    sdui: ^0.0.68
     shared_preferences: ^2.0.8
     uuid: ^3.0.5
 
