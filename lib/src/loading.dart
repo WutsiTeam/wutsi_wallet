@@ -17,4 +17,7 @@ void initLoadingState() {
         size: 120.0,
         color: Color(0xFF1D7EDF),
       )));
+
+  sdui.sduiProgressIndicator =
+      (context) => SpinKitCubeGrid(size: 120.0, color: Color(0xFF1D7EDF));
 }

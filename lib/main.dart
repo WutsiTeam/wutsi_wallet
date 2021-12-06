@@ -6,6 +6,7 @@ import 'package:logger/logger.dart';
 import 'package:sdui/sdui.dart';
 import 'package:wutsi_wallet/src/access_token.dart';
 import 'package:wutsi_wallet/src/analytics.dart';
+import 'package:wutsi_wallet/src/camera.dart';
 import 'package:wutsi_wallet/src/contact.dart';
 import 'package:wutsi_wallet/src/crashlytics.dart';
 import 'package:wutsi_wallet/src/device.dart';
@@ -51,6 +52,11 @@ void _launch() async {
 
   logger.i('Initializing Contacts');
   initContacts('$shellBaseUrl/commands/sync-contacts');
+
+  logger.i('Initializing the camera');
+  int count = await initCamera();
+  print(
+      '$count Cameras: ' + sduiCameras.map((e) => e.lensDirection).toString());
 
   runApp(const WutsiApp());
 }

@@ -1,7 +1,10 @@
 # CHANGELOG
 
+## 0.0.18
+- FIXED: Initialize camera
+
 ## 0.0.17
-- CHANGED: Change picture
+- CHANGED: Integrate picture
 
 ## 0.0.16
 - CHANGED: Store synced contact locally, to optimize the contact sync
