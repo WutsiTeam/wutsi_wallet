@@ -55,7 +55,7 @@ void _launch() async {
 
   logger.i('Initializing the camera');
   int count = await initCamera();
-  print(
+  logger.i(
       '$count Cameras: ' + sduiCameras.map((e) => e.lensDirection).toString());
 
   runApp(const WutsiApp());

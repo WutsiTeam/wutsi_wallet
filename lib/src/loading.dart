@@ -19,5 +19,5 @@ void initLoadingState() {
       )));
 
   sdui.sduiProgressIndicator =
-      (context) => SpinKitCubeGrid(size: 120.0, color: Color(0xFF1D7EDF));
+      (context) => const SpinKitCubeGrid(size: 120.0, color: Color(0xFF1D7EDF));
 }
