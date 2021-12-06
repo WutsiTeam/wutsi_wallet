@@ -3,6 +3,9 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:sdui/sdui.dart' as sdui;
 
 void initLoadingState() {
+  sdui.sduiProgressIndicator =
+      (context) => const SpinKitCubeGrid(size: 120.0, color: Color(0xFF1D7EDF));
+
   sdui.sduiLoadingState = (context) => Scaffold(
       appBar: AppBar(
         title: const Text('Loading...'),
@@ -12,12 +15,5 @@ void initLoadingState() {
         centerTitle: true,
         elevation: 0.0,
       ),
-      body: const Center(
-          child: SpinKitCubeGrid(
-        size: 120.0,
-        color: Color(0xFF1D7EDF),
-      )));
-
-  sdui.sduiProgressIndicator =
-      (context) => const SpinKitCubeGrid(size: 120.0, color: Color(0xFF1D7EDF));
+      body: Center(child: sdui.sduiProgressIndicator(context)));
 }
