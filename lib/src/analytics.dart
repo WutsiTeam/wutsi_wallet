@@ -57,7 +57,7 @@ class _SDUIAnalyticsImpl extends sdui.SDUIAnalytics {
   @override
   void endTrace(dynamic trace) {
     // Disable performance tracing in debug-mode
-    if (kDebugMode) return null;
+    if (kDebugMode) return;
 
     try {
       if (trace is Trace) {
