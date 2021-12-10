@@ -1,6 +1,9 @@
 # CHANGELOG
 
-## 0.0.18
+## 0.0.20
+- ADDED: Google Performance for tracking page performance
+
+## 0.0.19
 - FIXED: Initialize camera
 
 ## 0.0.17
