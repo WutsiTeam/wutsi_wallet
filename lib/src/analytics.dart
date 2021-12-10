@@ -47,8 +47,6 @@ class _SDUIAnalyticsImpl extends sdui.SDUIAnalytics {
     try {
       Trace trace = FirebasePerformance.instance.newTrace(id);
       trace.start();
-
-      print('startTrace: $id - $trace');
       return trace;
     } catch(ex){
       _logger.e('Unable to start the trace: $id', ex);
@@ -62,8 +60,6 @@ class _SDUIAnalyticsImpl extends sdui.SDUIAnalytics {
     if (kDebugMode) return null;
 
     try {
-      print('endTrace: $trace');
-
       if (trace is Trace) {
         trace.stop();
       }
