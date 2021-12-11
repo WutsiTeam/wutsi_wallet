@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.21
+- CHANGED: Send page as home page
+
 ## 0.0.20
 - ADDED: Google Performance for tracking page performance
 
