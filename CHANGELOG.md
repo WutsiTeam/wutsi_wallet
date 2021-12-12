@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.22
+- CHANGED: Update to sdui-0.0.77 to fix
+
 ## 0.0.21
 - CHANGED: Send page as home page
 
