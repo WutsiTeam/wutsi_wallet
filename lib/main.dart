@@ -84,18 +84,7 @@ class WutsiApp extends StatelessWidget {
     );
   }
 
-  String _initialRoute() {
-    String url = '/login';
-
-    if (!accessToken.exists()) {
-      url = '/onboard';
-    } else if (accessToken.expired()) {
-      logger.i('access_token has expired');
-      url = '/login';
-    }
-    logger.i('initial-route=$url');
-    return url;
-  }
+  String _initialRoute() => !accessToken.exists() ? '/onboard' : '/login';
 }
 
 class LoginContentProvider implements RouteContentProvider {
