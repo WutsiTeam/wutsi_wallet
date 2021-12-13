@@ -1,7 +1,9 @@
 # CHANGELOG
 
 ## 0.0.22
-- CHANGED: Update to sdui-0.0.77 to fix
+- FIXED: https://trello.com/c/AF0STmwS/50-after-sending-money
+- FIXED: https://trello.com/c/gkrk3m4x/55-cosmetic-profile-photo-frame
+- FIXED: https://trello.com/c/SVAr9i9a/56-refresh-profile-picture
 
 ## 0.0.21
 - CHANGED: Send page as home page
