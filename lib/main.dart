@@ -11,6 +11,7 @@ import 'package:wutsi_wallet/src/contact.dart';
 import 'package:wutsi_wallet/src/crashlytics.dart';
 import 'package:wutsi_wallet/src/device.dart';
 import 'package:wutsi_wallet/src/http.dart';
+import 'package:wutsi_wallet/src/language.dart';
 import 'package:wutsi_wallet/src/loading.dart';
 
 const String onboardBaseUrl = 'https://wutsi-onboard-bff-test.herokuapp.com';
@@ -21,6 +22,7 @@ const String cashBaseUrl = 'https://wutsi-cash-bff-test.herokuapp.com';
 final Logger logger = LoggerFactory.create('main');
 Device device = Device('');
 AccessToken accessToken = AccessToken(null, {});
+Language language = Language('en');
 
 void main() async {
   runZonedGuarded<Future<void>>(() async {
@@ -37,10 +39,12 @@ void _launch() async {
 
   device = await Device.get();
   accessToken = await AccessToken.get();
-  logger.i('device-id=${device.id} access-token=${accessToken.value}');
+  language = await Language.get();
+  logger.i(
+      'device-id=${device.id} access-token=${accessToken.value} language=${language.value}');
 
   logger.i('Initializing HTTP');
-  initHttp('wutsi-wallet', accessToken, device);
+  initHttp('wutsi-wallet', accessToken, device, language);
 
   logger.i('Initializing Crashlytics');
   initCrashlytics(device);

@@ -2,6 +2,7 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:logger/logger.dart';
 import 'package:sdui/sdui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wutsi_wallet/src/event.dart';
 
 class AccessToken {
   static const String _key = "com.wutsi.access_token";
@@ -52,4 +53,28 @@ class AccessToken {
   String? phoneNumber() => _claims['phone_number'];
 
   String? subject() => _claims['sub'];
+}
+
+/// HTTP interceptor that adds Authorization header
+class HttpAuthorizationInterceptor extends HttpInterceptor {
+  final AccessToken _accessToken;
+
+  HttpAuthorizationInterceptor(this._accessToken);
+
+  @override
+  void onRequest(RequestTemplate request) {
+    if (_accessToken.value != null) {
+      request.headers['Authorization'] = 'Bearer ${_accessToken.value}';
+    }
+  }
+
+  @override
+  void onResponse(ResponseTemplate response) {
+    String? value = response.headers['x-access-token'];
+    if (value != null) {
+      _accessToken
+          .set(value)
+          .then((value) => eventBus.fire(UserLoggedInEvent(_accessToken)));
+    }
+  }
 }

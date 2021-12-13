@@ -1,20 +1,18 @@
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:sdui/sdui.dart';
 import 'package:uuid/uuid.dart';
 import 'package:wutsi_wallet/src/crashlytics.dart';
 import 'package:wutsi_wallet/src/device.dart';
-import 'package:wutsi_wallet/src/event.dart';
 
 import 'access_token.dart';
+import 'language.dart';
 
-void initHttp(String clientId, AccessToken accessToken, Device device) {
+void initHttp(String clientId, AccessToken accessToken, Device device,
+    Language language) {
   Http.getInstance().interceptors = [
     HttpJsonInterceptor(),
     HttpAuthorizationInterceptor(accessToken),
     HttpTracingInterceptor(clientId, device.id, 1),
-    HttpInternationalizationInterceptor(),
+    HttpInternationalizationInterceptor(language),
     HttpCrashlyticsInterceptor(accessToken),
   ];
 }
@@ -41,42 +39,4 @@ class HttpTracingInterceptor extends HttpInterceptor {
 
   @override
   void onResponse(ResponseTemplate response) {}
-}
-
-/// HTTP interceptor that set the request header `Accept-Language` to the current user language
-class HttpInternationalizationInterceptor extends HttpInterceptor {
-  @override
-  void onRequest(RequestTemplate request) {
-    request.headers[HttpHeaders.acceptLanguageHeader] = _language();
-  }
-
-  @override
-  void onResponse(ResponseTemplate response) {}
-
-  String _language() =>
-      WidgetsBinding.instance?.window.locale.languageCode ?? 'en';
-}
-
-/// HTTP interceptor that adds Authorization header
-class HttpAuthorizationInterceptor extends HttpInterceptor {
-  final AccessToken _accessToken;
-
-  HttpAuthorizationInterceptor(this._accessToken);
-
-  @override
-  void onRequest(RequestTemplate request) {
-    if (_accessToken.value != null) {
-      request.headers['Authorization'] = 'Bearer ${_accessToken.value}';
-    }
-  }
-
-  @override
-  void onResponse(ResponseTemplate response) {
-    String? value = response.headers['x-access-token'];
-    if (value != null) {
-      _accessToken
-          .set(value)
-          .then((value) => eventBus.fire(UserLoggedInEvent(_accessToken)));
-    }
-  }
 }

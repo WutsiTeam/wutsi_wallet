@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.23
+- CHANGED: Handle language change
+
 ## 0.0.22
 - FIXED: https://trello.com/c/AF0STmwS/50-after-sending-money
 - FIXED: https://trello.com/c/gkrk3m4x/55-cosmetic-profile-photo-frame
