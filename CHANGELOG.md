@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.25
+- CHANGED: upgrade to sdui 0.0.84
+
 ## 0.0.24
 - CHANGED: upgrade to sdui 0.0.82 to fix JSON encoding with French
 
