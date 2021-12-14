@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.26
+- CHANGED: upgrade to sdui 0.0.85 to fix https://trello.com/c/AGF2kS5D/62-unexpected-error-occurring-while-changing-language
+
 ## 0.0.25
 - CHANGED: upgrade to sdui 0.0.84
 
