@@ -1,7 +1,10 @@
 # CHANGELOG
 
+## 0.0.24
+- CHANGED: upgrade to sdui 0.0.82 to fix JSON encoding with French
+
 ## 0.0.23
-- CHANGED: Handle language change
+- CHANGED: https://trello.com/c/5SzkIbie/6-settings-update-my-profile
 
 ## 0.0.22
 - FIXED: https://trello.com/c/AF0STmwS/50-after-sending-money
