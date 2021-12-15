@@ -5,6 +5,20 @@ on:
     branches:
       - master
 
+env:
+  FLUTTER_VERSION: "2.5.2"
+  PROPERTIES_PATH: "./android/key.properties"
+  #--------------------------
+  # SECRETS
+  #--------------------------
+  KEY_STORE: "wutsiwutsi"
+  KEY_PASSWORD: "wutsiwutsi"
+  KEY_ALIAS: "upload"
+  KEY_FILE: "../keystore/upload-keystore2.jks"
+  KEYSTORE: "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"
+
+  GOOGLE_SERVICE_JSONKEY: "ewogICJ0eXBlIjogInNlcnZpY2VfYWNjb3VudCIsCiAgInByb2plY3RfaWQiOiAicGMtYXBpLTgxNjE4NjQ4MjUxOTIwNzczMjQtNDkzIiwKICAicHJpdmF0ZV9rZXlfaWQiOiAiM2JjMWU0ZGUxN2NkM2ZhNTQyNjFjNjA2ZWM0NTVjNGZjZDg0ODhmNiIsCiAgInByaXZhdGVfa2V5IjogIi0tLS0tQkVHSU4gUFJJVkFURSBLRVktLS0tLVxuTUlJRXZBSUJBREFOQmdrcWhraUc5dzBCQVFFRkFBU0NCS1l3Z2dTaUFnRUFBb0lCQVFEMEVjcWt5ckovdHhKNlxuRlNiQ1V6TE1COVdnTm9ZNlVQeUtPbDJKTjIyUUxvM0FNNHMzcHhML2k5WGl1UmRIYWV2aUNPWFA3aEhzdSttQVxuNDlVSWxjWStUcjIzQkZZOEpLSVY2dCtuQkg1RkZRWFlvK3d3eVJES0JJN0VwKzhxTlF0QklnSDJPRHdTcGFPSFxuOStockJlV0p3OGI4YkJlSTRZSFljcnhNSlVWODhMajhsZVlqdjdzU1MrdDRZNVdlUXNLSU4xaHJtOENFcEE0R1xueUtuSjl3L1RTblFGUWg5WmgrQTF6V0h4clNwQWxXVUJkY09ic1h6TjE1dmxmVGF4cytuTWlnbm9CS2trTHYyWlxubkcxam51ZytQY0dGSlNxbkZQM0tQQmtrRTd5TEhMeVJwbHBST292TzYxd0RnNzJrWVVDMkx2S3NOb2NCS1R1Z1xuYTV3RWdPYURBZ01CQUFFQ2dnRUFJSjI0RE9taGpQdTBGbWg1TTRMV3lQbExEUXY4U0JMR2pOcGI0WmhzcGRYeVxuejNxVDRpNExsZWJrQUZabnkvMVZybkV0OU9tRnI3TTA4eXAvTDVTRVY1TkNPeER6VFRwQUJ0bktaWkZ1Sm1FMlxuMU1xako2blcrb2c5WS81bE1hakJCa1U3S2VJOTlPZjV3SlBhbFdMR1YvQzN5TWZSSlZPdGZIVm93R3hDcXYxbFxuakEyWnBqMTc4a1lPWENJL2dsYlE1ZlJuaUJOUEhIT2djOTgvY1N1S0VSWjJNM2tEOURkVDVLU2NQbGpsbDFFRVxuSUJ2N2VKditvOXhIV3U4dFZYUDd3RlZEY0ZHN0ZDWDZySFNrWllIV1dxeEY0VzRLa2xSSEFzWVkvbzFmVmdFelxuYVdING9Pd1MrUXBkTkQ0ZFNNOGV5OXdBcit2YXBLd1BEWXpvMWFwQndRS0JnUUQ2K3BIdjJLdHJSUTRqU0J0elxuUm5nODRDc1k0bjJSSndReER0ZVhKUnRoRWtxQW1UbXFXdERUelNORGViQ0gvbUlvYUN4QWJNTERGY0I3dm9DaVxubEY4UDRPMnFnMWlXdVNYZTQ4eGIzOHArMkZEbE54RUMySWxGdGlvSzQ4aHpNS3JuUFZ1TExhaGVscjY2NXlxUVxubFg5WWt6eDZOWWEreGlJUGFuUGgzaWE1MFFLQmdRRDQ4OVdjZ0lteUZOc1U0amdDWi9tcDhDYURHakZ4UWhGZVxuSDRkSFhRb2ZjclNPb3k4N3VjK0tWWmR4c0Y1RDVZV2YxUmJseWhwcTZ3cVVWa1FSZnFGWFhqa042VG9tUFdlK1xuZUpEWTY2WTdVT3RpQTN3b1E0QkhyNW8zdlVYTFkyNlRtaXZFSDBobThqZFNEYysvbDZ0QjUxb3FBdXNhZURkTFxuUTlMeHE3cGNFd0tCZ0RRSFVjMlk2eUJYdG5DVitDclRod1dIcXllRGZHaGs0RGVUVGhvbE5TSFFldVZoM2xSMFxuY3lvVk1xUkFTOXBGWCsva2VKZjZjLzJoT3Ivc1pCcFFDOHpzNGhnaEZuSlllNE5UVWdBUnlwYTFIVUFIUkYyRVxucWlCcmZSZTQxTXNjWWJHQ1JNSDdleFh3eGlWVTJyd1NZYzNvNS9hbHRnTkNhN2txWmsrQ2tDQ2hBb0dBUThLcVxuaTdSNHhoM2pHNllQTktoMFRncnRrSldhaTRjK0R1NXA5Y1NmTXJ3WDVSTUpraW9iRVQ0R3dJME91MUJIdEo5ZFxuWWlKR1duK3JHNEQzZWdPTGlxbzh3VXFQNTBTamJqYUd4bVF0bE11THBkdm8rVlNXSCt6dC91bm5pMXAvQ0hIWVxuSThPWUExMCtMWGxRNkljeHQvaHVsQ3pETFNzM2NhYitUWVUrYmowQ2dZQjYwa0h1Uy9wcmFORGhXYkJxMU4wNFxuL29qcjNZQlMwNC8rdFdiYXpFMXNUUFpQLzQ5WmZoQnhWd21CekN6cDFSYk5OcnhiYmxLbm9sSDB2S1B4MGlSZlxuZGtVcVJoU2YzZXpBbkZsbXBEUUFzWmJTalg2SCszZ0hXM0FhenF4SzBidStucEEyMGRTb3poNExadUF3bjk0UVxuL0JhVktMZjg1OU0ybGZnM3dHZmQzUT09XG4tLS0tLUVORCBQUklWQVRFIEtFWS0tLS0tXG4iLAogICJjbGllbnRfZW1haWwiOiAiZ29vZ2xlLXBsYXktcHVibGlzaGVyQHBjLWFwaS04MTYxODY0ODI1MTkyMDc3MzI0LTQ5My5pYW0uZ3NlcnZpY2VhY2NvdW50LmNvbSIsCiAgImNsaWVudF9pZCI6ICIxMDE2OTg0MjYxMzU2NDQxNDQxMjYiLAogICJhdXRoX3VyaSI6ICJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20vby9vYXV0aDIvYXV0aCIsCiAgInRva2VuX3VyaSI6ICJodHRwczovL29hdXRoMi5nb29nbGVhcGlzLmNvbS90b2tlbiIsCiAgImF1dGhfcHJvdmlkZXJfeDUwOV9jZXJ0X3VybCI6ICJodHRwczovL3d3dy5nb29nbGVhcGlzLmNvbS9vYXV0aDIvdjEvY2VydHMiLAogICJjbGllbnRfeDUwOV9jZXJ0X3VybCI6ICJodHRwczovL3d3dy5nb29nbGVhcGlzLmNvbS9yb2JvdC92MS9tZXRhZGF0YS94NTA5L2dvb2dsZS1wbGF5LXB1Ymxpc2hlciU0MHBjLWFwaS04MTYxODY0ODI1MTkyMDc3MzI0LTQ5My5pYW0uZ3NlcnZpY2VhY2NvdW50LmNvbSIKfQo="
+
 jobs:
 
   #--------------------------
@@ -24,11 +38,21 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      # Creating the key.properties file
+      - name: Creating key.properties
+        run: |
+          echo keyPassword=\${{ env.KEY_STORE }} > ${{env.PROPERTIES_PATH}}
+          echo storePassword=\${{ env.KEY_PASSWORD }} >> ${{env.PROPERTIES_PATH}}
+          echo keyAlias=\${{ env.KEY_ALIAS }} >> ${{env.PROPERTIES_PATH}}
+          echo storeFile=\${{ env.KEY_FILE }} >> ${{env.PROPERTIES_PATH}}
+          echo "${{ env.KEYSTORE }}" | base64 --decode > ./android/keystore/upload-keystore2.jks
+
       - name: Build
         run: |
           flutter analyze
           flutter test
           flutter build apk --no-tree-shake-icons
+          flutter build appbundle --no-tree-shake-icons
 
 
       - name: S3-Deploy-Test
@@ -40,3 +64,34 @@ jobs:
             --acl public-read \
             --region us-east-1 \
             build/app/outputs/flutter-apk/ s3://int-wutsi/releases
+      
+      # Make appbundle downloadable
+      - name: Upload app bundle
+        uses: actions/upload-artifact@v2
+        with:
+          name: appbundle
+          path: build/app/outputs/bundle/release
+
+  release_internal:
+    name: Release Artifacts to internal testing track
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Get APPBUNDLE from Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: appbundle
+      - name: Create Google play config file
+        run: |
+          echo "${{env.GOOGLE_SERVICE_JSONKEY}}" > play_config.json.b64
+          base64 -d -i play_config.json.b64 > play_config.json
+      - name: Release APPBUNDLE to internal track
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJson: play_config.json
+          packageName: com.wutsi.wutsi_wallet
+          releaseFile: app-release.aab
+          track: internal
+          status: draft
+          whatsNewDirectory: distribution/whatsnew
