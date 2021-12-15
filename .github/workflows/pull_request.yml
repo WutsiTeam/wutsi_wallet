@@ -79,6 +79,5 @@ jobs:
           packageName: com.wutsi.wutsi_wallet
           releaseFile: app-release.aab
           track: internal
-          userFraction: 0.50
           status: draft
           whatsNewDirectory: distribution/whatsnew
