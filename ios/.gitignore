@@ -12,6 +12,7 @@ Icon?
 **/Pods/
 **/.symlinks/
 profile
+Podfile.lock
 xcuserdata
 **/.generated/
 Flutter/App.framework
@@ -25,6 +26,10 @@ Flutter/flutter_assets/
 Flutter/flutter_export_environment.sh
 ServiceDefinitions.json
 Runner/GeneratedPluginRegistrant.*
+
+Runner.xcodeproj/project.pbxproj
+Runner.xcodeproj/project.pbxproj
+Flutter/Debug.xcconfig
 
 # Exceptions to above rules.
 !default.mode1v3
