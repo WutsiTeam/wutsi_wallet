@@ -1,7 +1,10 @@
 # CHANGELOG
 
+## 0.0.28
+- CHANGED: upgrade to sdui 0.0.87 to optimize layout for smaller screen
+
 ## 0.0.27
-- CHANGED: upgrade to sdui 0.0.87 to remove focus on tap out
+- CHANGED: upgrade to sdui 0.0.86 to remove focus on tap out
 
 ## 0.0.26
 - CHANGED: upgrade to sdui 0.0.85 to fix https://trello.com/c/AGF2kS5D/62-unexpected-error-occurring-while-changing-language
