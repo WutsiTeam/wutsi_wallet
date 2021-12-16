@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.29
+- CHANGED: upgrade to sdui 0.0.88 to replace keyboard DEL by icon
+
 ## 0.0.28
 - CHANGED: upgrade to sdui 0.0.87 to optimize layout for smaller screen
 
