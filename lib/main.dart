@@ -16,7 +16,7 @@ import 'package:wutsi_wallet/src/loading.dart';
 
 const String gatewayUrl = 'https://wutsi-gateway-test.herokuapp.com';
 const String loginBaseUrl = '$gatewayUrl/login';
-const String onboardBaseUrl = '$gatewayUrl/onboard';
+const String onboardBaseUrl = '$loginBaseUrl/onboard';
 const String shellBaseUrl = '$gatewayUrl/shell';
 const String cashBaseUrl = '$gatewayUrl/cash';
 
