@@ -14,10 +14,11 @@ import 'package:wutsi_wallet/src/http.dart';
 import 'package:wutsi_wallet/src/language.dart';
 import 'package:wutsi_wallet/src/loading.dart';
 
-const String onboardBaseUrl = 'https://wutsi-onboard-bff-test.herokuapp.com';
-const String loginBaseUrl = 'https://wutsi-login-bff-test.herokuapp.com';
-const String shellBaseUrl = 'https://wutsi-shell-bff-test.herokuapp.com';
-const String cashBaseUrl = 'https://wutsi-cash-bff-test.herokuapp.com';
+const String gatewayUrl = 'https://wutsi-gateway-test.herokuapp.com';
+const String loginBaseUrl = '$gatewayUrl/login';
+const String onboardBaseUrl = '$gatewayUrl/onboard';
+const String shellBaseUrl = '$gatewayUrl/shell';
+const String cashBaseUrl = '$gatewayUrl/cash';
 
 final Logger logger = LoggerFactory.create('main');
 Device device = Device('');

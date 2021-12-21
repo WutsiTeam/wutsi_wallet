@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.30
+- CHANGED: Integrate the API gateway
+
 ## 0.0.29
 - CHANGED: upgrade to sdui 0.0.88 to replace keyboard DEL by icon
 
