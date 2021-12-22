@@ -29,10 +29,11 @@ void main() async {
   runZonedGuarded<Future<void>>(() async {
     _launch();
   },
-      (error, stack) => {
-            if (FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled)
-              {FirebaseCrashlytics.instance.recordError(error, stack)}
-          });
+          (error, stack) =>
+      {
+        if (FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled)
+          {FirebaseCrashlytics.instance.recordError(error, stack)}
+      });
 }
 
 void _launch() async {
@@ -42,7 +43,8 @@ void _launch() async {
   accessToken = await AccessToken.get();
   language = await Language.get();
   logger.i(
-      'device-id=${device.id} access-token=${accessToken.value} language=${language.value}');
+      'device-id=${device.id} access-token=${accessToken
+          .value} language=${language.value}');
 
   logger.i('Initializing HTTP');
   initHttp('wutsi-wallet', accessToken, device, language);
@@ -59,10 +61,11 @@ void _launch() async {
   logger.i('Initializing Contacts');
   initContacts('$shellBaseUrl/commands/sync-contacts');
 
-  logger.i('Initializing the camera');
-  int count = await initCamera();
-  logger.i(
-      '$count Cameras: ' + sduiCameras.map((e) => e.lensDirection).toString());
+  // We no longer using the camera widget
+  // logger.i('Initializing the camera');
+  // int count = await initCamera();
+  // logger.i(
+  //     '$count Cameras: ' + sduiCameras.map((e) => e.lensDirection).toString());
 
   runApp(const WutsiApp());
 }
@@ -79,11 +82,13 @@ class WutsiApp extends StatelessWidget {
       initialRoute: _initialRoute(),
       navigatorObservers: [sduiRouteObserver, analyticsObserver],
       routes: {
-        '/': (context) => const DynamicRoute(
+        '/': (context) =>
+        const DynamicRoute(
             provider: HttpRouteContentProvider("$cashBaseUrl/send")),
         '/login': (context) =>
             DynamicRoute(provider: LoginContentProvider(context)),
-        '/onboard': (context) => const DynamicRoute(
+        '/onboard': (context) =>
+        const DynamicRoute(
             provider: HttpRouteContentProvider(onboardBaseUrl)),
       },
     );
@@ -103,7 +108,10 @@ class LoginContentProvider implements RouteContentProvider {
 
   Future<String> _url() async {
     String url = onboardBaseUrl;
-    Object? args = ModalRoute.of(context)?.settings.arguments;
+    Object? args = ModalRoute
+        .of(context)
+        ?.settings
+        .arguments;
     if (args is Map<String, dynamic>) {
       logger.i('Login with arguments: $args');
 

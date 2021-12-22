@@ -1,6 +1,9 @@
 # CHANGELOG
 
-## 0.0.21
+## 0.0.33
+- CHANGED: upgrade to sdui 0.0.95 to support pictures from image and camera
+
+## 0.0.31
 - CHANGED: upgrade to sdui 0.0.89
 
 ## 0.0.30
