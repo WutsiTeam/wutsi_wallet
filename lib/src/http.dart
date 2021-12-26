@@ -7,13 +7,13 @@ import 'access_token.dart';
 import 'language.dart';
 
 void initHttp(String clientId, AccessToken accessToken, Device device,
-    Language language) {
+    Language language, int tenantId) {
   Http.getInstance().interceptors = [
     HttpJsonInterceptor(),
     HttpAuthorizationInterceptor(accessToken),
-    HttpTracingInterceptor(clientId, device.id, 1),
+    HttpTracingInterceptor(clientId, device.id, tenantId),
     HttpInternationalizationInterceptor(language),
-    HttpCrashlyticsInterceptor(accessToken),
+    HttpCrashlyticsInterceptor(accessToken, tenantId),
   ];
 }
 

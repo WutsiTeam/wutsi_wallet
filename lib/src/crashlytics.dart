@@ -33,8 +33,9 @@ void initCrashlytics(Device device) async {
 class HttpCrashlyticsInterceptor extends HttpInterceptor {
   final Logger logger = LoggerFactory.create('HttpCrashlyticsInterceptor');
   final AccessToken _accessToken;
+  final int tenantId;
 
-  HttpCrashlyticsInterceptor(this._accessToken);
+  HttpCrashlyticsInterceptor(this._accessToken, this.tenantId);
 
   @override
   void onRequest(RequestTemplate request) {
@@ -42,9 +43,9 @@ class HttpCrashlyticsInterceptor extends HttpInterceptor {
       var crashlytics = FirebaseCrashlytics.instance;
       if (crashlytics.isCrashlyticsCollectionEnabled) {
         _setCustomKeyFromHeader(request, 'X-Trace-ID', 'trace_id');
-        _setCustomKeyFromHeader(request, 'X-Tenant-ID', 'tenant_id');
         _setCustomKey('request_body', request.body?.toString());
         _setCustomKey("user_id", _accessToken.subject());
+        _setCustomKey("tenant_id", tenantId.toString());
       }
     } catch (e) {
       logger.e('Unable to initialize Crashlytics with request information', e);

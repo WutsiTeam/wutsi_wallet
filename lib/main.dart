@@ -13,11 +13,11 @@ import 'package:wutsi_wallet/src/http.dart';
 import 'package:wutsi_wallet/src/language.dart';
 import 'package:wutsi_wallet/src/loading.dart';
 
+const int tenantId = 1;
 const String gatewayUrl = 'https://wutsi-gateway-test.herokuapp.com';
 const String loginBaseUrl = '$gatewayUrl/login';
 const String onboardBaseUrl = '$loginBaseUrl/onboard';
 const String shellBaseUrl = '$gatewayUrl/shell';
-const String cashBaseUrl = '$gatewayUrl/cash';
 
 final Logger logger = LoggerFactory.create('main');
 Device device = Device('');
@@ -28,11 +28,10 @@ void main() async {
   runZonedGuarded<Future<void>>(() async {
     _launch();
   },
-          (error, stack) =>
-      {
-        if (FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled)
-          {FirebaseCrashlytics.instance.recordError(error, stack)}
-      });
+      (error, stack) => {
+            if (FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled)
+              {FirebaseCrashlytics.instance.recordError(error, stack)}
+          });
 }
 
 void _launch() async {
@@ -42,11 +41,10 @@ void _launch() async {
   accessToken = await AccessToken.get();
   language = await Language.get();
   logger.i(
-      'device-id=${device.id} access-token=${accessToken
-          .value} language=${language.value}');
+      'device-id=${device.id} access-token=${accessToken.value} language=${language.value}');
 
   logger.i('Initializing HTTP');
-  initHttp('wutsi-wallet', accessToken, device, language);
+  initHttp('wutsi-wallet', accessToken, device, language, tenantId);
 
   logger.i('Initializing Crashlytics');
   initCrashlytics(device);
@@ -81,13 +79,11 @@ class WutsiApp extends StatelessWidget {
       initialRoute: _initialRoute(),
       navigatorObservers: [sduiRouteObserver, analyticsObserver],
       routes: {
-        '/': (context) =>
-        const DynamicRoute(
-            provider: HttpRouteContentProvider("$cashBaseUrl/send")),
+        '/': (context) => const DynamicRoute(
+            provider: HttpRouteContentProvider(shellBaseUrl)),
         '/login': (context) =>
             DynamicRoute(provider: LoginContentProvider(context)),
-        '/onboard': (context) =>
-        const DynamicRoute(
+        '/onboard': (context) => const DynamicRoute(
             provider: HttpRouteContentProvider(onboardBaseUrl)),
       },
     );
@@ -107,10 +103,7 @@ class LoginContentProvider implements RouteContentProvider {
 
   Future<String> _url() async {
     String url = onboardBaseUrl;
-    Object? args = ModalRoute
-        .of(context)
-        ?.settings
-        .arguments;
+    Object? args = ModalRoute.of(context)?.settings.arguments;
     if (args is Map<String, dynamic>) {
       logger.i('Login with arguments: $args');
 

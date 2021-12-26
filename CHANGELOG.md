@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.34
+- CHANGED: Change home page
+
 ## 0.0.33
 - CHANGED: upgrade to sdui 0.0.95 to support pictures from image and camera
 
