@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.35
+- CHANGED: upgrade to sdui 0.0.99 to support qr-image
+
 ## 0.0.34
 - CHANGED: Change home page
 
