@@ -3,7 +3,8 @@ import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sdui/sdui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wutsi_wallet/src/event.dart';
+
+import 'event.dart';
 
 void initContacts(String syncUrl) {
   eventBus.on<UserLoggedInEvent>().listen((event) {
@@ -19,6 +20,7 @@ class ContactSynchronizer {
   ContactSynchronizer(this._syncUrl);
 
   void sync() async {
+    _logger.i('Synching contacts');
     _getSyncedPhones().then((phones) => _sync(phones));
   }
 
@@ -48,18 +50,23 @@ class ContactSynchronizer {
     }
 
     _logger.i(
-        'sync_url=$_syncUrl synced_phoned=$phones all_phone_numbers=$allPhoneNumbers new_phone_numbers=$newPhoneNumbers');
+        'sync_url=$_syncUrl synced_phoned=${phones.length} all_phone_numbers=${allPhoneNumbers.length} new_phone_numbers=${newPhoneNumbers.length}');
     if (newPhoneNumbers.isNotEmpty) {
-      _requestPermission()
-          .then((value) => _syncWithServer(value, allPhoneNumbers));
+      _requestPermission().then(
+          (value) => _syncWithServer(value, newPhoneNumbers, allPhoneNumbers));
     }
   }
 
-  void _syncWithServer(bool flag, List<String> phoneNumbers) {
-    if (!flag) return;
+  void _syncWithServer(
+      bool flag, List<String> newPhoneNumbers, List<String> allPhoneNumbers) {
+    if (!flag) {
+      _logger.i(
+          "User doesn't have permission to contacts. No synchronization with server");
+      return;
+    }
 
-    Http.getInstance().post(_syncUrl, {'phoneNumbers': phoneNumbers}).then(
-        (value) => _setSyncedPhones(phoneNumbers));
+    Http.getInstance().post(_syncUrl, {'phoneNumbers': newPhoneNumbers}).then(
+        (value) => _setSyncedPhones(allPhoneNumbers));
   }
 
   void _setSyncedPhones(List<String> phones) async =>

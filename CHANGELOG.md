@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.39
+- FIXED: Phone number synchronization
+
 ## 0.0.38
 - CHANGED: upgrade to sdui 0.0.116 with bug fixes on the qr-view
 
