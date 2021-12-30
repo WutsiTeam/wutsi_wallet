@@ -1,7 +1,10 @@
 # CHANGELOG
 
 ## 0.0.38
-- CHANGED: upgrade to sdui 0.0.118 with bug fixes on the qr-view
+- CHANGED: upgrade to sdui 0.0.116 with bug fixes on the qr-view
+
+## 0.0.37
+- CHANGED: upgrade to sdui 0.0.114 with bug fixes on the qr-view
 
 ## 0.0.36
 - CHANGED: upgrade to sdui 0.0.111 to support qr-view
