@@ -1,22 +1,21 @@
-import 'package:package_info/package_info.dart';
 import 'package:sdui/sdui.dart';
 import 'package:uuid/uuid.dart';
-import 'package:wutsi_wallet/src/crashlytics.dart';
-import 'package:wutsi_wallet/src/device.dart';
 
 import 'access_token.dart';
+import 'crashlytics.dart';
+import 'device.dart';
 import 'language.dart';
 import 'package_info.dart';
 
 void initHttp(String clientId, AccessToken accessToken, Device device,
-    Language language, int tenantId, PackageInfo packageInfo) {
+    Language language, int tenantId) {
   Http.getInstance().interceptors = [
     HttpJsonInterceptor(),
     HttpAuthorizationInterceptor(accessToken),
     HttpTracingInterceptor(clientId, device.id, tenantId),
     HttpInternationalizationInterceptor(language),
     HttpCrashlyticsInterceptor(accessToken, tenantId),
-    HttpPackageInfoInterceptor(packageInfo)
+    HttpPackageInfoInterceptor()
   ];
 }
 

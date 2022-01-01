@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:package_info/package_info.dart';
 import 'package:sdui/sdui.dart';
 import 'package:wutsi_wallet/src/access_token.dart';
 import 'package:wutsi_wallet/src/analytics.dart';
@@ -24,7 +23,6 @@ final Logger logger = LoggerFactory.create('main');
 Device device = Device('');
 AccessToken accessToken = AccessToken(null, {});
 Language language = Language('en');
-PackageInfo? packageInfo;
 
 void main() async {
   runZonedGuarded<Future<void>>(() async {
@@ -42,13 +40,11 @@ void _launch() async {
   device = await Device.get();
   accessToken = await AccessToken.get();
   language = await Language.get();
-  packageInfo = await PackageInfo.fromPlatform();
   logger.i(
       'device-id=${device.id} access-token=${accessToken.value} language=${language.value}');
 
   logger.i('Initializing HTTP');
-  initHttp(
-      'wutsi-wallet', accessToken, device, language, tenantId, packageInfo!);
+  initHttp('wutsi-wallet', accessToken, device, language, tenantId);
 
   logger.i('Initializing Crashlytics');
   initCrashlytics(device);
