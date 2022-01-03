@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.42
+- FIX: Fix the collection of platform information
+
 ## 0.0.41
 - CHANGED: Add application information into the headers
 

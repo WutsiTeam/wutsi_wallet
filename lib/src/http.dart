@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sdui/sdui.dart';
 import 'package:uuid/uuid.dart';
 
@@ -5,17 +8,17 @@ import 'access_token.dart';
 import 'crashlytics.dart';
 import 'device.dart';
 import 'language.dart';
-import 'package_info.dart';
 
 void initHttp(String clientId, AccessToken accessToken, Device device,
-    Language language, int tenantId) {
+    Language language, int tenantId) async {
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
   Http.getInstance().interceptors = [
     HttpJsonInterceptor(),
-    HttpAuthorizationInterceptor(accessToken),
-    HttpTracingInterceptor(clientId, device.id, tenantId),
+    HttpTracingInterceptor(clientId, device.id, tenantId, packageInfo),
     HttpInternationalizationInterceptor(language),
+    HttpAuthorizationInterceptor(accessToken),
     HttpCrashlyticsInterceptor(accessToken, tenantId),
-    HttpPackageInfoInterceptor()
   ];
 }
 
@@ -28,8 +31,10 @@ class HttpTracingInterceptor extends HttpInterceptor {
   final String clientId;
   final String deviceId;
   final int tenantId;
+  final PackageInfo packageInfo;
 
-  HttpTracingInterceptor(this.clientId, this.deviceId, this.tenantId);
+  HttpTracingInterceptor(
+      this.clientId, this.deviceId, this.tenantId, this.packageInfo);
 
   @override
   void onRequest(RequestTemplate request) async {
@@ -37,6 +42,11 @@ class HttpTracingInterceptor extends HttpInterceptor {
     request.headers['X-Trace-ID'] = const Uuid().v1().toString();
     request.headers['X-Device-ID'] = deviceId;
     request.headers['X-Tenant-ID'] = tenantId.toString();
+
+    request.headers['X-Client-Version'] =
+        '${packageInfo.version}.${packageInfo.buildNumber}';
+    request.headers['X-OS'] = Platform.operatingSystem;
+    request.headers['X-OS-Version'] = Platform.operatingSystemVersion;
   }
 
   @override
