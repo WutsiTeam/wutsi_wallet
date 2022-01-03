@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sdui/sdui.dart';
 import 'package:wutsi_wallet/src/access_token.dart';
 import 'package:wutsi_wallet/src/analytics.dart';
@@ -44,7 +45,9 @@ void _launch() async {
       'device-id=${device.id} access-token=${accessToken.value} language=${language.value}');
 
   logger.i('Initializing HTTP');
-  initHttp('wutsi-wallet', accessToken, device, language, tenantId);
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  initHttp(
+      'wutsi-wallet', accessToken, device, language, tenantId, packageInfo);
 
   logger.i('Initializing Crashlytics');
   initCrashlytics(device);
@@ -70,61 +73,46 @@ class WutsiApp extends StatelessWidget {
     return MaterialApp(
       title: 'Wutsi Wallet',
       debugShowCheckedModeBanner: false,
-      initialRoute: _initialRoute(),
       navigatorObservers: [sduiRouteObserver, analyticsObserver],
       routes: {
-        '/': (context) => const DynamicRoute(
-            provider: HttpRouteContentProvider(shellBaseUrl)),
-        '/login': (context) =>
-            DynamicRoute(provider: LoginContentProvider(context)),
-        '/onboard': (context) => const DynamicRoute(
-            provider: HttpRouteContentProvider(onboardBaseUrl)),
+        '/': (context) => DynamicRoute(provider: HomeContentProvider(context)),
       },
     );
   }
-
-  String _initialRoute() => !accessToken.exists() ? '/onboard' : '/login';
 }
 
-class LoginContentProvider implements RouteContentProvider {
+class HomeContentProvider implements RouteContentProvider {
   final BuildContext context;
 
-  const LoginContentProvider(this.context);
+  const HomeContentProvider(this.context);
 
   @override
-  Future<String> getContent() async =>
-      Http.getInstance().post(await _url(), null);
+  Future<String> getContent() {
+    String url = _url();
+    return Http.getInstance().post(url, null);
+  }
 
-  Future<String> _url() async {
-    String url = onboardBaseUrl;
-    Object? args = ModalRoute.of(context)?.settings.arguments;
-    if (args is Map<String, dynamic>) {
-      logger.i('Login with arguments: $args');
+  String _url() {
+    String url;
 
-      var query = '';
-      var phone = args['phone']?.toString().trim();
-      if (phone != null && phone.isNotEmpty) {
-        query += '&phone=$phone&';
-
-        var title = args['title'];
-        if (title != null && title.isNotEmpty) {
-          query += '&title=$title';
-        }
-
-        var subTitle = args['sub-title'];
-        if (subTitle != null && subTitle.isNotEmpty) {
-          query += '&sub-title=$subTitle';
-        }
-
-        url = loginBaseUrl + "?$query";
-      }
+    if (!accessToken.exists()) {
+      url = onboardBaseUrl;
+      logger.i('No access-token. home_url=$url');
     } else {
-      if (accessToken.exists()) {
-        return loginBaseUrl + "?phone=${accessToken.phoneNumber()}";
+      if (accessToken.expired()) {
+        url = _loginUrl();
+        logger.i(
+            'Expired access-token. phone=${accessToken.phoneNumber()} home_url=$url');
+      } else {
+        url = shellBaseUrl;
+        logger.i('Valid access-token. home_url=$url');
       }
     }
-
-    logger.i('login-url=$url');
     return url;
+  }
+
+  String _loginUrl() {
+    String? phone = accessToken.phoneNumber();
+    return phone != null ? loginBaseUrl + '?phone=$phone' : onboardBaseUrl;
   }
 }

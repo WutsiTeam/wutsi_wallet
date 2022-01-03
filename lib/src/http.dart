@@ -10,9 +10,7 @@ import 'device.dart';
 import 'language.dart';
 
 void initHttp(String clientId, AccessToken accessToken, Device device,
-    Language language, int tenantId) async {
-  PackageInfo packageInfo = await PackageInfo.fromPlatform();
-
+    Language language, int tenantId, PackageInfo packageInfo) {
   Http.getInstance().interceptors = [
     HttpJsonInterceptor(),
     HttpTracingInterceptor(clientId, device.id, tenantId, packageInfo),
@@ -37,7 +35,7 @@ class HttpTracingInterceptor extends HttpInterceptor {
       this.clientId, this.deviceId, this.tenantId, this.packageInfo);
 
   @override
-  void onRequest(RequestTemplate request) async {
+  void onRequest(RequestTemplate request) {
     request.headers['X-Client-ID'] = clientId;
     request.headers['X-Trace-ID'] = const Uuid().v1().toString();
     request.headers['X-Device-ID'] = deviceId;

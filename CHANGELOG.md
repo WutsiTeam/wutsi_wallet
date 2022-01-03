@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.43
+- FIX: Fix HTTP initialization
+
 ## 0.0.42
 - FIX: Fix the collection of platform information
 
