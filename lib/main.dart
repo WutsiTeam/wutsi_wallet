@@ -58,12 +58,6 @@ void _launch() async {
   logger.i('Initializing Contacts');
   initContacts('$shellBaseUrl/commands/sync-contacts');
 
-  // We no longer using the camera widget
-  // logger.i('Initializing the camera');
-  // int count = await initCamera();
-  // logger.i(
-  //     '$count Cameras: ' + sduiCameras.map((e) => e.lensDirection).toString());
-
   runApp(const WutsiApp());
 }
 

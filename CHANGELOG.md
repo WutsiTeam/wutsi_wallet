@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.41
+- CHANGED: Add application information into the headers
+
 ## 0.0.39
 - FIXED: Phone number synchronization
 
