@@ -94,7 +94,6 @@ class HomeContentProvider implements RouteContentProvider {
 
   String _url() {
     String url;
-
     if (!accessToken.exists()) {
       url = onboardBaseUrl;
       logger.i('No access-token. home_url=$url');
