@@ -1,6 +1,9 @@
 # CHANGELOG
 
 ## 0.0.44
+- CHANGED: upgrade to sdui 0.0.120
+
+## 0.0.44
 - CHANGED: upgrade to sdui 0.0.119 to fix the qr-view flashlight.
 
 ## 0.0.43
