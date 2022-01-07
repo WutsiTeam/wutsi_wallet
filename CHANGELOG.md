@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.0.47
+- CHANGED: upgrade to sdui 0.0.123
+- CHANGED: Customer error page
+- CHANGED: Add logout interceptor
+
 ## 0.0.45
 - CHANGED: upgrade to sdui 0.0.122
 

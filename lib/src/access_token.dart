@@ -29,12 +29,25 @@ class AccessToken {
   }
 
   Future<AccessToken> set(String value) async {
+    // Set state
     this.value = value;
     _claims = JwtDecoder.decode(value);
 
-    // Store
+    // Store into preference
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString(_key, value);
+
+    return this;
+  }
+
+  Future<AccessToken> delete() async {
+    // Clear state
+    value = null;
+    _claims = {};
+
+    // Remove from preferences
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.remove(_key);
 
     return this;
   }
@@ -75,6 +88,23 @@ class HttpAuthorizationInterceptor extends HttpInterceptor {
       _accessToken
           .set(value)
           .then((value) => eventBus.fire(UserLoggedInEvent(_accessToken)));
+    }
+  }
+}
+
+/// HTTP interceptor that logs out the user
+class HttpLogoutInterceptor extends HttpInterceptor {
+  final AccessToken _accessToken;
+
+  HttpLogoutInterceptor(this._accessToken);
+
+  @override
+  void onRequest(RequestTemplate request) {}
+
+  @override
+  void onResponse(ResponseTemplate response) {
+    if (response.request.url.endsWith("/logout")) {
+      _accessToken.delete();
     }
   }
 }

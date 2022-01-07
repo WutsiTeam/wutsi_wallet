@@ -16,6 +16,7 @@ void initHttp(String clientId, AccessToken accessToken, Device device,
     HttpTracingInterceptor(clientId, device.id, tenantId, packageInfo),
     HttpInternationalizationInterceptor(language),
     HttpAuthorizationInterceptor(accessToken),
+    HttpLogoutInterceptor(accessToken),
     HttpCrashlyticsInterceptor(accessToken, tenantId),
   ];
 }

@@ -10,6 +10,7 @@ import 'package:wutsi_wallet/src/analytics.dart';
 import 'package:wutsi_wallet/src/contact.dart';
 import 'package:wutsi_wallet/src/crashlytics.dart';
 import 'package:wutsi_wallet/src/device.dart';
+import 'package:wutsi_wallet/src/error.dart';
 import 'package:wutsi_wallet/src/http.dart';
 import 'package:wutsi_wallet/src/language.dart';
 import 'package:wutsi_wallet/src/loading.dart';
@@ -57,6 +58,9 @@ void _launch() async {
 
   logger.i('Initializing Loading State');
   initLoadingState();
+
+  logger.i('Initializing Error page');
+  initError(device);
 
   logger.i('Initializing Contacts');
   initContacts('$shellBaseUrl/commands/sync-contacts');
