@@ -19,6 +19,8 @@ void initHttp(String clientId, AccessToken accessToken, Device device,
     HttpLogoutInterceptor(accessToken),
     HttpCrashlyticsInterceptor(accessToken, tenantId),
   ];
+
+  DynamicRouteState.statusCodeRoutes[401] = '/401';
 }
 
 /// Interceptor that add tracing information into the request headers.
