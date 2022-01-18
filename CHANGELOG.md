@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.49
+- CHANGED: upgrade to sdui 0.0.125
+
 ## 0.0.48
 - CHANGED: upgrade to sdui 0.0.124 to handle 401 errors
 
