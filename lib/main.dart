@@ -83,6 +83,8 @@ class WutsiApp extends StatelessWidget {
         '/': (context) => DynamicRoute(provider: HomeContentProvider(context)),
         '/401': (context) =>
             DynamicRoute(provider: HomeContentProvider(context)),
+        '/403': (context) => Error403(device),
+        '/404': (context) => Error404(device)
       },
     );
   }

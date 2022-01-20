@@ -70,6 +70,8 @@ class AccessToken {
 
 /// HTTP interceptor that adds Authorization header
 class HttpAuthorizationInterceptor extends HttpInterceptor {
+  static final Logger _logger =
+      LoggerFactory.create('HttpAuthorizationInterceptor');
   final AccessToken _accessToken;
 
   HttpAuthorizationInterceptor(this._accessToken);
@@ -85,6 +87,7 @@ class HttpAuthorizationInterceptor extends HttpInterceptor {
   void onResponse(ResponseTemplate response) {
     String? value = response.headers['x-access-token'];
     if (value != null) {
+      _logger.i('access-token: $value');
       _accessToken
           .set(value)
           .then((value) => eventBus.fire(UserLoggedInEvent(_accessToken)));
