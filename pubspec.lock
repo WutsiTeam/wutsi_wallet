@@ -611,6 +611,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.4.0"
+  photo_view:
+    dependency: transitive
+    description:
+      name: photo_view
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.13.0"
   pinput:
     dependency: transitive
     description:
@@ -680,7 +687,7 @@ packages:
       name: sdui
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.144"
+    version: "0.0.154"
   share_plus:
     dependency: transitive
     description:
