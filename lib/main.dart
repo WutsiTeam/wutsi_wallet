@@ -17,10 +17,6 @@ import 'package:wutsi_wallet/src/language.dart';
 import 'package:wutsi_wallet/src/loading.dart';
 
 const int tenantId = 1;
-// const String gatewayUrl = 'https://wutsi-gateway-test.herokuapp.com';
-// const String loginBaseUrl = '$gatewayUrl/login';
-// const String onboardBaseUrl = '$loginBaseUrl/onboard';
-// const String shellBaseUrl = '$gatewayUrl/shell';
 
 Environment environment = Environment(Environment.defaultEnvironment);
 
