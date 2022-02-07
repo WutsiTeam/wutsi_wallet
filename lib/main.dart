@@ -10,16 +10,19 @@ import 'package:wutsi_wallet/src/analytics.dart';
 import 'package:wutsi_wallet/src/contact.dart';
 import 'package:wutsi_wallet/src/crashlytics.dart';
 import 'package:wutsi_wallet/src/device.dart';
+import 'package:wutsi_wallet/src/environment.dart';
 import 'package:wutsi_wallet/src/error.dart';
 import 'package:wutsi_wallet/src/http.dart';
 import 'package:wutsi_wallet/src/language.dart';
 import 'package:wutsi_wallet/src/loading.dart';
 
 const int tenantId = 1;
-const String gatewayUrl = 'https://wutsi-gateway-test.herokuapp.com';
-const String loginBaseUrl = '$gatewayUrl/login';
-const String onboardBaseUrl = '$loginBaseUrl/onboard';
-const String shellBaseUrl = '$gatewayUrl/shell';
+// const String gatewayUrl = 'https://wutsi-gateway-test.herokuapp.com';
+// const String loginBaseUrl = '$gatewayUrl/login';
+// const String onboardBaseUrl = '$loginBaseUrl/onboard';
+// const String shellBaseUrl = '$gatewayUrl/shell';
+
+Environment environment = Environment(Environment.defaultEnvironment);
 
 final Logger logger = LoggerFactory.create('main');
 Device device = Device('');
@@ -39,16 +42,17 @@ void main() async {
 void _launch() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  environment = await Environment.get();
   device = await Device.get();
   accessToken = await AccessToken.get();
   language = await Language.get();
   logger.i(
-      'device-id=${device.id} access-token=${accessToken.value} language=${language.value}');
+      'device-id=${device.id} access-token=${accessToken.value} language=${language.value} environment=${environment.value}');
 
   logger.i('Initializing HTTP');
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
-  initHttp(
-      'wutsi-wallet', accessToken, device, language, tenantId, packageInfo);
+  initHttp('wutsi-wallet', accessToken, device, language, tenantId, packageInfo,
+      environment);
 
   logger.i('Initializing Crashlytics');
   initCrashlytics(device);
@@ -63,7 +67,7 @@ void _launch() async {
   initError(device);
 
   logger.i('Initializing Contacts');
-  initContacts('$shellBaseUrl/commands/sync-contacts');
+  initContacts(environment.getShellUrl() + '/commands/sync-contacts');
 
   runApp(const WutsiApp());
 }
@@ -104,7 +108,7 @@ class HomeContentProvider implements RouteContentProvider {
   String _url() {
     String url;
     if (!accessToken.exists()) {
-      url = onboardBaseUrl;
+      url = environment.getOnboardUrl();
       logger.i('No access-token. home_url=$url');
     } else {
       if (accessToken.expired()) {
@@ -112,7 +116,7 @@ class HomeContentProvider implements RouteContentProvider {
         logger.i(
             'Expired access-token. phone=${accessToken.phoneNumber()} home_url=$url');
       } else {
-        url = shellBaseUrl;
+        url = environment.getShellUrl();
         logger.i('Valid access-token. home_url=$url');
       }
     }
@@ -121,6 +125,8 @@ class HomeContentProvider implements RouteContentProvider {
 
   String _loginUrl() {
     String? phone = accessToken.phoneNumber();
-    return phone != null ? loginBaseUrl + '?phone=$phone' : onboardBaseUrl;
+    return phone != null
+        ? environment.getLoginUrl() + '?phone=$phone'
+        : environment.getOnboardUrl();
   }
 }

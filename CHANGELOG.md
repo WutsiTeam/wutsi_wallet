@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.62
+- Switch environment
+
 ## 0.0.61
 - CHANGED: upgrade to sdui 0.1.12
 

@@ -3,14 +3,21 @@ import 'dart:io';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sdui/sdui.dart';
 import 'package:uuid/uuid.dart';
+import 'package:wutsi_wallet/src/environment.dart';
 
 import 'access_token.dart';
 import 'crashlytics.dart';
 import 'device.dart';
 import 'language.dart';
 
-void initHttp(String clientId, AccessToken accessToken, Device device,
-    Language language, int tenantId, PackageInfo packageInfo) {
+void initHttp(
+    String clientId,
+    AccessToken accessToken,
+    Device device,
+    Language language,
+    int tenantId,
+    PackageInfo packageInfo,
+    Environment environment) {
   Http.getInstance().interceptors = [
     HttpJsonInterceptor(),
     HttpTracingInterceptor(clientId, device.id, tenantId, packageInfo),
@@ -18,6 +25,7 @@ void initHttp(String clientId, AccessToken accessToken, Device device,
     HttpAuthorizationInterceptor(accessToken),
     HttpLogoutInterceptor(accessToken),
     HttpCrashlyticsInterceptor(accessToken, tenantId),
+    HttpEnvironmentInterceptor(environment, accessToken)
   ];
 
   DynamicRouteState.statusCodeRoutes[401] = '/401';
