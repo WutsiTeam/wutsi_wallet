@@ -6,7 +6,7 @@ import 'package:wutsi_wallet/src/access_token.dart';
 class Environment {
   static const String _key = 'com.wutsi.env';
   static final Logger _logger = LoggerFactory.create('Environment');
-  static const String defaultEnvironment = 'test';
+  static const String defaultEnvironment = 'prod';
 
   String value = defaultEnvironment;
 

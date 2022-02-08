@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.64
+- Default environment = PROD
+
 ## 0.0.63
 - Switch environment: PROD and TEST
 
