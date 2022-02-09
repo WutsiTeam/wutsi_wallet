@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.65
+- Integrate deeplink
+
 ## 0.0.64
 - Default environment = PROD
 

@@ -61,5 +61,28 @@
 	<false/>
 	<key>kTCCServiceMediaLibrary</key>
 	<string>media</string>
+	<key>CFBundleURLTypes</key>
+      <array>
+            <dict>
+              <key>CFBundleTypeRole</key>
+              <string>Editor</string>
+              <key>CFBundleURLName</key>
+              <string>www.wutsi.me</string>
+              <key>CFBundleURLSchemes</key>
+              <array>
+                <string>https</string>
+              </array>
+            </dict>
+            <dict>
+              <key>CFBundleTypeRole</key>
+              <string>Editor</string>
+              <key>CFBundleURLName</key>
+              <string>wutsi-web-test.herokuapp.com</string>
+              <key>CFBundleURLSchemes</key>
+              <array>
+                <string>https</string>
+              </array>
+            </dict>
+      </array>
 </dict>
 </plist>

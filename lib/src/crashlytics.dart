@@ -8,6 +8,7 @@ import 'package:logger/logger.dart';
 import 'package:sdui/sdui.dart';
 import 'package:wutsi_wallet/src/access_token.dart';
 import 'package:wutsi_wallet/src/device.dart';
+import 'package:wutsi_wallet/src/environment.dart';
 
 void initCrashlytics(Device device) async {
   await Firebase.initializeApp();
@@ -33,9 +34,11 @@ void initCrashlytics(Device device) async {
 class HttpCrashlyticsInterceptor extends HttpInterceptor {
   final Logger logger = LoggerFactory.create('HttpCrashlyticsInterceptor');
   final AccessToken _accessToken;
+  final Environment _environment;
   final int tenantId;
 
-  HttpCrashlyticsInterceptor(this._accessToken, this.tenantId);
+  HttpCrashlyticsInterceptor(
+      this._accessToken, this._environment, this.tenantId);
 
   @override
   void onRequest(RequestTemplate request) {
@@ -46,6 +49,7 @@ class HttpCrashlyticsInterceptor extends HttpInterceptor {
         _setCustomKey('request_body', request.body?.toString());
         _setCustomKey("user_id", _accessToken.subject());
         _setCustomKey("tenant_id", tenantId.toString());
+        _setCustomKey("env", _environment.value);
       }
     } catch (e) {
       logger.e('Unable to initialize Crashlytics with request information', e);

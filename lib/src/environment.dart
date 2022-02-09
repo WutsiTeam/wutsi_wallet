@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:logger/logger.dart';
 import 'package:sdui/sdui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -6,7 +7,7 @@ import 'package:wutsi_wallet/src/access_token.dart';
 class Environment {
   static const String _key = 'com.wutsi.env';
   static final Logger _logger = LoggerFactory.create('Environment');
-  static const String defaultEnvironment = 'prod';
+  static const String defaultEnvironment = kDebugMode ? 'test' : 'prod';
 
   String value = defaultEnvironment;
 
@@ -41,6 +42,12 @@ class Environment {
   String getOnboardUrl() => getLoginUrl() + '/onboard';
 
   String getShellUrl() => getGatewayUrl() + '/shell';
+
+  String getStoreUrl() => getGatewayUrl() + "/store";
+
+  String getDeeplinkUrl() => value == 'test'
+      ? 'https://wutsi-web-test.herokuapp.com'
+      : 'https://www.wutsi.me';
 }
 
 class HttpEnvironmentInterceptor extends HttpInterceptor {

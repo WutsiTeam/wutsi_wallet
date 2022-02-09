@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sdui/sdui.dart';
+import 'package:uni_links/uni_links.dart';
 import 'package:wutsi_wallet/src/access_token.dart';
 import 'package:wutsi_wallet/src/analytics.dart';
 import 'package:wutsi_wallet/src/contact.dart';
@@ -96,12 +97,12 @@ class HomeContentProvider implements RouteContentProvider {
   const HomeContentProvider(this.context);
 
   @override
-  Future<String> getContent() {
-    String url = _url();
+  Future<String> getContent() async {
+    String url = await _url();
     return Http.getInstance().post(url, null);
   }
 
-  String _url() {
+  Future<String> _url() async {
     String url;
     if (!accessToken.exists()) {
       url = environment.getOnboardUrl();
@@ -112,11 +113,31 @@ class HomeContentProvider implements RouteContentProvider {
         logger.i(
             'Expired access-token. phone=${accessToken.phoneNumber()} home_url=$url');
       } else {
-        url = environment.getShellUrl();
-        logger.i('Valid access-token. home_url=$url');
+        String? deepLink =
+            await getInitialLink(); // Get initial deeplink that opens the app
+        url = _handleDeeplink(deepLink) ?? environment.getShellUrl();
+        logger.i('Valid access-token. deep_link=$deepLink home_url=$url');
       }
     }
     return url;
+  }
+
+  String? _handleDeeplink(String? link) {
+    if (link == null) return null;
+
+    String prefix = environment.getDeeplinkUrl().toLowerCase();
+    int index = link.toLowerCase().indexOf(prefix);
+    if (index != 0) return null;
+
+    String? internalUrl;
+    String suffix = link.substring(prefix.length);
+    if (suffix.startsWith('/profile?id=')) {
+      internalUrl = environment.getShellUrl() + suffix;
+    } else if (suffix.startsWith('/product?id=')) {
+      internalUrl = environment.getStoreUrl() + suffix;
+    }
+
+    return internalUrl;
   }
 
   String _loginUrl() {

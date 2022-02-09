@@ -3,11 +3,11 @@ import 'dart:io';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sdui/sdui.dart';
 import 'package:uuid/uuid.dart';
-import 'package:wutsi_wallet/src/environment.dart';
 
 import 'access_token.dart';
 import 'crashlytics.dart';
 import 'device.dart';
+import 'environment.dart';
 import 'language.dart';
 
 void initHttp(
@@ -24,7 +24,7 @@ void initHttp(
     HttpInternationalizationInterceptor(language),
     HttpAuthorizationInterceptor(accessToken),
     HttpLogoutInterceptor(accessToken),
-    HttpCrashlyticsInterceptor(accessToken, tenantId),
+    HttpCrashlyticsInterceptor(accessToken, environment, tenantId),
     HttpEnvironmentInterceptor(environment, accessToken)
   ];
 
