@@ -136,6 +136,9 @@ class HomeContentProvider implements RouteContentProvider {
     } else if (suffix.startsWith('/product?id=')) {
       internalUrl = environment.getStoreUrl() + suffix;
     }
+    if (internalUrl != null) {
+      internalUrl += '&deep-link=true';
+    }
 
     return internalUrl;
   }

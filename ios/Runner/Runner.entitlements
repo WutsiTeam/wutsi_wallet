@@ -5,4 +5,10 @@
 	<key>aps-environment</key>
 	<string>development</string>
 </dict>
+<dict>
+  <key>com.apple.developer.associated-domains</key>
+  <array>
+    <string>applinks:www.wutsi.me</string>
+  </array>
+</dict>
 </plist>
