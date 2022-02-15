@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 0.0.65
+## 0.0.66
 - Integrate deeplink
 
 ## 0.0.64
