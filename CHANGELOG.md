@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.67
+- CHANGED: upgrade to sdui 0.1.17
+
 ## 0.0.66
 - Integrate deeplink
 
