@@ -27,15 +27,15 @@
 	<key>NSCalendarsUsageDescription</key>
 	<string>This app needs access to your calendar.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>This app needs access to the camera to take photos.</string>
+	<string>This app needs access to the camera to take photos for profile and scan QR Code from a peer. </string>
 	<key>NSContactsUsageDescription</key>
-	<string>This app needs access to your contacts.</string>
+	<string>This app needs access to your contacts to find which user is also a witsi user.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This app needs access to microphone.</string>
 	<key>NSMotionUsageDescription</key>
 	<string>This app needs access to motion.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app needs access to the photo gallery.</string>
+	<string>This app needs access to the photo gallery for profile picture update or configuring images for a store for merchants.</string>
 	<key>NSRemindersUsageDescription</key>
 	<string>This app needs access to reminders.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
