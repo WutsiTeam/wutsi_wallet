@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.80
+- CHANGED: upgrade to sdui 0.1.47
+
 ## 0.0.79
 - CHANGED: upgrade to sdui 0.1.45
 
