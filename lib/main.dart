@@ -55,7 +55,7 @@ void _launch() async {
   initCrashlytics(device);
 
   logger.i('Initializing Analytics');
-  initAnalytics(accessToken, device);
+  initAnalytics(environment);
 
   logger.i('Initializing Loading State');
   initLoadingState();
@@ -78,7 +78,7 @@ class WutsiApp extends StatelessWidget {
     return MaterialApp(
       title: 'Wutsi Wallet',
       debugShowCheckedModeBanner: false,
-      navigatorObservers: [sduiRouteObserver, analyticsObserver],
+      navigatorObservers: [sduiRouteObserver],
       initialRoute: '/',
       routes: {
         '/': (context) => DynamicRoute(provider: HomeContentProvider(context)),
