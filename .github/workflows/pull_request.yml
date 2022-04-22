@@ -49,7 +49,7 @@ jobs:
 
       # Make appbundle downloadable
       - name: Upload app bundle
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: appbundle
           path: build/app/outputs/bundle/release
