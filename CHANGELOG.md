@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.0.82
+- CHANGED: upgrade to sdui 0.1.58
+- ADD: Integrate renovate
+
 ## 0.0.80
 - CHANGED: upgrade to sdui 0.1.47
 
