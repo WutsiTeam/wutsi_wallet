@@ -135,14 +135,19 @@ class HomeContentProvider implements RouteContentProvider {
       return null;
     }
 
+    var uri = Uri.parse(link);
+    var id = uri.queryParameters['id'];
     String? internalUrl;
-    String suffix = link.substring(prefix.length);
-    if (suffix.startsWith('/profile?id=')) {
-      return environment.getShellUrl() + suffix;
-    } else if (suffix.startsWith('/products?id=')) {
-      return environment.getStoreUrl() + suffix;
+    if (uri.path == '/profile') {
+      internalUrl = environment.getShellUrl() + '/profile?id=$id';
+    } else if (uri.path == '/products') {
+      internalUrl = environment.getStoreUrl() + '/product?id=$id';
+      if (uri.queryParameters['fbclid'] != null){
+        internalUrl += '&utm_source=facebook';
+      }
     }
-    logger.i('Deeplink - suffix=$suffix internal-url=$internalUrl');
+
+    logger.i('Deeplink - path=${uri.path} internal-url=$internalUrl');
     return internalUrl;
   }
 
