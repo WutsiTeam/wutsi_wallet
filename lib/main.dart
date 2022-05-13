@@ -123,23 +123,26 @@ class HomeContentProvider implements RouteContentProvider {
   }
 
   String? _handleDeeplink(String? link) {
-    if (link == null) return null;
+    if (link == null) {
+      logger.i('Deeplink - null');
+      return null;
+    }
 
     String prefix = environment.getDeeplinkUrl().toLowerCase();
     int index = link.toLowerCase().indexOf(prefix);
-    if (index != 0) return null;
+    if (index != 0) {
+      logger.i('Deeplink - $link doesnt start with $prefix');
+      return null;
+    }
 
     String? internalUrl;
     String suffix = link.substring(prefix.length);
     if (suffix.startsWith('/profile?id=')) {
-      internalUrl = environment.getShellUrl() + suffix;
-    } else if (suffix.startsWith('/product?id=')) {
-      internalUrl = environment.getStoreUrl() + suffix;
+      return environment.getShellUrl() + suffix;
+    } else if (suffix.startsWith('/products?id=')) {
+      return environment.getStoreUrl() + suffix;
     }
-    if (internalUrl != null) {
-      internalUrl += '&deep-link=true';
-    }
-
+    logger.i('Deeplink - suffix=$suffix internal-url=$internalUrl');
     return internalUrl;
   }
 
