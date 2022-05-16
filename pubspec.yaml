@@ -44,7 +44,7 @@ dependencies:
     logger: ^1.1.0
     package_info_plus: ^1.3.0
     permission_handler: ^9.0.0
-    sdui: ^0.1.67
+    sdui: ^0.1.68
     shared_preferences: ^2.0.8
     uni_links: ^0.5.1
     uuid: ^3.0.5
