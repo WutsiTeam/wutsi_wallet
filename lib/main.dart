@@ -8,7 +8,6 @@ import 'package:sdui/sdui.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:wutsi_wallet/src/access_token.dart';
 import 'package:wutsi_wallet/src/analytics.dart';
-import 'package:wutsi_wallet/src/contact.dart';
 import 'package:wutsi_wallet/src/crashlytics.dart';
 import 'package:wutsi_wallet/src/device.dart';
 import 'package:wutsi_wallet/src/environment.dart';
@@ -63,8 +62,8 @@ void _launch() async {
   logger.i('Initializing Error page');
   initError(device);
 
-  logger.i('Initializing Contacts');
-  initContacts(environment.getShellUrl() + '/commands/sync-contacts');
+  // logger.i('Initializing Contacts');
+  // initContacts(environment.getShellUrl() + '/commands/sync-contacts');
 
   runApp(const WutsiApp());
 }
