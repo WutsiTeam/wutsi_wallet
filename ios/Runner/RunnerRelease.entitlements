@@ -6,6 +6,7 @@
 	<string>development</string>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
+		<string>applinks:www.wutsi.me</string>
 		<string>applinks:wutsi-web-test.herokuapp.com</string>
 	</array>
 </dict>
