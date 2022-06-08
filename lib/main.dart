@@ -62,8 +62,8 @@ void _launch() async {
   logger.i('Initializing Error page');
   initError(device);
 
-  // logger.i('Initializing Contacts');
-  // initContacts(environment.getShellUrl() + '/commands/sync-contacts');
+  logger.i('Initializing Contacts');
+  initContacts(environment.getShellUrl() + '/commands/sync-contacts');
 
   runApp(const WutsiApp());
 }
