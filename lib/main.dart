@@ -142,7 +142,12 @@ class HomeContentProvider implements RouteContentProvider {
       internalUrl = environment.getShellUrl() + '/profile?id=$id';
     } else if (uri.path == '/products') {
       internalUrl = environment.getStoreUrl() + '/product?id=$id';
-      if (uri.queryParameters['fbclid'] != null){
+    } else if (uri.path == '/orders') {
+      internalUrl = environment.getStoreUrl() + '/order?id=$id';
+    }
+
+    if (internalUrl != null) {
+      if (uri.queryParameters['fbclid'] != null) {
         internalUrl += '&utm_source=facebook';
       }
     }
