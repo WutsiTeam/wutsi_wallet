@@ -6,7 +6,7 @@ on:
       - master
 
 env:
-  FLUTTER_VERSION: "2.16.5"
+  FLUTTER_VERSION: "3.0.2"
   PROPERTIES_PATH: "./android/key.properties"
   #--------------------------
   # SECRETS
@@ -33,7 +33,7 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: 2.10.3
+          flutter-version: 3.0.2
 
       - name: Install dependencies
         run: flutter pub get
