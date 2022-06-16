@@ -25,7 +25,7 @@ class Language {
   }
 
   static String _defaultLanguage() =>
-      WidgetsBinding.instance?.window.locale.languageCode ?? 'en';
+      WidgetsBinding.instance.window.locale.languageCode;
 
   Future<Language> set(String value) async {
     this.value = value;
