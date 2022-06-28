@@ -55,7 +55,7 @@ android {
         applicationId "com.wutsi.wutsi_wallet"
         minSdkVersion 21
         targetSdkVersion 32
-        versionCode 90
+        versionCode 91
         versionName flutterVersionName
     }
     signingConfigs {
