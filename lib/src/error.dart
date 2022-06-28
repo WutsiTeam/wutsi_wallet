@@ -91,7 +91,6 @@ Widget _buildErrorWidget(String title, String message, Device device,
                 child: FutureBuilder(
                     future: Connectivity().checkConnectivity(),
                     initialData: ConnectivityResult.none,
-                    builder: (context, value) => Text('Network: ' +
-                        (value.data as ConnectivityResult).toString())),
+                    builder: (context, value) => Text('Network: ${value.data}')),
               )
             ]));

@@ -64,7 +64,7 @@ void _launch() async {
   initError(device);
 
   logger.i('Initializing Contacts');
-  initContacts(environment.getShellUrl() + '/commands/sync-contacts');
+  initContacts('${environment.getShellUrl()}/commands/sync-contacts');
 
   runApp(const WutsiApp());
 }
@@ -139,11 +139,11 @@ class HomeContentProvider implements RouteContentProvider {
     var id = uri.queryParameters['id'];
     String? internalUrl;
     if (uri.path == '/profile') {
-      internalUrl = environment.getShellUrl() + '/profile?id=$id';
+      internalUrl = '${environment.getShellUrl()}/profile?id=$id';
     } else if (uri.path == '/product') {
-      internalUrl = environment.getStoreUrl() + '/product?id=$id';
+      internalUrl ='${environment.getStoreUrl()}/product?id=$id';
     } else if (uri.path == '/order') {
-      internalUrl = environment.getStoreUrl() + '/order?id=$id';
+      internalUrl = '${environment.getStoreUrl()}/order?id=$id';
     }
 
     if (internalUrl != null) {
@@ -159,7 +159,7 @@ class HomeContentProvider implements RouteContentProvider {
   String _loginUrl() {
     String? phone = accessToken.phoneNumber();
     return phone != null
-        ? environment.getLoginUrl() + '?phone=$phone'
+        ? '${environment.getLoginUrl()}?phone=$phone'
         : environment.getOnboardUrl();
   }
 }

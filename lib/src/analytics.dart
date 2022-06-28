@@ -11,7 +11,7 @@ class _SDUIAnalyticsImpl extends sdui.SDUIAnalytics {
   String _trackUrl = '';
 
   _SDUIAnalyticsImpl(Environment environment){
-    _trackUrl = environment.getShellUrl() + '/track';
+    _trackUrl = '${environment.getShellUrl()}/track';
   }
 
   @override

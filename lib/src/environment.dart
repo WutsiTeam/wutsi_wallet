@@ -37,13 +37,13 @@ class Environment {
 
   String getGatewayUrl() => 'https://wutsi-gateway-$value.herokuapp.com';
 
-  String getLoginUrl() => getGatewayUrl() + '/login';
+  String getLoginUrl() =>  '${getGatewayUrl()}/login';
 
-  String getOnboardUrl() => getLoginUrl() + '/onboard';
+  String getOnboardUrl() => '${getLoginUrl()}/onboard';
 
-  String getShellUrl() => getGatewayUrl() + '/shell';
+  String getShellUrl() =>  '${getGatewayUrl()}/shell';
 
-  String getStoreUrl() => getGatewayUrl() + "/store";
+  String getStoreUrl() => '${getGatewayUrl()}/store';
 
   String getDeeplinkUrl() => value == 'test'
       ? 'https://wutsi-web-test.herokuapp.com'
