@@ -45,6 +45,8 @@ class Environment {
 
   String getStoreUrl() => '${getGatewayUrl()}/store';
 
+  String getNewsUrl() => '${getGatewayUrl()}/news';
+
   String getDeeplinkUrl() => value == 'test'
       ? 'https://wutsi-web-test.herokuapp.com'
       : 'https://www.wutsi.me';

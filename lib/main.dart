@@ -144,6 +144,8 @@ class HomeContentProvider implements RouteContentProvider {
       internalUrl ='${environment.getStoreUrl()}/product?id=$id';
     } else if (uri.path == '/order') {
       internalUrl = '${environment.getStoreUrl()}/order?id=$id';
+    } else if (uri.path == '/story/read') {
+      internalUrl = '${environment.getNewsUrl()}/read?id=$id';
     }
 
     if (internalUrl != null) {

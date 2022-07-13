@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.89
+- ADD: Support news deeplink
+
 ## 0.0.87
 - FIX: Click of URLs
 
