@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.91
+- CHANGED: upgrade to sdui 0.1.87
+-
 ## 0.0.90
 - CHANGED: upgrade to sdui 0.1.86
 - CHANGED: Lock app orientation to Portrait
