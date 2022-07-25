@@ -27,9 +27,9 @@
 	<key>NSCalendarsUsageDescription</key>
 	<string>This app needs access to your calendar.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>This app needs access to the camera to take photos for profile and scan QR Code from a peer. </string>
+	<string>This app needs access to the camera to take photos for profile and scan QR Code from a peer.</string>
 	<key>NSContactsUsageDescription</key>
-	<string>This app needs access to your contacts to find which user is also a witsi user.</string>
+	<string>This app needs access to your contacts to find which user is also a Wutsi user.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This app needs access to microphone.</string>
 	<key>NSMotionUsageDescription</key>
@@ -61,5 +61,9 @@
 	<false/>
 	<key>kTCCServiceMediaLibrary</key>
 	<string>media</string>
+	<key>UISupportedInterfaceOrientations</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+    </array>
 </dict>
 </plist>

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.0.90
+- CHANGED: upgrade to sdui 0.1.86
+- CHANGED: Lock app orientation to Portrait
+
 ## 0.0.89
 - ADD: Support news deeplink
 

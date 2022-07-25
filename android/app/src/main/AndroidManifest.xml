@@ -11,11 +11,12 @@
 
   <application
     android:usesCleartextTraffic="true"
-    android:label="wutsi_wallet"
+    android:label="Wutsi Wallet"
     android:icon="@mipmap/logo_192">
     <activity
       android:name=".MainActivity"
       android:launchMode="singleTop"
+      android:screenOrientation="portrait"
       android:exported="true"
       android:theme="@style/LaunchTheme"
       android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"

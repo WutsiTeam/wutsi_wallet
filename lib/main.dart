@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sdui/sdui.dart';
@@ -66,7 +67,9 @@ void _launch() async {
   logger.i('Initializing Contacts');
   initContacts('${environment.getShellUrl()}/commands/sync-contacts');
 
-  runApp(const WutsiApp());
+  // The app runs only in Portrait Mode
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((value) => runApp(const WutsiApp()));
 }
 
 class WutsiApp extends StatelessWidget {
