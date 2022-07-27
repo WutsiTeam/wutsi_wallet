@@ -15,8 +15,8 @@ env:
   KEY_PASSWORD: "wutsiwutsi"
   KEY_ALIAS: "upload"
   KEY_FILE: "../keystore/upload-keystore2.jks"
-  KEYSTORE: "${secret.KEYSTORE}"
-  GOOGLE_SERVICE_JSONKEY: "${secret.GOOGLE_SERVICE_JSONKEY}"
+  KEYSTORE: "${{secrets.KEYSTORE}}"
+  GOOGLE_SERVICE_JSONKEY: "${{secrets.GOOGLE_SERVICE_JSONKEY}}"
 
 jobs:
   #--------------------------
@@ -70,6 +70,16 @@ jobs:
           name: appbundle
           path: build/app/outputs/bundle/release
 
+      - name: Notification
+        uses: rtCamp/action-slack-notify@v2
+        if: $${{ always() }}
+        env:
+          SLACK_COLOR: ${{ job.status }}
+          SLACK_TITLE: wutsi_wallet
+          SLACK_MESSAGE: Build
+          MSG_MINIMAL: true
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+
   #--------------------------
   # RELEASE
   #--------------------------
@@ -83,10 +93,12 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: appbundle
+
       - name: Create Google play config file
         run: |
           echo "${{env.GOOGLE_SERVICE_JSONKEY}}" > play_config.json.b64
           base64 -d -i play_config.json.b64 > play_config.json
+
       - name: Release APPBUNDLE to internal track
         uses: r0adkll/upload-google-play@v1
         with:
@@ -96,6 +108,7 @@ jobs:
           track: internal
           status: draft
           whatsNewDirectory: distribution/whatsnew
+
       - name: Notification
         uses: rtCamp/action-slack-notify@v2
         if: $${{ always() }}
