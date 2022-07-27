@@ -52,8 +52,7 @@ jobs:
           flutter build apk --no-tree-shake-icons --debug
           flutter build appbundle --no-tree-shake-icons
 
-
-      - name: S3-Deploy-Test
+      - name: Deploy APK
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
@@ -72,7 +71,7 @@ jobs:
 
       - name: Notification
         uses: rtCamp/action-slack-notify@v2
-        if: $${{ always() }}
+        if: ${{ always() }}
         env:
           SLACK_COLOR: ${{ job.status }}
           SLACK_TITLE: wutsi_wallet
@@ -111,7 +110,7 @@ jobs:
 
       - name: Notification
         uses: rtCamp/action-slack-notify@v2
-        if: $${{ always() }}
+        if: ${{ always() }}
         env:
           SLACK_COLOR: ${{ job.status }}
           SLACK_TITLE: wutsi_wallet
