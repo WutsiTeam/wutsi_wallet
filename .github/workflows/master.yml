@@ -98,7 +98,7 @@ jobs:
           whatsNewDirectory: distribution/whatsnew
       - name: Notification
         uses: rtCamp/action-slack-notify@v2
-        if: always()
+        if: $${{ always() }}
         env:
           SLACK_COLOR: ${{ job.status }}
           SLACK_TITLE: wutsi_wallet
