@@ -57,13 +57,14 @@
         <action android:name="android.intent.action.VIEW"/>
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
+
         <data android:host="www.wutsi.me" android:scheme="https"/>
-      </intent-filter>
-      <intent-filter>
-        <action android:name="android.intent.action.VIEW"/>
-        <category android:name="android.intent.category.DEFAULT"/>
-        <category android:name="android.intent.category.BROWSABLE"/>
         <data android:host="wutsi-web-test.herokuapp.com" android:scheme="https"/>
+
+        <data android:pathPattern="/profile?id=.*" />
+        <data android:pathPattern="/product?id=.*" />
+        <data android:pathPattern="/order?id=.*" />
+        <data android:pathPattern="/story/read?id=.*" />
       </intent-filter>
     </activity>
     <!-- Don't delete the meta-data below.
