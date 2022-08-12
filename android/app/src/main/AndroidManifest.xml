@@ -7,7 +7,17 @@
   <uses-permission android:name="android.permission.ACTION_SEND"/>
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-  <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+
+  <queries>
+    <intent>
+      <action android:name="android.intent.action.VIEW" />
+      <data android:scheme="https" />
+    </intent>
+    <intent>
+      <action android:name="android.intent.action.VIEW" />
+      <data android:scheme="tel" />
+    </intent>
+  </queries>
 
   <application
     android:usesCleartextTraffic="true"

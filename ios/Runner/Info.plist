@@ -65,5 +65,10 @@
     <array>
         <string>UIInterfaceOrientationPortrait</string>
     </array>
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+      <string>https</string>
+      <string>tel</string>
+    </array>
 </dict>
 </plist>
