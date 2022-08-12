@@ -8,7 +8,6 @@ void initLoadingState() {
 
   sdui.sduiLoadingState = (context) => Scaffold(
       appBar: AppBar(
-        title: const Text('Loading...'),
         foregroundColor: const Color(0xFF1D7EDF),
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
