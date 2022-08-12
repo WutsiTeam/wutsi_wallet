@@ -62,6 +62,16 @@ jobs:
             --region us-east-1 \
             build/app/outputs/flutter-apk/ s3://int-wutsi/releases
 
+      - name: Deploy AAB
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+        run: |
+          aws s3 sync \
+            --acl public-read \
+            --region us-east-1 \
+            build/app/outputs/bundle/release s3://int-wutsi/releases
+
       # Make appbundle downloadable
       - name: Upload app bundle
         uses: actions/upload-artifact@v3
