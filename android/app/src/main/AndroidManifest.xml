@@ -20,9 +20,10 @@
   </queries>
 
   <application
-    android:usesCleartextTraffic="true"
+    android:usesCleartextTraffic="false"
     android:label="Wutsi Wallet"
-    android:icon="@mipmap/logo_192">
+    android:icon="@mipmap/logo_192"
+    android:debuggable="false">
     <activity
       android:name=".MainActivity"
       android:launchMode="singleTop"
