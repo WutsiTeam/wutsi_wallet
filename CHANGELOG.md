@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.96
+- CHANGED: Upgrade to flutter v3.0.5
+
 ## 0.0.95
 - CHANGED: Disabled analytics module
 - CHANGED: Update error screen for offline mode
