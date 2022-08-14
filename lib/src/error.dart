@@ -5,8 +5,13 @@ import 'package:sdui/sdui.dart' as sdui;
 import 'device.dart';
 
 void initError(Device device) {
-  sdui.sduiErrorState = (context, error) => _buildErrorWidget('Oops',
-      'An unexpected error has occurred', device, error?.toString(), context);
+  sdui.sduiErrorState = (context, error) => _buildErrorWidget(
+      'Oops',
+      'An unexpected error has occurred',
+      device,
+      error?.toString(),
+      context
+  );
 }
 
 class Error403 extends StatelessWidget {
@@ -51,46 +56,86 @@ Widget _buildErrorWidget(String title, String message, Device device,
           centerTitle: true,
           elevation: 0.0,
         ),
-        body: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                alignment: Alignment.center,
-                child:
-                    const Icon(Icons.error, size: 80, color: Color(0xff8B0000)),
-              ),
-              Container(
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.all(10),
-                  child: Text(title,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 25))),
-              Container(
-                  alignment: Alignment.center,
-                  child: Text(message,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 18))),
-              Container(padding: const EdgeInsets.all(20)),
-              Container(
-                  alignment: Alignment.center,
-                  child: error != null
-                      ? Text(error, textAlign: TextAlign.center)
-                      : null),
-              Container(
-                  alignment: Alignment.center,
-                  child: Text('Device ID: ${device.id}',
-                      textAlign: TextAlign.center)),
-              Container(
-                  alignment: Alignment.center,
-                  child: Text('Date: ${DateTime.now()}',
-                      textAlign: TextAlign.center)),
-              Container(
-                alignment: Alignment.center,
-                child: FutureBuilder(
-                    future: Connectivity().checkConnectivity(),
-                    initialData: ConnectivityResult.none,
-                    builder: (context, value) => Text('Network: ${value.data}')),
-              )
-            ]));
+        body: FutureBuilder(
+            future: Connectivity().checkConnectivity(),
+            initialData: ConnectivityResult.none,
+            builder: (context, value) => value.data == ConnectivityResult.none
+              ? _buildOfflineWidget(context)
+                : _buildGenericErrorWidget(title, message, device, error, value.data, context)
+    ));
+
+Widget _buildOfflineWidget(BuildContext context) =>
+    Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.all(20),
+            child:
+            const Icon(Icons.signal_wifi_statusbar_connected_no_internet_4_outlined, size: 80, color: Colors.grey),
+          ),
+          Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(10),
+              child: const Text('You are offline',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 25))),
+          Container(
+              alignment: Alignment.center,
+              child: const Text('You must connect on Internet to use the App',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 18))),
+          Container(padding: const EdgeInsets.all(20)),
+        ]);
+
+Widget _buildGenericErrorWidget(
+    String title,
+    String message,
+    Device device,
+    String? error,
+    Object? connectivity,
+    BuildContext context
+    ) =>
+    Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.all(20),
+            child: const Icon(Icons.error, size: 80, color: Color(0xff8B0000)),
+          ),
+          Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(10),
+              child: Text(title,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 25))),
+          Container(
+              alignment: Alignment.center,
+              child: Text(message,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 18))),
+          Container(padding: const EdgeInsets.all(20)),
+          Container(
+              alignment: Alignment.center,
+              child: error != null
+                  ? Text(error, textAlign: TextAlign.center)
+                  : null),
+          Container(
+              alignment: Alignment.center,
+              child: Text('Device ID: ${device.id}',
+                  textAlign: TextAlign.center)),
+          Container(
+              alignment: Alignment.center,
+              child: Text('Date: ${DateTime.now()}',
+                  textAlign: TextAlign.center)),
+          Container(
+            alignment: Alignment.center,
+            child: Text('Network: $connectivity')
+          )
+        ]);
+

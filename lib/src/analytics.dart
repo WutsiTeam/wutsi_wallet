@@ -3,7 +3,8 @@ import 'package:logger/logger.dart';
 import 'environment.dart';
 
 void initAnalytics(Environment environment) async {
-  sdui.sduiAnalytics = _SDUIAnalyticsImpl(environment);
+  // Disabled temporarly
+  // sdui.sduiAnalytics = _SDUIAnalyticsImpl(environment);
 }
 
 class _SDUIAnalyticsImpl extends sdui.SDUIAnalytics {

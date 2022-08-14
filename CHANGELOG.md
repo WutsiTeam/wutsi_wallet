@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.0.95
+- CHANGED: Disabled analytics module
+- CHANGED: Update error screen for offline mode
+
 ## 0.0.94
 - CHANGED: upgrade to sdui 0.1.94
 
