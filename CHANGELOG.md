@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.97
+- CHANGED: Upgrade to sdui-0.1.96 to handle widget ids.
+
 ## 0.0.96
 - CHANGED: Upgrade to flutter v3.0.5
 
