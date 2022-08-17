@@ -106,7 +106,7 @@ class HttpLogoutInterceptor extends HttpInterceptor {
 
   @override
   void onResponse(ResponseTemplate response) {
-    if (response.request.url.endsWith("/logout")) {
+    if (response.request.url.contains("/logout")) {
       _accessToken.delete();
     }
   }
