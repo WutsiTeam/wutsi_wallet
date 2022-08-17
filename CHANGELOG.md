@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.98
+- CHANGED: Improve error handling
+
 ## 0.0.97
 - CHANGED: Upgrade to sdui-0.1.96 to handle widget ids.
 
