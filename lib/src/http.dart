@@ -23,14 +23,9 @@ void initHttp(
     HttpTracingInterceptor(clientId, device.id, tenantId, packageInfo),
     HttpInternationalizationInterceptor(language),
     HttpAuthorizationInterceptor(accessToken),
-    HttpLogoutInterceptor(accessToken),
     HttpCrashlyticsInterceptor(accessToken, environment, tenantId),
     HttpEnvironmentInterceptor(environment, accessToken)
   ];
-
-  DynamicRouteState.statusCodeRoutes[401] = '/401';
-  DynamicRouteState.statusCodeRoutes[403] = '/403';
-  DynamicRouteState.statusCodeRoutes[404] = '/404';
 }
 
 /// Interceptor that add tracing information into the request headers.
