@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.99
+- CHANGED: Hide back button on 401 error pages
+
 ## 0.0.98
 - CHANGED: Improve error handling
 

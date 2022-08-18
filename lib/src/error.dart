@@ -52,6 +52,7 @@ class SDUIErrorWidget extends StatelessWidget{
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: const Text('Error'),
+          automaticallyImplyLeading: !_is401Error(),
         ),
         body: SingleChildScrollView(
             child: _toContentWidget(context)
@@ -99,7 +100,8 @@ class SDUIErrorWidget extends StatelessWidget{
           context,
           '/login',
           arguments: <String, String?>{
-            'phone-number': phoneNumber
+            'phone-number': phoneNumber,
+            'hide-back-button': 'true'
           }
       );
     });
@@ -112,8 +114,8 @@ Widget _toErrorWidget(
     String message,
     Widget? button,
     String? error,
-    BuildContext context
-) =>Container(
+    BuildContext context,
+) => Container(
     padding: const EdgeInsets.all(10),
     child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

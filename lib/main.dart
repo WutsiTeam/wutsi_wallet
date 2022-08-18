@@ -116,7 +116,7 @@ class HomeContentProvider implements RouteContentProvider {
       logger.i('No access-token. home_url=$url');
     } else {
       if (accessToken.expired()) {
-        url = LoginContentProvider.loginUrl(accessToken.phoneNumber());
+        url = LoginContentProvider.loginUrl(accessToken.phoneNumber(), true);
         logger.i(
             'Expired access-token. phone=${accessToken.phoneNumber()} home_url=$url');
       } else {
@@ -176,12 +176,13 @@ class LoginContentProvider implements RouteContentProvider {
   Future<String> getContent() async {
     final arguments = (ModalRoute.of(context)?.settings.arguments ?? <String, String?>{}) as Map;
     final phoneNumber = arguments['phone-number'];
+    final hideBackButton = arguments['hide-back-button'];
 
-    return Http.getInstance().post(loginUrl(phoneNumber), null);
+    return Http.getInstance().post(loginUrl(phoneNumber, hideBackButton == 'true'), null);
   }
 
-  static String loginUrl(String? phoneNumber) =>
+  static String loginUrl(String? phoneNumber, bool hideBackButton) =>
       phoneNumber == null || phoneNumber.isEmpty
           ? environment.getOnboardUrl()
-          : '${environment.getLoginUrl()}?phone=$phoneNumber';
+          : '${environment.getLoginUrl()}?phone=$phoneNumber&hide-back-button=$hideBackButton';
 }
