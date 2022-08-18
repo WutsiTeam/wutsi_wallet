@@ -75,9 +75,9 @@ class SDUIErrorWidget extends StatelessWidget{
       );
     } else {
       return _toErrorWidget(
-          const Icon(Icons.power_settings_new_outlined, color: Color(0xffa9a9a9), size: 80),
+          const Icon(Icons.error, color: Color(0xff8B0000), size: 80),
           'Error',
-          'An unexpected error has occured.',
+          'An unexpected error has occurred.',
           null,
           null,
           context

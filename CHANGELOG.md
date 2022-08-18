@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.100
+- CHANGED: Fix the error icon
+
 ## 0.0.99
 - CHANGED: Hide back button on 401 error pages
 
