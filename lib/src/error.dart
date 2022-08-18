@@ -23,7 +23,12 @@ class FlutterErrorWidget extends StatelessWidget{
         child: Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
-              title: const Text('Error'),
+              title: const Text(
+                  'Error',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Color(0xff8B0000))
+              ),
+              foregroundColor: Colors.white,
             ),
             body:SingleChildScrollView(
             child: _toErrorWidget(
