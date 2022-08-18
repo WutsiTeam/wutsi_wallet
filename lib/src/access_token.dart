@@ -94,20 +94,3 @@ class HttpAuthorizationInterceptor extends HttpInterceptor {
     }
   }
 }
-
-/// HTTP interceptor that logs out the user
-class HttpLogoutInterceptor extends HttpInterceptor {
-  final AccessToken _accessToken;
-
-  HttpLogoutInterceptor(this._accessToken);
-
-  @override
-  void onRequest(RequestTemplate request) {}
-
-  @override
-  void onResponse(ResponseTemplate response) {
-    if (response.request.url.endsWith("/logout")) {
-      _accessToken.delete();
-    }
-  }
-}

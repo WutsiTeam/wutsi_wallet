@@ -785,7 +785,7 @@ packages:
       name: qr_code_scanner
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.1"
   qr_flutter:
     dependency: transitive
     description:
@@ -813,7 +813,7 @@ packages:
       name: sdui
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.94"
+    version: "0.1.96"
   search_choices:
     dependency: transitive
     description:
@@ -1119,7 +1119,7 @@ packages:
       name: video_player_android
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.3.8"
+    version: "2.3.9"
   video_player_avfoundation:
     dependency: transitive
     description:
@@ -1189,7 +1189,7 @@ packages:
       name: webview_flutter_android
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.9.3"
+    version: "2.9.5"
   webview_flutter_platform_interface:
     dependency: transitive
     description:

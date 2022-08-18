@@ -28,6 +28,12 @@ AccessToken accessToken = AccessToken(null, {});
 Language language = Language('en');
 
 void main() async {
+  // Flutter Screen of Death
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    return FlutterErrorWidget(details: details);
+  };
+
+  // Run the app
   runZonedGuarded<Future<void>>(() async {
     _launch();
   },
@@ -62,7 +68,7 @@ void _launch() async {
   initLoadingState();
 
   logger.i('Initializing Error page');
-  initError(device);
+  initError();
 
   logger.i('Initializing Contacts');
   initContacts('${environment.getShellUrl()}/commands/sync-contacts');
@@ -85,15 +91,13 @@ class WutsiApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => DynamicRoute(provider: HomeContentProvider(context)),
-        '/401': (context) =>
-            DynamicRoute(provider: HomeContentProvider(context)),
-        '/403': (context) => Error403(device),
-        '/404': (context) => Error404(device)
+        '/login': (context) => DynamicRoute(provider: LoginContentProvider(context)),
       },
     );
   }
 }
 
+/// Home Page
 class HomeContentProvider implements RouteContentProvider {
   final BuildContext context;
 
@@ -112,7 +116,7 @@ class HomeContentProvider implements RouteContentProvider {
       logger.i('No access-token. home_url=$url');
     } else {
       if (accessToken.expired()) {
-        url = _loginUrl();
+        url = LoginContentProvider.loginUrl(accessToken.phoneNumber());
         logger.i(
             'Expired access-token. phone=${accessToken.phoneNumber()} home_url=$url');
       } else {
@@ -160,11 +164,24 @@ class HomeContentProvider implements RouteContentProvider {
     logger.i('Deeplink - path=${uri.path} internal-url=$internalUrl');
     return internalUrl;
   }
+}
 
-  String _loginUrl() {
-    String? phone = accessToken.phoneNumber();
-    return phone != null
-        ? '${environment.getLoginUrl()}?phone=$phone'
-        : environment.getOnboardUrl();
+/// Login Page
+class LoginContentProvider implements RouteContentProvider {
+  final BuildContext context;
+
+  const LoginContentProvider(this.context);
+
+  @override
+  Future<String> getContent() async {
+    final arguments = (ModalRoute.of(context)?.settings.arguments ?? <String, String?>{}) as Map;
+    final phoneNumber = arguments['phone-number'];
+
+    return Http.getInstance().post(loginUrl(phoneNumber), null);
   }
+
+  static String loginUrl(String? phoneNumber) =>
+      phoneNumber == null || phoneNumber.isEmpty
+          ? environment.getOnboardUrl()
+          : '${environment.getLoginUrl()}?phone=$phoneNumber';
 }
