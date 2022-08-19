@@ -1,8 +1,8 @@
 # CHANGELOG
 
 ## 0.0.100
-- CHANGED: Upgrade to sdui-0.1.98
-- FIX: Fix the handling of initial deeplink
+- CHANGED: Upgrade to sdui-0.1.100
+- FIX: Improve deeplink handling
 
 ## 0.0.100
 - CHANGED: Fix the error icon
