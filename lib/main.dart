@@ -26,6 +26,7 @@ final Logger logger = LoggerFactory.create('main');
 Device device = Device('');
 AccessToken accessToken = AccessToken(null, {});
 Language language = Language('en');
+bool useDeeplink = true;
 
 void main() async {
   // Flutter Screen of Death
@@ -101,7 +102,7 @@ class WutsiApp extends StatelessWidget {
 class HomeContentProvider implements RouteContentProvider {
   final BuildContext context;
 
-  const HomeContentProvider(this.context);
+  HomeContentProvider(this.context);
 
   @override
   Future<String> getContent() async {
@@ -111,21 +112,31 @@ class HomeContentProvider implements RouteContentProvider {
 
   Future<String> _url() async {
     String url;
+
+    logger.i('useDeeplink=$useDeeplink');
     if (!accessToken.exists()) {
       url = environment.getOnboardUrl();
+
       logger.i('No access-token. home_url=$url');
     } else {
       if (accessToken.expired()) {
         url = LoginContentProvider.loginUrl(accessToken.phoneNumber(), true);
+
         logger.i(
-            'Expired access-token. phone=${accessToken.phoneNumber()} home_url=$url');
-      } else {
-        String? deepLink =
-            await getInitialLink(); // Get initial deeplink that opens the app
+            'use_deep_link=$useDeeplink phone=${accessToken.phoneNumber()} home_url=$url');
+      } else if (useDeeplink) {
+        String? deepLink = await getInitialLink();
         url = _handleDeeplink(deepLink) ?? environment.getShellUrl();
-        logger.i('Valid access-token. deep_link=$deepLink home_url=$url');
+
+        logger.i('use_deep_link=$useDeeplink deep_link=$deepLink home_url=$url');
+      } else {
+        url = environment.getShellUrl();
+
+        logger.i('use_deep_link=$useDeeplink home_url=$url');
       }
     }
+
+    useDeeplink = false; // Reset this to false so that deeplink is used only once by the home page
     return url;
   }
 
