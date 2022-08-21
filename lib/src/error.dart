@@ -105,7 +105,7 @@ class SDUIErrorWidget extends StatelessWidget{
           context,
           '/login',
           arguments: <String, String?>{
-            'phone-number': phoneNumber,
+            'phone': phoneNumber,
             'hide-back-button': 'true'
           }
       );

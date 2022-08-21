@@ -1,6 +1,9 @@
 # CHANGELOG
 
-## 0.0.100
+## 0.0.102
+- FIX: Login URL in the 401 error page
+
+## 0.0.101
 - CHANGED: Upgrade to sdui-0.1.100
 - FIX: Improve deeplink handling
 
