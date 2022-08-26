@@ -28,7 +28,8 @@ class FlutterErrorWidget extends StatelessWidget{
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Color(0xff8B0000))
               ),
-              foregroundColor: Colors.white,
+              foregroundColor: const Color(0xff8B0000),
+              backgroundColor: Colors.white,
             ),
             body:SingleChildScrollView(
             child: _toErrorWidget(
