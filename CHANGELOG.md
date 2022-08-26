@@ -1,8 +1,11 @@
 # CHANGELOG
 
+## 0.0.104
+- CHANGE: Update to sdui-0.1.103
+
 ## 0.0.103
 - FIX: Fix the title color in the error page
-- FIX: Update to sdui-0.1.102
+- CHANGE: Update to sdui-0.1.102
 
 ## 0.0.102
 - FIX: Login URL in the 401 error page
