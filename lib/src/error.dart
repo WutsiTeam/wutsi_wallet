@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sdui/sdui.dart' as sdui;
-import 'package:wutsi_wallet/src/access_token.dart';
 import 'package:http/http.dart';
 import 'package:wutsi_wallet/src/environment.dart';
 import 'package:wutsi_wallet/src/login.dart';
 
 import 'device.dart';
 
-Environment? environment;
+Environment environment = Environment(Environment.defaultEnvironment);
 
 void initError() async {
   environment = await Environment.get();
@@ -58,7 +57,7 @@ class SDUIErrorWidget extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) => _is401Error()
-      ? sdui.DynamicRoute(provider: LoginContentProvider(context, environment!))
+      ? sdui.DynamicRoute(provider: LoginContentProvider(context, environment))
       : SafeArea(
           child: Scaffold(
             backgroundColor: Colors.white,
@@ -80,26 +79,6 @@ class SDUIErrorWidget extends StatelessWidget{
       );
 
   bool _is401Error() => (error is ClientException) && ((error as ClientException).message == '401');
-
-  void _logout(BuildContext context){
-    // Remove access token locally
-    AccessToken.get().then((value) {
-      // Delete the token
-      String? phoneNumber = value.phoneNumber();
-      value.delete();
-
-      // Goto home page
-      // Navigator.popUntil(context, (route) => route.isFirst);
-      Navigator.pushReplacementNamed(
-          context,
-          '/login',
-          arguments: <String, String?>{
-            'phone': phoneNumber,
-            'hide-back-button': 'true'
-          }
-      );
-    });
-  }
 }
 
 Widget _toErrorWidget(

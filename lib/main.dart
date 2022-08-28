@@ -19,11 +19,11 @@ import 'package:wutsi_wallet/src/loading.dart';
 import 'package:wutsi_wallet/src/deeplink.dart';
 import 'package:wutsi_wallet/src/login.dart';
 
+
+final Logger logger = LoggerFactory.create('main');
 const int tenantId = 1;
 
 Environment environment = Environment(Environment.defaultEnvironment);
-
-final Logger logger = LoggerFactory.create('main');
 Device device = Device('');
 AccessToken accessToken = AccessToken(null, {});
 Language language = Language('en');
