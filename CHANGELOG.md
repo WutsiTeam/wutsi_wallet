@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.114
+- CHANGE: Update to sdui-0.1.107
+
 ## 0.0.105
 - CHANGE: Show login page on 401 error
 
