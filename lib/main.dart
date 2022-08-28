@@ -17,6 +17,7 @@ import 'package:wutsi_wallet/src/http.dart';
 import 'package:wutsi_wallet/src/language.dart';
 import 'package:wutsi_wallet/src/loading.dart';
 import 'package:wutsi_wallet/src/deeplink.dart';
+import 'package:wutsi_wallet/src/login.dart';
 
 const int tenantId = 1;
 
@@ -95,29 +96,8 @@ class WutsiApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => DynamicRoute(provider: HttpRouteContentProvider(environment.getShellUrl())),
-        '/login': (context) => DynamicRoute(provider: LoginContentProvider(context)),
+        '/login': (context) => DynamicRoute(provider: LoginContentProvider(context, environment)),
       },
     );
   }
-}
-
-/// Login Page
-class LoginContentProvider implements RouteContentProvider {
-  final BuildContext context;
-
-  const LoginContentProvider(this.context);
-
-  @override
-  Future<String> getContent() async {
-    final arguments = (ModalRoute.of(context)?.settings.arguments ?? <String, String?>{}) as Map;
-    final phoneNumber = arguments['phone-number'];
-    final hideBackButton = arguments['hide-back-button'];
-
-    return Http.getInstance().post(loginUrl(phoneNumber, hideBackButton == 'true'), null);
-  }
-
-  static String loginUrl(String? phoneNumber, bool hideBackButton) =>
-      phoneNumber == null || phoneNumber.isEmpty
-          ? environment.getOnboardUrl()
-          : '${environment.getLoginUrl()}?phone=$phoneNumber&hide-back-button=$hideBackButton';
 }
