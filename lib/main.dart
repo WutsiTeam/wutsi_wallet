@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sdui/sdui.dart';
-import 'package:uni_links/uni_links.dart';
 import 'package:wutsi_wallet/src/access_token.dart';
 import 'package:wutsi_wallet/src/analytics.dart';
 import 'package:wutsi_wallet/src/contact.dart';
@@ -17,15 +16,18 @@ import 'package:wutsi_wallet/src/error.dart';
 import 'package:wutsi_wallet/src/http.dart';
 import 'package:wutsi_wallet/src/language.dart';
 import 'package:wutsi_wallet/src/loading.dart';
+import 'package:wutsi_wallet/src/deeplink.dart';
+import 'package:wutsi_wallet/src/login.dart';
 
+
+final Logger logger = LoggerFactory.create('main');
 const int tenantId = 1;
 
 Environment environment = Environment(Environment.defaultEnvironment);
-
-final Logger logger = LoggerFactory.create('main');
 Device device = Device('');
 AccessToken accessToken = AccessToken(null, {});
 Language language = Language('en');
+bool useDeeplink = true;
 
 void main() async {
   // Flutter Screen of Death
@@ -70,6 +72,9 @@ void _launch() async {
   logger.i('Initializing Error page');
   initError();
 
+  logger.i('Initializing Deeplinks');
+  initDeeplink(environment);
+
   logger.i('Initializing Contacts');
   initContacts('${environment.getShellUrl()}/commands/sync-contacts');
 
@@ -90,99 +95,9 @@ class WutsiApp extends StatelessWidget {
       navigatorObservers: [sduiRouteObserver],
       initialRoute: '/',
       routes: {
-        '/': (context) => DynamicRoute(provider: HomeContentProvider(context)),
-        '/login': (context) => DynamicRoute(provider: LoginContentProvider(context)),
+        '/': (context) => DynamicRoute(provider: HttpRouteContentProvider(environment.getShellUrl())),
+        '/login': (context) => DynamicRoute(provider: LoginContentProvider(context, environment)),
       },
     );
   }
-}
-
-/// Home Page
-class HomeContentProvider implements RouteContentProvider {
-  final BuildContext context;
-
-  const HomeContentProvider(this.context);
-
-  @override
-  Future<String> getContent() async {
-    String url = await _url();
-    return Http.getInstance().post(url, null);
-  }
-
-  Future<String> _url() async {
-    String url;
-    if (!accessToken.exists()) {
-      url = environment.getOnboardUrl();
-      logger.i('No access-token. home_url=$url');
-    } else {
-      if (accessToken.expired()) {
-        url = LoginContentProvider.loginUrl(accessToken.phoneNumber(), true);
-        logger.i(
-            'Expired access-token. phone=${accessToken.phoneNumber()} home_url=$url');
-      } else {
-        String? deepLink =
-            await getInitialLink(); // Get initial deeplink that opens the app
-        url = _handleDeeplink(deepLink) ?? environment.getShellUrl();
-        logger.i('Valid access-token. deep_link=$deepLink home_url=$url');
-      }
-    }
-    return url;
-  }
-
-  String? _handleDeeplink(String? link) {
-    if (link == null) {
-      logger.i('Deeplink - null');
-      return null;
-    }
-
-    String prefix = environment.getDeeplinkUrl().toLowerCase();
-    int index = link.toLowerCase().indexOf(prefix);
-    if (index != 0) {
-      logger.i('Deeplink - $link doesnt start with $prefix');
-      return null;
-    }
-
-    var uri = Uri.parse(link);
-    var id = uri.queryParameters['id'];
-    String? internalUrl;
-    if (uri.path == '/profile') {
-      internalUrl = '${environment.getShellUrl()}/profile?id=$id';
-    } else if (uri.path == '/product') {
-      internalUrl ='${environment.getStoreUrl()}/product?id=$id';
-    } else if (uri.path == '/order') {
-      internalUrl = '${environment.getStoreUrl()}/order?id=$id';
-    } else if (uri.path == '/story/read') {
-      internalUrl = '${environment.getNewsUrl()}/read?id=$id';
-    }
-
-    if (internalUrl != null) {
-      if (uri.queryParameters['fbclid'] != null) {
-        internalUrl += '&utm_source=facebook';
-      }
-    }
-
-    logger.i('Deeplink - path=${uri.path} internal-url=$internalUrl');
-    return internalUrl;
-  }
-}
-
-/// Login Page
-class LoginContentProvider implements RouteContentProvider {
-  final BuildContext context;
-
-  const LoginContentProvider(this.context);
-
-  @override
-  Future<String> getContent() async {
-    final arguments = (ModalRoute.of(context)?.settings.arguments ?? <String, String?>{}) as Map;
-    final phoneNumber = arguments['phone-number'];
-    final hideBackButton = arguments['hide-back-button'];
-
-    return Http.getInstance().post(loginUrl(phoneNumber, hideBackButton == 'true'), null);
-  }
-
-  static String loginUrl(String? phoneNumber, bool hideBackButton) =>
-      phoneNumber == null || phoneNumber.isEmpty
-          ? environment.getOnboardUrl()
-          : '${environment.getLoginUrl()}?phone=$phoneNumber&hide-back-button=$hideBackButton';
 }

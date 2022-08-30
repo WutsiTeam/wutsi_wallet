@@ -1,5 +1,28 @@
 # CHANGELOG
 
+## 0.0.114
+- CHANGE: Update to sdui-0.1.107
+
+## 0.0.105
+- CHANGE: Show login page on 401 error
+
+## 0.0.104
+- CHANGE: Update to sdui-0.1.106
+
+## 0.0.103
+- FIX: Fix the title color in the error page
+- CHANGE: Update to sdui-0.1.102
+
+## 0.0.102
+- FIX: Login URL in the 401 error page
+
+## 0.0.101
+- CHANGED: Upgrade to sdui-0.1.100
+- FIX: Improve deeplink handling
+
+## 0.0.100
+- CHANGED: Fix the error icon
+
 ## 0.0.99
 - CHANGED: Hide back button on 401 error pages
 

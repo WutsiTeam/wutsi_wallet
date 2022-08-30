@@ -813,7 +813,7 @@ packages:
       name: sdui
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.96"
+    version: "0.1.106"
   search_choices:
     dependency: transitive
     description:
@@ -1016,7 +1016,7 @@ packages:
     source: hosted
     version: "1.3.1"
   uni_links:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: uni_links
       url: "https://pub.dartlang.org"

@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sdui/sdui.dart' as sdui;
-import 'package:wutsi_wallet/src/access_token.dart';
 import 'package:http/http.dart';
+import 'package:wutsi_wallet/src/environment.dart';
+import 'package:wutsi_wallet/src/login.dart';
 
 import 'device.dart';
 
-void initError() {
+Environment environment = Environment(Environment.defaultEnvironment);
+
+void initError() async {
+  environment = await Environment.get();
   sdui.sduiErrorState = (context, error) => SDUIErrorWidget(error: error).build(context);
 }
 
@@ -23,7 +27,13 @@ class FlutterErrorWidget extends StatelessWidget{
         child: Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
-              title: const Text('Error'),
+              title: const Text(
+                  'Error',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Color(0xff8B0000))
+              ),
+              foregroundColor: const Color(0xff8B0000),
+              backgroundColor: Colors.white,
             ),
             body:SingleChildScrollView(
             child: _toErrorWidget(
@@ -46,66 +56,29 @@ class SDUIErrorWidget extends StatelessWidget{
   const SDUIErrorWidget({this.error, Key? key}): super(key: key);
 
   @override
-  Widget build(BuildContext context) => SafeArea(
-
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          title: const Text('Error'),
-          automaticallyImplyLeading: !_is401Error(),
-        ),
-        body: SingleChildScrollView(
-            child: _toContentWidget(context)
-        )
-      ),
-  );
-
-  Widget _toContentWidget(BuildContext context) {
-    if (_is401Error()) {
-      return _toErrorWidget(
-          const Icon(Icons.power_settings_new_outlined, color: Color(0xffa9a9a9), size: 80),
-          'Logged out',
-          'Your session is no longer valid',
-          ElevatedButton(
-            child: const Text('Sign In'),
-            onPressed: () => _logout(context),
+  Widget build(BuildContext context) => _is401Error()
+      ? sdui.DynamicRoute(provider: LoginContentProvider(context, environment))
+      : SafeArea(
+          child: Scaffold(
+            backgroundColor: Colors.white,
+            appBar: AppBar(
+              title: const Text('Error'),
+              automaticallyImplyLeading: !_is401Error(),
+            ),
+            body: SingleChildScrollView(
+                child: _toErrorWidget(
+                    const Icon(Icons.error, color: Color(0xff8B0000), size: 80),
+                    'Error',
+                    'An unexpected error has occurred.',
+                    null,
+                    null,
+                    context
+                )
+            )
           ),
-          null,
-          context
       );
-    } else {
-      return _toErrorWidget(
-          const Icon(Icons.power_settings_new_outlined, color: Color(0xffa9a9a9), size: 80),
-          'Error',
-          'An unexpected error has occured.',
-          null,
-          null,
-          context
-      );
-    }
-  }
 
   bool _is401Error() => (error is ClientException) && ((error as ClientException).message == '401');
-
-  void _logout(BuildContext context){
-    // Remove access token locally
-    AccessToken.get().then((value) {
-      // Delete the token
-      String? phoneNumber = value.phoneNumber();
-      value.delete();
-
-      // Goto home page
-      // Navigator.popUntil(context, (route) => route.isFirst);
-      Navigator.pushReplacementNamed(
-          context,
-          '/login',
-          arguments: <String, String?>{
-            'phone-number': phoneNumber,
-            'hide-back-button': 'true'
-          }
-      );
-    });
-  }
 }
 
 Widget _toErrorWidget(
