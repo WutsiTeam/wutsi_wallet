@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.115
+- CHANGE: Disable debug info in APK
+
 ## 0.0.114
 - CHANGE: Update to sdui-0.1.107
 
