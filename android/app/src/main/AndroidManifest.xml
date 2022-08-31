@@ -22,8 +22,7 @@
   <application
     android:usesCleartextTraffic="false"
     android:label="Wutsi Wallet"
-    android:icon="@mipmap/logo_192"
-    android:debuggable="false">
+    android:icon="@mipmap/logo_192">
     <activity
       android:name=".MainActivity"
       android:launchMode="singleTop"
