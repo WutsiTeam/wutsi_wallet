@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.116
+- CHANGE: Update to sdui-0.1.116 to fix the state of ListItemSwitch
+
 ## 0.0.115
 - CHANGE: Disable debug info in APK
 
