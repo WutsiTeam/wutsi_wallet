@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.119
+- CHANGE: Enable debug flag in the apk
+
 ## 0.0.116
 - CHANGE: Update to sdui-0.1.112
 
