@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.120
+- FIX: redirection to login should remember the phone number
+
 ## 0.0.119
 - CHANGE: Enable debug flag in the apk
 
