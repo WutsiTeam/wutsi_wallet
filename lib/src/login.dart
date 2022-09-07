@@ -6,17 +6,15 @@ import 'package:wutsi_wallet/src/environment.dart';
 class LoginContentProvider implements RouteContentProvider {
   final BuildContext context;
   final Environment environment;
+  String? phoneNumber;
+  bool? hideBackButton;
 
-  const LoginContentProvider(this.context, this.environment);
+  LoginContentProvider(this.context, this.environment, {this.phoneNumber, this.hideBackButton});
 
   @override
-  Future<String> getContent() async {
-    final arguments = (ModalRoute.of(context)?.settings.arguments ?? <String, String?>{}) as Map;
-    final phoneNumber = arguments['phone-number'];
-    final hideBackButton = arguments['hide-back-button'];
+  Future<String> getContent() => Http.getInstance()
+      .post(loginUrl(phoneNumber, hideBackButton ?? false, environment), null);
 
-    return Http.getInstance().post(loginUrl(phoneNumber, hideBackButton == 'true', environment), null);
-  }
 
   static String loginUrl(String? phoneNumber, bool hideBackButton, Environment environment) =>
       phoneNumber == null || phoneNumber.isEmpty

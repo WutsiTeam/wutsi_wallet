@@ -17,13 +17,16 @@
       <action android:name="android.intent.action.VIEW" />
       <data android:scheme="tel" />
     </intent>
+    <intent>
+      <action android:name="android.intent.action.whatsapp" />
+      <data android:scheme="whatsapp" />
+    </intent>
   </queries>
 
   <application
     android:usesCleartextTraffic="false"
     android:label="Wutsi Wallet"
-    android:icon="@mipmap/logo_192"
-    android:debuggable="false">
+    android:icon="@mipmap/logo_192">
     <activity
       android:name=".MainActivity"
       android:launchMode="singleTop"

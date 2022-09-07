@@ -1,5 +1,23 @@
 # CHANGELOG
 
+## 0.0.121
+- FIX: WU-288: Add intent to send messages to whatsapp
+
+## 0.0.120
+- FIX: redirection to login should remember the phone number
+
+## 0.0.119
+- CHANGE: Enable debug flag in the apk
+
+## 0.0.116
+- CHANGE: Update to sdui-0.1.112
+
+## 0.0.116
+- CHANGE: Update to sdui-0.1.111 to fix the state of ListItemSwitch
+
+## 0.0.115
+- CHANGE: Disable debug info in APK
+
 ## 0.0.114
 - CHANGE: Update to sdui-0.1.107
 
