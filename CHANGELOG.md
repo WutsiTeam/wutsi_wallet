@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.121
+- FIX: WU-288: Add intent to send messages to whatsapp
+
 ## 0.0.120
 - FIX: redirection to login should remember the phone number
 
