@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.122
+- FIX: Update to sdui-0.1.114
+
 ## 0.0.121
 - FIX: WU-288: Add intent to send messages to whatsapp
 
