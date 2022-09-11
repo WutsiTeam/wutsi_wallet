@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.123
+- FIX: Update to sdui-0.1.116
+
 ## 0.0.122
 - FIX: Update to sdui-0.1.114
 
