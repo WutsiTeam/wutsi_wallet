@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sdui/sdui.dart';
 import 'package:uuid/uuid.dart';
+import 'package:wutsi_wallet/src/firebase.dart';
 
 import 'access_token.dart';
-import 'crashlytics.dart';
 import 'device.dart';
 import 'environment.dart';
 import 'language.dart';

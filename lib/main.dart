@@ -4,15 +4,16 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sdui/sdui.dart';
 import 'package:wutsi_wallet/src/access_token.dart';
 import 'package:wutsi_wallet/src/analytics.dart';
-import 'package:wutsi_wallet/src/contact.dart';
-import 'package:wutsi_wallet/src/crashlytics.dart';
 import 'package:wutsi_wallet/src/device.dart';
 import 'package:wutsi_wallet/src/environment.dart';
 import 'package:wutsi_wallet/src/error.dart';
+import 'package:wutsi_wallet/src/event.dart';
+import 'package:wutsi_wallet/src/firebase.dart';
 import 'package:wutsi_wallet/src/http.dart';
 import 'package:wutsi_wallet/src/language.dart';
 import 'package:wutsi_wallet/src/loading.dart';
@@ -60,8 +61,11 @@ void _launch() async {
   initHttp('wutsi-wallet', accessToken, device, language, tenantId, packageInfo,
       environment);
 
-  logger.i('Initializing Crashlytics');
-  initCrashlytics(device);
+  logger.i('Initializing Events');
+  initEvents(environment);
+
+  logger.i('Initializing Firebase');
+  initFirebase(device, environment);
 
   logger.i('Initializing Analytics');
   initAnalytics(environment);
@@ -75,9 +79,6 @@ void _launch() async {
   logger.i('Initializing Deeplinks');
   initDeeplink(environment);
 
-  logger.i('Initializing Contacts');
-  initContacts('${environment.getShellUrl()}/commands/sync-contacts');
-
   // The app runs only in Portrait Mode
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((value) => runApp(const WutsiApp()));
@@ -89,7 +90,8 @@ class WutsiApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return OverlaySupport.global(
+        child: MaterialApp(
       title: 'Wutsi Wallet',
       debugShowCheckedModeBanner: false,
       navigatorObservers: [sduiRouteObserver],
@@ -98,6 +100,6 @@ class WutsiApp extends StatelessWidget {
         '/': (context) => DynamicRoute(provider: HttpRouteContentProvider(environment.getShellUrl())),
         '/login': (context) => DynamicRoute(provider: LoginContentProvider(context, environment)),
       },
-    );
+    ));
   }
 }

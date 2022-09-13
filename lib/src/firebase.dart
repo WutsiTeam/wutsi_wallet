@@ -2,6 +2,7 @@ import 'dart:isolate';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -9,8 +10,73 @@ import 'package:sdui/sdui.dart';
 import 'package:wutsi_wallet/src/access_token.dart';
 import 'package:wutsi_wallet/src/device.dart';
 import 'package:wutsi_wallet/src/environment.dart';
+import 'package:wutsi_wallet/src/event.dart';
+import 'package:overlay_support/overlay_support.dart';
 
-void initCrashlytics(Device device) async {
+final Logger _logger = LoggerFactory.create('firebase');
+
+
+void initFirebase(Device device, Environment env) async {
+  _initCrashlytics(device);
+  _initMessaging(env);
+}
+
+///
+/// MESSAGING
+///
+void _initMessaging(Environment env) async {
+  _logger.i('Initializing Messaging');
+
+  await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(_onBackgroundMessage);
+  registerLoginEventHanlder((env) => _onLogin(env));
+}
+
+Future _onBackgroundMessage(RemoteMessage message) async {
+  _logger.i('Background - message received: $message');
+}
+
+void _showNotification(RemoteMessage message){
+  showSimpleNotification(
+    Text(message.notification?.body ?? '<Empty-Message>'),
+    duration: const Duration(seconds: 5),
+  );
+}
+
+void _onLogin(Environment env) async {
+  FirebaseMessaging fb = FirebaseMessaging.instance;
+
+  NotificationSettings settings = await fb.requestPermission(
+    alert: true,
+    badge: true,
+    provisional: false,
+    sound: true,
+  );
+
+  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+    // Get the token
+    fb.getToken().then((value) {
+      _logger.i('Syncing User FCM Token - token=$value');
+      String url = '${env.getShellUrl()}/commands/update-fcm-token';
+      Http.getInstance().post(url, {'token': value});
+    });
+
+    // Listen to events
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      _logger.i('Foreground - Message received: $message');
+      _showNotification(message);
+    });
+  } else {
+    _logger.i('User declined or has not accepted permission');
+  }
+}
+
+///
+/// CRASHLYTICS
+///
+void _initCrashlytics(Device device) async {
+  _logger.i('Initializing Crashlytics');
+
   await Firebase.initializeApp();
 
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
@@ -82,3 +148,4 @@ class HttpCrashlyticsInterceptor extends HttpInterceptor {
     }
   }
 }
+
