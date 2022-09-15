@@ -1,8 +1,11 @@
 # CHANGELOG
 
+## 0.0.124
+- CHANGE: Display push notifications
+
 ## 0.0.123
 - FIX: Update to sdui-0.1.118
-- CHANGE: Display push notifications
+
 
 ## 0.0.122
 - FIX: Update to sdui-0.1.114
