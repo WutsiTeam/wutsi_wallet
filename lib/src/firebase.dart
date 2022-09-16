@@ -11,12 +11,22 @@ import 'package:wutsi_wallet/src/access_token.dart';
 import 'package:wutsi_wallet/src/device.dart';
 import 'package:wutsi_wallet/src/environment.dart';
 import 'package:wutsi_wallet/src/event.dart';
-import 'package:overlay_support/overlay_support.dart';
 
 final Logger _logger = LoggerFactory.create('firebase');
 
+// const AndroidNotificationChannel channel = AndroidNotificationChannel(
+//   'high_importance_channel',
+//   'High Importance Notifications', // name
+//   description: 'This channel is used for important notifications.', // description
+//   importance: Importance.max,
+// );
+
+// final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 void initFirebase(Device device, Environment env) async {
+  _logger.i('Initializing Firebase');
+  await Firebase.initializeApp();
+
   _initCrashlytics(device);
   _initMessaging(env);
 }
@@ -25,22 +35,60 @@ void initFirebase(Device device, Environment env) async {
 /// MESSAGING
 ///
 void _initMessaging(Environment env) async {
-  _logger.i('Initializing Messaging');
+  _logger.i('Initializing FirebaseMessaging');
 
-  await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(_onBackgroundMessage);
   registerLoginEventHanlder((env) => _onLogin(env));
 }
 
 Future _onBackgroundMessage(RemoteMessage message) async {
-  _logger.i('Background - message received: $message');
+  _logger.i('Background - Message received: $message');
+  _showNotification(message, true);
 }
 
-void _showNotification(RemoteMessage message){
-  showSimpleNotification(
-    Text(message.notification?.body ?? '<Empty-Message>'),
-    duration: const Duration(seconds: 5),
+void _showNotification(RemoteMessage message, bool background) async{
+  final Logger logger = LoggerFactory.create('firebase');
+
+  // Send notification - Useful for tracking and debugging purpose
+  logger.i('Tracking notification...');
+  Environment.get().then((env) =>
+      Device.get().then((device) =>
+          Http.getInstance().post(
+              '${env.getShellUrl()}/firebase/on-message',
+              {
+                'title': message.notification?.title,
+                'body': message.notification?.body,
+                'imageUrl': message.notification?.android?.imageUrl,
+                'data': message.data,
+                'background': background,
+                'deviceId': device.id
+              }
+          )
+      )
   );
+
+  // // Send notification to channel
+  // logger.i('creating the channel...');
+  // await flutterLocalNotificationsPlugin
+  //     .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+  //     ?.createNotificationChannel(channel);
+  //
+  // logger.i('showing notification...');
+  // flutterLocalNotificationsPlugin.show(
+  //     message.hashCode,
+  //     message.notification?.title,
+  //     message.notification?.body,
+  //     NotificationDetails(
+  //       android: AndroidNotificationDetails(
+  //         channel.id,
+  //         channel.name,
+  //         channelDescription: channel.description,
+  //         icon: message.notification?.android?.smallIcon,
+  //         priority: Priority.max,
+  //         importance: Importance.max,
+  //         playSound: true
+  //       ),
+  //     ));
 }
 
 void _onLogin(Environment env) async {
@@ -57,14 +105,14 @@ void _onLogin(Environment env) async {
     // Get the token
     fb.getToken().then((value) {
       _logger.i('Syncing User FCM Token - token=$value');
-      String url = '${env.getShellUrl()}/commands/update-fcm-token';
-      Http.getInstance().post(url, {'token': value});
+      String url = '${env.getShellUrl()}/commands/update-profile-attribute?name=fcm-token';
+      Http.getInstance().post(url, {'value': value});
     });
 
     // Listen to events
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       _logger.i('Foreground - Message received: $message');
-      _showNotification(message);
+      _showNotification(message, false);
     });
   } else {
     _logger.i('User declined or has not accepted permission');
@@ -75,9 +123,7 @@ void _onLogin(Environment env) async {
 /// CRASHLYTICS
 ///
 void _initCrashlytics(Device device) async {
-  _logger.i('Initializing Crashlytics');
-
-  await Firebase.initializeApp();
+  _logger.i('Initializing FirebaseCrashlytics');
 
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   FirebaseCrashlytics.instance.setCustomKey("device_id", device.id);

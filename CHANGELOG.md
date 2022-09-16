@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.125
+- CHANGE: Send push notification message to wutsi-shell-bff
+
 ## 0.0.124
 - CHANGE: Display push notifications
 

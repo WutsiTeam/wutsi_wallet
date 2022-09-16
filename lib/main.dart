@@ -4,7 +4,6 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
-import 'package:overlay_support/overlay_support.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sdui/sdui.dart';
 import 'package:wutsi_wallet/src/access_token.dart';
@@ -90,8 +89,7 @@ class WutsiApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return OverlaySupport.global(
-        child: MaterialApp(
+    return MaterialApp(
       title: 'Wutsi Wallet',
       debugShowCheckedModeBanner: false,
       navigatorObservers: [sduiRouteObserver],
@@ -100,6 +98,6 @@ class WutsiApp extends StatelessWidget {
         '/': (context) => DynamicRoute(provider: HttpRouteContentProvider(environment.getShellUrl())),
         '/login': (context) => DynamicRoute(provider: LoginContentProvider(context, environment)),
       },
-    ));
+    );
   }
 }
