@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:isolate';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -5,30 +6,30 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:logger/logger.dart';
 import 'package:sdui/sdui.dart';
 import 'package:wutsi_wallet/src/access_token.dart';
 import 'package:wutsi_wallet/src/device.dart';
 import 'package:wutsi_wallet/src/environment.dart';
 import 'package:wutsi_wallet/src/event.dart';
+import 'package:sdui/sdui.dart' as sdui;
 
 final Logger _logger = LoggerFactory.create('firebase');
 
-// const AndroidNotificationChannel channel = AndroidNotificationChannel(
-//   'high_importance_channel',
-//   'High Importance Notifications', // name
-//   description: 'This channel is used for important notifications.', // description
-//   importance: Importance.max,
-// );
+const AndroidNotificationChannel channel = AndroidNotificationChannel(
+  'default_notification_channel_id',
+  'Wutsi_Notification', // name
+  description: 'This is a channel for Wutsi notification.', // description
+  importance: Importance.max,
+);
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-// final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
-void initFirebase(Device device, Environment env) async {
-  _logger.i('Initializing Firebase');
-  await Firebase.initializeApp();
-
-  _initCrashlytics(device);
-  _initMessaging(env);
+void initFirebase(Device device, Environment env) {
+  Firebase.initializeApp().then((app) {
+    _initCrashlytics(device);
+    _initMessaging(env);
+  });
 }
 
 ///
@@ -37,58 +38,43 @@ void initFirebase(Device device, Environment env) async {
 void _initMessaging(Environment env) async {
   _logger.i('Initializing FirebaseMessaging');
 
+  // Event handling - background and foreground
   FirebaseMessaging.onBackgroundMessage(_onBackgroundMessage);
+  sdui.sduiFirebaseMessagingHandler = (msg){
+    _showNotification(msg);
+  };
+
+  // Create channel
+  flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(channel);
+
+  // Login event handler
   registerLoginEventHanlder((env) => _onLogin(env));
 }
 
-Future _onBackgroundMessage(RemoteMessage message) async {
-  _logger.i('Background - Message received: $message');
-  _showNotification(message, true);
+Future<void> _onBackgroundMessage(RemoteMessage message) async{
+  Logger logger = LoggerFactory.create('firebase-background');
+  logger.i('Background - Message received: ${message.messageId}');
+
+  _showNotification(message);
 }
 
-void _showNotification(RemoteMessage message, bool background) async{
-  final Logger logger = LoggerFactory.create('firebase');
-
-  // Send notification - Useful for tracking and debugging purpose
-  logger.i('Tracking notification...');
-  Environment.get().then((env) =>
-      Device.get().then((device) =>
-          Http.getInstance().post(
-              '${env.getShellUrl()}/firebase/on-message',
-              {
-                'title': message.notification?.title,
-                'body': message.notification?.body,
-                'imageUrl': message.notification?.android?.imageUrl,
-                'data': message.data,
-                'background': background,
-                'deviceId': device.id
-              }
-          )
-      )
-  );
-
-  // // Send notification to channel
-  // logger.i('creating the channel...');
-  // await flutterLocalNotificationsPlugin
-  //     .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-  //     ?.createNotificationChannel(channel);
-  //
-  // logger.i('showing notification...');
-  // flutterLocalNotificationsPlugin.show(
-  //     message.hashCode,
-  //     message.notification?.title,
-  //     message.notification?.body,
-  //     NotificationDetails(
-  //       android: AndroidNotificationDetails(
-  //         channel.id,
-  //         channel.name,
-  //         channelDescription: channel.description,
-  //         icon: message.notification?.android?.smallIcon,
-  //         priority: Priority.max,
-  //         importance: Importance.max,
-  //         playSound: true
-  //       ),
-  //     ));
+void _showNotification(RemoteMessage message){
+  flutterLocalNotificationsPlugin.show(
+      message.hashCode,
+      message.notification?.title,
+      message.notification?.body,
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          channel.id,
+          channel.name,
+          channelDescription: channel.description,
+          priority: Priority.max,
+          importance: Importance.max,
+          playSound: true,
+        ),
+      ));
 }
 
 void _onLogin(Environment env) async {
@@ -107,12 +93,6 @@ void _onLogin(Environment env) async {
       _logger.i('Syncing User FCM Token - token=$value');
       String url = '${env.getShellUrl()}/commands/update-profile-attribute?name=fcm-token';
       Http.getInstance().post(url, {'value': value});
-    });
-
-    // Listen to events
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      _logger.i('Foreground - Message received: $message');
-      _showNotification(message, false);
     });
   } else {
     _logger.i('User declined or has not accepted permission');
