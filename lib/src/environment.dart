@@ -47,6 +47,8 @@ class Environment {
 
   String getShellUrl() =>  '${getGatewayUrl()}/shell';
 
+  String getCashUrl() =>  '${getGatewayUrl()}/cash';
+
   String getStoreUrl() => '${getGatewayUrl()}/store';
 
   String getNewsUrl() => '${getGatewayUrl()}/news';

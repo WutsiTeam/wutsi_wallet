@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
 
@@ -44,9 +45,9 @@ void _initMessaging(Environment env) async {
 
   var settings = const InitializationSettings(
       android: AndroidInitializationSettings('@mipmap/logo_192'),
-      iOS: IOSInitializationSettings()
+      iOS: IOSInitializationSettings(),
   );
-  flutterLocalNotificationsPlugin.initialize(settings);
+  flutterLocalNotificationsPlugin.initialize(settings, onSelectNotification: (payload) => _onSelect(payload));
 
   // Login event handler
   registerLoginEventHanlder((env) => _onLogin(env));
@@ -103,9 +104,16 @@ void _showNotification(RemoteMessage message) async {
           importance: Importance.max,
           playSound: true,
           icon: '@mipmap/logo_192'
-        ),
-      ));
+        )
+      ),
+      payload: jsonEncode(message.data)
+  );
 }
+
+void _onSelect(String? payload) {
+  _logger.i('onSelect: $payload');
+}
+
 
 void _onLogin(Environment env) async {
   if (!Platform.isAndroid || _token == null) return;

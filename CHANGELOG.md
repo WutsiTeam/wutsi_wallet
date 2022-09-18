@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.0.127
+- CHANGE: Handle deeeplink click
+- FIX: Do not open deeplinks from another environment
+
 ## 0.0.126
 - CHANGE: Send push notification message to wutsi-shell-bff
 
