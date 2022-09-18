@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 0.0.125
+## 0.0.126
 - CHANGE: Send push notification message to wutsi-shell-bff
 
 ## 0.0.124
