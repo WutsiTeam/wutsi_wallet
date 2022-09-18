@@ -16,20 +16,14 @@ import 'package:wutsi_wallet/src/event.dart';
 import 'package:sdui/sdui.dart' as sdui;
 
 final Logger _logger = LoggerFactory.create('firebase');
-
-const AndroidNotificationChannel channel = AndroidNotificationChannel(
-  'default_notification_channel_id',
-  'Wutsi_Notification', // name
-  description: 'This is a channel for Wutsi notification.', // description
-  importance: Importance.max,
-);
+const String channel_id = 'wutsi_notification_channel';
+const String channel_name = channel_id;
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-void initFirebase(Device device, Environment env) {
-  Firebase.initializeApp().then((app) {
-    _initCrashlytics(device);
-    _initMessaging(env);
-  });
+void initFirebase(Device device, Environment env) async {
+  await Firebase.initializeApp();
+  _initCrashlytics(device);
+  _initMessaging(env);
 }
 
 ///
@@ -39,12 +33,15 @@ void _initMessaging(Environment env) async {
   _logger.i('Initializing FirebaseMessaging');
 
   // Event handling - background and foreground
-  FirebaseMessaging.onBackgroundMessage(_onBackgroundMessage);
-  sdui.sduiFirebaseMessagingHandler = (msg){
-    _showNotification(msg);
+  sdui.sduiFirebaseMessagingForegroundHandler = (msg){
+    _onForegroundMessage(msg);
+  };
+  sdui.sduiFirebaseMessagingBackgroundHandler = (msg){
+    _onBackgroundMessage(msg);
   };
 
   // Create channel
+  AndroidNotificationChannel channel = _createMessagingChannel();
   flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
@@ -53,10 +50,24 @@ void _initMessaging(Environment env) async {
   registerLoginEventHanlder((env) => _onLogin(env));
 }
 
-Future<void> _onBackgroundMessage(RemoteMessage message) async{
-  Logger logger = LoggerFactory.create('firebase-background');
-  logger.i('Background - Message received: ${message.messageId}');
+AndroidNotificationChannel _createMessagingChannel() => const AndroidNotificationChannel(
+    channel_id,
+    channel_name, // name
+    importance: Importance.max,
+    enableVibration: true
+);
 
+void _onBackgroundMessage(RemoteMessage message) async{
+  // Create channel
+  AndroidNotificationChannel channel = _createMessagingChannel();
+  flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(channel);
+
+  _showNotification(message);
+}
+
+void _onForegroundMessage(RemoteMessage message) async{
   _showNotification(message);
 }
 
@@ -65,37 +76,30 @@ void _showNotification(RemoteMessage message){
       message.hashCode,
       message.notification?.title,
       message.notification?.body,
-      NotificationDetails(
+      const NotificationDetails(
         android: AndroidNotificationDetails(
-          channel.id,
-          channel.name,
-          channelDescription: channel.description,
+          channel_id,
+          channel_name,
           priority: Priority.max,
           importance: Importance.max,
           playSound: true,
+          icon: '@mipmap/logo_192'
         ),
       ));
 }
 
 void _onLogin(Environment env) async {
-  FirebaseMessaging fb = FirebaseMessaging.instance;
+  if (!Platform.isAndroid) return;
 
-  NotificationSettings settings = await fb.requestPermission(
-    alert: true,
-    badge: true,
-    provisional: false,
-    sound: true,
-  );
-
-  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-    // Get the token
-    fb.getToken().then((value) {
+  try {
+    FirebaseMessaging.instance.getToken().then((value) {
       _logger.i('Syncing User FCM Token - token=$value');
-      String url = '${env.getShellUrl()}/commands/update-profile-attribute?name=fcm-token';
+      String url = '${env
+          .getShellUrl()}/commands/update-profile-attribute?name=fcm-token';
       Http.getInstance().post(url, {'value': value});
     });
-  } else {
-    _logger.i('User declined or has not accepted permission');
+  } catch(e){
+    _logger.e('Unable to fetch messaging token', e);
   }
 }
 
