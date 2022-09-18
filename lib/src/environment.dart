@@ -35,6 +35,10 @@ class Environment {
     return this;
   }
 
+  String clientId() => 'wutsi-wallet';
+
+  int tenantId() => 1;
+
   String getGatewayUrl() => 'https://wutsi-gateway-$value.herokuapp.com';
 
   String getLoginUrl() =>  '${getGatewayUrl()}/login';

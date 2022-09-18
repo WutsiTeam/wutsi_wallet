@@ -7,19 +7,20 @@
   <uses-permission android:name="android.permission.ACTION_SEND"/>
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+  <uses-permission android:name="android.permission.VIBRATE"/>
 
   <queries>
     <intent>
-      <action android:name="android.intent.action.VIEW" />
-      <data android:scheme="https" />
+      <action android:name="android.intent.action.VIEW"/>
+      <data android:scheme="https"/>
     </intent>
     <intent>
-      <action android:name="android.intent.action.VIEW" />
-      <data android:scheme="tel" />
+      <action android:name="android.intent.action.VIEW"/>
+      <data android:scheme="tel"/>
     </intent>
     <intent>
-      <action android:name="android.intent.action.whatsapp" />
-      <data android:scheme="whatsapp" />
+      <action android:name="android.intent.action.whatsapp"/>
+      <data android:scheme="whatsapp"/>
     </intent>
   </queries>
 
@@ -56,13 +57,13 @@
 
       <meta-data
         android:name="firebase_messaging_auto_init_enabled"
-        android:value="false" />
+        android:value="false"/>
       <meta-data
         android:name="firebase_analytics_collection_enabled"
-        android:value="false" />
-      <meta-data
-        android:name="com.google.firebase.messaging.default_notification_channel_id"
-        android:value="wutsi_notification_channel" />
+        android:value="false"/>
+<!--      <meta-data-->
+<!--        android:name="com.google.firebase.messaging.default_notification_channel_id"-->
+<!--        android:value="default_notification_channel_id"/>-->
 
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
@@ -76,6 +77,7 @@
         <data android:host="www.wutsi.me" android:scheme="https"/>
         <data android:host="wutsi-web-test.herokuapp.com" android:scheme="https"/>
       </intent-filter>
+
     </activity>
     <!-- Don't delete the meta-data below.
          This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->

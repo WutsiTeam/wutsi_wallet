@@ -16,9 +16,8 @@ import 'package:wutsi_wallet/src/event.dart';
 import 'package:sdui/sdui.dart' as sdui;
 
 final Logger _logger = LoggerFactory.create('firebase');
-const String channel_id = 'wutsi_notification_channel';
-const String channel_name = channel_id;
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+String? _token;
 
 void initFirebase(Device device, Environment env) async {
   await Firebase.initializeApp();
@@ -33,53 +32,73 @@ void _initMessaging(Environment env) async {
   _logger.i('Initializing FirebaseMessaging');
 
   // Event handling - background and foreground
-  sdui.sduiFirebaseMessagingForegroundHandler = (msg){
+  sdui.sduiFirebaseForegroundMessageHandler = (msg){
     _onForegroundMessage(msg);
   };
-  sdui.sduiFirebaseMessagingBackgroundHandler = (msg){
+  sdui.sduiFirebaseBackgroundMessageHandler = (msg){
     _onBackgroundMessage(msg);
   };
+  sdui.sduiFirebaseTokenHandler = (token){
+    _onToken(token);
+  };
 
-  // Create channel
-  AndroidNotificationChannel channel = _createMessagingChannel();
-  flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(channel);
+  var settings = const InitializationSettings(
+      android: AndroidInitializationSettings('@mipmap/logo_192'),
+      iOS: IOSInitializationSettings()
+  );
+  flutterLocalNotificationsPlugin.initialize(settings);
 
   // Login event handler
   registerLoginEventHanlder((env) => _onLogin(env));
 }
 
-AndroidNotificationChannel _createMessagingChannel() => const AndroidNotificationChannel(
-    channel_id,
-    channel_name, // name
-    importance: Importance.max,
-    enableVibration: true
-);
-
 void _onBackgroundMessage(RemoteMessage message) async{
-  // Create channel
-  AndroidNotificationChannel channel = _createMessagingChannel();
-  flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(channel);
-
+  // Notify and Track
   _showNotification(message);
+  _trackMessage(message, Http.getInstance(), false);
 }
 
 void _onForegroundMessage(RemoteMessage message) async{
+  // Notify and Track
   _showNotification(message);
+  _trackMessage(message, Http.getInstance(), false);
 }
 
-void _showNotification(RemoteMessage message){
-  flutterLocalNotificationsPlugin.show(
+void _onToken(String? token) {
+  _token = token;
+  Environment.get().then((env) {
+    String url = '${env
+        .getShellUrl()}/commands/update-profile-attribute?name=fcm-token';
+    Http.getInstance().post(url, {'value': token});
+  });
+}
+
+void _trackMessage(RemoteMessage message, Http http, bool background) {
+  Environment.get().then((env) =>
+      Device.get().then((device) =>
+          Http.getInstance().post(
+              '${env.getShellUrl()}/firebase/on-message',
+              {
+                'title': message.notification?.title,
+                'body': message.notification?.body,
+                'imageUrl': message.notification?.android?.imageUrl,
+                'data': message.data,
+                'background': background
+              }
+          )
+      )
+  );
+}
+
+void _showNotification(RemoteMessage message) async {
+  await flutterLocalNotificationsPlugin.show(
       message.hashCode,
       message.notification?.title,
       message.notification?.body,
       const NotificationDetails(
         android: AndroidNotificationDetails(
-          channel_id,
-          channel_name,
+          'wutsi_channel',
+          'wutsi_channel',
           priority: Priority.max,
           importance: Importance.max,
           playSound: true,
@@ -89,18 +108,8 @@ void _showNotification(RemoteMessage message){
 }
 
 void _onLogin(Environment env) async {
-  if (!Platform.isAndroid) return;
-
-  try {
-    FirebaseMessaging.instance.getToken().then((value) {
-      _logger.i('Syncing User FCM Token - token=$value');
-      String url = '${env
-          .getShellUrl()}/commands/update-profile-attribute?name=fcm-token';
-      Http.getInstance().post(url, {'value': value});
-    });
-  } catch(e){
-    _logger.e('Unable to fetch messaging token', e);
-  }
+  if (!Platform.isAndroid || _token == null) return;
+  _onToken(_token);
 }
 
 ///
@@ -131,10 +140,9 @@ class HttpCrashlyticsInterceptor extends HttpInterceptor {
   final Logger logger = LoggerFactory.create('HttpCrashlyticsInterceptor');
   final AccessToken _accessToken;
   final Environment _environment;
-  final int tenantId;
 
   HttpCrashlyticsInterceptor(
-      this._accessToken, this._environment, this.tenantId);
+      this._accessToken, this._environment);
 
   @override
   void onRequest(RequestTemplate request) {
@@ -144,7 +152,7 @@ class HttpCrashlyticsInterceptor extends HttpInterceptor {
         _setCustomKeyFromHeader(request, 'X-Trace-ID', 'trace_id');
         _setCustomKey('request_body', request.body?.toString());
         _setCustomKey("user_id", _accessToken.subject());
-        _setCustomKey("tenant_id", tenantId.toString());
+        _setCustomKey("tenant_id", _environment.tenantId().toString());
         _setCustomKey("env", _environment.value);
       }
     } catch (e) {

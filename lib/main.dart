@@ -21,7 +21,6 @@ import 'package:wutsi_wallet/src/login.dart';
 
 
 final Logger logger = LoggerFactory.create('main');
-const int tenantId = 1;
 
 Environment environment = Environment(Environment.defaultEnvironment);
 Device device = Device('');
@@ -57,8 +56,7 @@ void _launch() async {
 
   logger.i('Initializing HTTP');
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
-  initHttp('wutsi-wallet', accessToken, device, language, tenantId, packageInfo,
-      environment);
+  initHttp(accessToken, device, language, packageInfo, environment);
 
   logger.i('Initializing Events');
   initEvents(environment);
