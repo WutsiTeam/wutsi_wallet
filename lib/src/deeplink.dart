@@ -3,6 +3,12 @@ import 'package:sdui/sdui.dart' as sdui;
 
 void initDeeplink(Environment environment){
   sdui.sduiDeeplinkHandler = (uri) {
+    // Environment
+    if (!uri.toString().startsWith(environment.getDeeplinkUrl())) {
+      return null;
+    }
+
+    // ID
     var id = uri.queryParameters['id'];
     if (id == null) {
       return null;
@@ -14,9 +20,11 @@ void initDeeplink(Environment environment){
       return'${environment.getStoreUrl()}/product?id=$id';
     } else if (uri.path == '/order') {
       return '${environment.getStoreUrl()}/order?id=$id';
+    } else if (uri.path == '/transaction') {
+      return '${environment.getCashUrl()}/transaction?id=$id';
     } else if (uri.path == '/story/read') {
       return '${environment.getNewsUrl()}/read?id=$id';
-    } else {
+    } else{
       return null;
     }
   };

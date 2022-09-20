@@ -62,11 +62,14 @@ class SDUIErrorWidget extends StatelessWidget{
           future: AccessToken.get(),
           builder: (BuildContext context, AsyncSnapshot<AccessToken> snapshot){
             if (snapshot.hasData){
-              return sdui.DynamicRoute(provider: LoginContentProvider(context,
-                  environment,
-                  phoneNumber: snapshot.data?.phoneNumber(),
-                  hideBackButton: true
-              ));
+              return sdui.DynamicRoute(
+                provider: LoginContentProvider(context,
+                    environment,
+                    phoneNumber: snapshot.data?.phoneNumber(),
+                    hideBackButton: true
+                ),
+                handleFirebaseMessages: false
+              );
             } else{
               return Container();
             }

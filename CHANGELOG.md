@@ -1,5 +1,22 @@
 # CHANGELOG
 
+## 0.0.127
+- CHANGE: Handle deeeplink click
+- FIX: Do not open deeplinks from another environment
+
+## 0.0.126
+- CHANGE: Send push notification message to wutsi-shell-bff
+
+## 0.0.124
+- CHANGE: Display push notifications
+
+## 0.0.123
+- FIX: Update to sdui-0.1.118
+
+
+## 0.0.122
+- FIX: Update to sdui-0.1.114
+
 ## 0.0.121
 - FIX: WU-288: Add intent to send messages to whatsapp
 

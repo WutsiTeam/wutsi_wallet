@@ -8,11 +8,11 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sdui/sdui.dart';
 import 'package:wutsi_wallet/src/access_token.dart';
 import 'package:wutsi_wallet/src/analytics.dart';
-import 'package:wutsi_wallet/src/contact.dart';
-import 'package:wutsi_wallet/src/crashlytics.dart';
 import 'package:wutsi_wallet/src/device.dart';
 import 'package:wutsi_wallet/src/environment.dart';
 import 'package:wutsi_wallet/src/error.dart';
+import 'package:wutsi_wallet/src/event.dart';
+import 'package:wutsi_wallet/src/firebase.dart';
 import 'package:wutsi_wallet/src/http.dart';
 import 'package:wutsi_wallet/src/language.dart';
 import 'package:wutsi_wallet/src/loading.dart';
@@ -21,7 +21,6 @@ import 'package:wutsi_wallet/src/login.dart';
 
 
 final Logger logger = LoggerFactory.create('main');
-const int tenantId = 1;
 
 Environment environment = Environment(Environment.defaultEnvironment);
 Device device = Device('');
@@ -57,11 +56,13 @@ void _launch() async {
 
   logger.i('Initializing HTTP');
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
-  initHttp('wutsi-wallet', accessToken, device, language, tenantId, packageInfo,
-      environment);
+  initHttp(accessToken, device, language, packageInfo, environment);
 
-  logger.i('Initializing Crashlytics');
-  initCrashlytics(device);
+  logger.i('Initializing Events');
+  initEvents(environment);
+
+  logger.i('Initializing Firebase');
+  initFirebase(device, environment);
 
   logger.i('Initializing Analytics');
   initAnalytics(environment);
@@ -74,9 +75,6 @@ void _launch() async {
 
   logger.i('Initializing Deeplinks');
   initDeeplink(environment);
-
-  logger.i('Initializing Contacts');
-  initContacts('${environment.getShellUrl()}/commands/sync-contacts');
 
   // The app runs only in Portrait Mode
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
@@ -96,7 +94,7 @@ class WutsiApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => DynamicRoute(provider: HttpRouteContentProvider(environment.getShellUrl())),
-        '/login': (context) => DynamicRoute(provider: LoginContentProvider(context, environment)),
+        '/login': (context) => DynamicRoute(provider: LoginContentProvider(context, environment), handleFirebaseMessages: false),
       },
     );
   }

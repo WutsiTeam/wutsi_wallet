@@ -2,61 +2,51 @@ import 'package:contacts_service/contacts_service.dart';
 import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sdui/sdui.dart';
+import 'package:wutsi_wallet/src/environment.dart';
+import 'package:wutsi_wallet/src/event.dart';
 
-import 'event.dart';
+final Logger _logger = LoggerFactory.create('contact');
 
-void initContacts(String syncUrl) {
-  eventBus.on<UserLoggedInEvent>().listen((event) {
-    ContactSynchronizer(syncUrl).sync();
+void initContacts(){
+  registerLoginEventHanlder((env) => _onLogin(env));
+}
+
+void _onLogin(Environment env) async {
+  _requestPermission().then((flag) {
+    if (flag){
+      String url = '${env.getShellUrl()}/commands/sync-contacts';
+      _logger.i('Syncing User FCM Token - url=$url');
+      ContactsService.getContacts(withThumbnails: false)
+          .then((contacts) => _syncContacts(contacts, url));
+    }
   });
 }
 
-class ContactSynchronizer {
-  final Logger _logger = LoggerFactory.create('ContactSynchronizer');
-  final String _syncUrl;
+void _syncContacts(List<Contact> contacts, String url) async {
+  List<String> phoneNumbers = [];
+  for (var i = 0; i < contacts.length; i++) {
+    Contact contact = contacts[i];
+    if (contact.phones == null) continue;
 
-  ContactSynchronizer(this._syncUrl);
-
-  void sync() async {
-    _requestPermission().then((value) => _sync(value));
-  }
-
-  void _sync(bool flag) {
-    if (!flag) {
-      _logger.i(
-          "User doesn't have permission to contacts. No synchronization with server");
-      return;
-    }
-
-    ContactsService.getContacts(withThumbnails: false)
-        .then((contacts) => _syncContacts(contacts));
-  }
-
-  void _syncContacts(List<Contact> contacts) async {
-    List<String> phoneNumbers = [];
-    for (var i = 0; i < contacts.length; i++) {
-      Contact contact = contacts[i];
-      if (contact.phones == null) continue;
-
-      for (var j = 0; j < contact.phones!.length; j++) {
-        var value = contact.phones?[j].value;
-        if (value != null) {
-          phoneNumbers.add(value);
-        }
+    for (var j = 0; j < contact.phones!.length; j++) {
+      var value = contact.phones?[j].value;
+      if (value != null) {
+        phoneNumbers.add(value);
       }
     }
-
-    if (phoneNumbers.isNotEmpty) {
-      _logger
-          .i('phone_number_count=${phoneNumbers.length} - Synching contacts');
-      Http.getInstance().post(_syncUrl, {'phoneNumbers': phoneNumbers});
-    } else {
-      _logger
-          .i('phone_number_count=${phoneNumbers.length} - No contact to sync');
-    }
   }
 
-  Future<bool> _requestPermission() async {
+  if (phoneNumbers.isNotEmpty) {
+    _logger
+        .i('phone_number_count=${phoneNumbers.length} - Syncing contacts');
+    Http.getInstance().post(url, {'phoneNumbers': phoneNumbers});
+  } else {
+    _logger
+        .i('phone_number_count=${phoneNumbers.length} - No contact to sync');
+  }
+}
+
+Future<bool> _requestPermission() async {
     var status = await Permission.contacts.status;
     if (status.isDenied) {
       return await Permission.contacts.request().isGranted;
@@ -64,4 +54,3 @@ class ContactSynchronizer {
       return true;
     }
   }
-}
