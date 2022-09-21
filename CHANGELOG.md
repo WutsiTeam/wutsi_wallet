@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.128
+- CHANGE: Add notification for iOS
+
 ## 0.0.127
 - CHANGE: Handle deeeplink click
 - FIX: Do not open deeplinks from another environment

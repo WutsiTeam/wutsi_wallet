@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:isolate';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -17,7 +16,6 @@ import 'package:wutsi_wallet/src/event.dart';
 import 'package:sdui/sdui.dart' as sdui;
 
 final Logger _logger = LoggerFactory.create('firebase');
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 String? _token;
 
 void initFirebase(Device device, Environment env) async {
@@ -32,37 +30,73 @@ void initFirebase(Device device, Environment env) async {
 void _initMessaging(Environment env) async {
   _logger.i('Initializing FirebaseMessaging');
 
-  // Event handling - background and foreground
-  sdui.sduiFirebaseForegroundMessageHandler = (msg){
-    _onForegroundMessage(msg);
+  // Event handlers
+  sdui.sduiFirebaseIconAndroid = '@mipmap/logo_192';
+  sdui.sduiFirebaseMessageHandler = (msg, foreground){
+    _onRemoteMessage(msg, foreground);
   };
-  sdui.sduiFirebaseBackgroundMessageHandler = (msg){
-    _onBackgroundMessage(msg);
+  sdui.sduiSelectionHandler = (payload, context){
+    _onRemoteMessageSelected(payload, context);
   };
   sdui.sduiFirebaseTokenHandler = (token){
     _onToken(token);
   };
 
-  var settings = const InitializationSettings(
-      android: AndroidInitializationSettings('@mipmap/logo_192'),
-      iOS: IOSInitializationSettings(),
-  );
-  flutterLocalNotificationsPlugin.initialize(settings, onSelectNotification: (payload) => _onSelect(payload));
-
   // Login event handler
   registerLoginEventHanlder((env) => _onLogin(env));
 }
 
-void _onBackgroundMessage(RemoteMessage message) async{
-  // Notify and Track
-  _showNotification(message);
-  _trackMessage(message, Http.getInstance(), false);
+void _onRemoteMessage(RemoteMessage message, bool foreground) async{
+  // Show notification
+  await sduiLocalNotificationsPlugin.show(
+      message.hashCode,
+      message.notification?.title,
+      message.notification?.body,
+      const NotificationDetails(
+          android: AndroidNotificationDetails(
+              'wutsi_channel',
+              'wutsi_channel',
+              priority: Priority.max,
+              importance: Importance.max,
+              playSound: true,
+              icon: '@mipmap/logo_192'
+          )
+      ),
+      payload: jsonEncode(message.data)
+  );
+
+  // Track
+  Environment.get().then((env) =>
+      Device.get().then((device) =>
+          Http.getInstance().post(
+              '${env.getShellUrl()}/firebase/on-message',
+              {
+                'title': message.notification?.title,
+                'body': message.notification?.body,
+                'imageUrl': message.notification?.android?.imageUrl,
+                'data': message.data,
+                'background': !foreground
+              }
+          )
+      )
+  );
 }
 
-void _onForegroundMessage(RemoteMessage message) async{
-  // Notify and Track
-  _showNotification(message);
-  _trackMessage(message, Http.getInstance(), false);
+void _onRemoteMessageSelected(String? payload, BuildContext context){
+  if (payload == null) return;
+
+  var json = jsonDecode(payload);
+  if (json is Map<String, dynamic>){
+    String? url = sdui.sduiDeeplinkHandler(json['url']);
+    if (url != null){
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => DynamicRoute(
+                provider: HttpRouteContentProvider(url))),
+      );
+    }
+  }
 }
 
 void _onToken(String? token) {
@@ -74,49 +108,7 @@ void _onToken(String? token) {
   });
 }
 
-void _trackMessage(RemoteMessage message, Http http, bool background) {
-  Environment.get().then((env) =>
-      Device.get().then((device) =>
-          Http.getInstance().post(
-              '${env.getShellUrl()}/firebase/on-message',
-              {
-                'title': message.notification?.title,
-                'body': message.notification?.body,
-                'imageUrl': message.notification?.android?.imageUrl,
-                'data': message.data,
-                'background': background
-              }
-          )
-      )
-  );
-}
-
-void _showNotification(RemoteMessage message) async {
-  await flutterLocalNotificationsPlugin.show(
-      message.hashCode,
-      message.notification?.title,
-      message.notification?.body,
-      const NotificationDetails(
-        android: AndroidNotificationDetails(
-          'wutsi_channel',
-          'wutsi_channel',
-          priority: Priority.max,
-          importance: Importance.max,
-          playSound: true,
-          icon: '@mipmap/logo_192'
-        )
-      ),
-      payload: jsonEncode(message.data)
-  );
-}
-
-void _onSelect(String? payload) {
-  _logger.i('onSelect: $payload');
-}
-
-
 void _onLogin(Environment env) async {
-  if (!Platform.isAndroid || _token == null) return;
   _onToken(_token);
 }
 
