@@ -66,7 +66,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyA7xkNkcCflyiLlDApz4ybUJXBlqIov1Is',
-    appId: '1:4026312901:ios:1befbe62bda612ccada8ac',
+    appId: '1:4026312901:ios:e1428d688b9f1bbdada8ac',
     messagingSenderId: '4026312901',
     projectId: 'wutsi-wallet-int',
     storageBucket: 'wutsi-wallet-int.appspot.com',

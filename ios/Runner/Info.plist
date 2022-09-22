@@ -47,6 +47,11 @@
 	<string>This app needs access to reminders.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>This app needs access to microphone for speech.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
