@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.129
+- CHANGE: Improve URL handling
+
 ## 0.0.128
 - CHANGE: Add notification for iOS
 

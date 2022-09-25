@@ -14,13 +14,15 @@ import 'package:wutsi_wallet/src/device.dart';
 import 'package:wutsi_wallet/src/environment.dart';
 import 'package:wutsi_wallet/src/event.dart';
 import 'package:sdui/sdui.dart' as sdui;
+import 'package:wutsi_wallet/src/http.dart';
 
 final Logger _logger = LoggerFactory.create('firebase');
 String? _token;
 
-void initFirebase(Device device, Environment env) async {
+void initFirebase(Environment env) async {
   await Firebase.initializeApp();
-  _initCrashlytics(device);
+
+  _initCrashlytics();
   _initMessaging(env);
 }
 
@@ -47,6 +49,8 @@ void _initMessaging(Environment env) async {
 }
 
 void _onRemoteMessage(RemoteMessage message, bool foreground) async{
+  _logger.i('_onRemoteMessage foreground=$foreground notification=${message.notification} data=${message.data}');
+
   // Show notification
   await sduiLocalNotificationsPlugin.show(
       message.hashCode,
@@ -66,23 +70,23 @@ void _onRemoteMessage(RemoteMessage message, bool foreground) async{
   );
 
   // Track
-  Environment.get().then((env) =>
-      Device.get().then((device) =>
-          Http.getInstance().post(
-              '${env.getShellUrl()}/firebase/on-message',
-              {
-                'title': message.notification?.title,
-                'body': message.notification?.body,
-                'imageUrl': message.notification?.android?.imageUrl,
-                'data': message.data,
-                'background': !foreground
-              }
-          )
-      )
+  Environment env = await Environment.get();
+  if (!foreground) initHttp(env); // Init HTTP when handling background event
+  Http.getInstance().post(
+      '${env.getShellUrl()}/firebase/on-message',
+      {
+        'title': message.notification?.title,
+        'body': message.notification?.body,
+        'imageUrl': message.notification?.android?.imageUrl,
+        'data': message.data,
+        'background': !foreground
+      }
   );
 }
 
 void _onRemoteMessageSelected(String? payload, BuildContext context){
+  _logger.i('onRemoteMessageSelected $payload');
+
   if (payload == null) return;
 
   var json = jsonDecode(payload);
@@ -100,6 +104,8 @@ void _onRemoteMessageSelected(String? payload, BuildContext context){
 }
 
 void _onToken(String? token) {
+  _logger.i('onToken $token');
+
   _token = token;
   Environment.get().then((env) {
     String url = '${env
@@ -109,14 +115,18 @@ void _onToken(String? token) {
 }
 
 void _onLogin(Environment env) async {
+  _logger.i('onLogin');
+
   _onToken(_token);
 }
 
 ///
 /// CRASHLYTICS
 ///
-void _initCrashlytics(Device device) async {
+void _initCrashlytics() async {
   _logger.i('Initializing FirebaseCrashlytics');
+
+  Device device = await Device.get();
 
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   FirebaseCrashlytics.instance.setCustomKey("device_id", device.id);
