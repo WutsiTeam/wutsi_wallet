@@ -296,7 +296,7 @@ packages:
     source: hosted
     version: "0.4.2+4"
   firebase_core:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: firebase_core
       url: "https://pub.dartlang.org"
@@ -876,7 +876,7 @@ packages:
       name: sdui
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.129"
+    version: "0.1.141"
   search_choices:
     dependency: transitive
     description:

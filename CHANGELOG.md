@@ -14,8 +14,8 @@
 - CHANGE: Add notification for iOS
 
 ## 0.0.127
-- CHANGE: Handle deeeplink click
-- FIX: Do not open deeplinks from another environment
+- CHANGE: Handle deeplink click
+- FIX: Do not open deeplink from another environment
 
 ## 0.0.126
 - CHANGE: Send push notification message to wutsi-shell-bff

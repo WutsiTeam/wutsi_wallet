@@ -1,12 +1,9 @@
-import 'dart:convert';
 import 'dart:isolate';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:logger/logger.dart';
 import 'package:sdui/sdui.dart';
 import 'package:wutsi_wallet/src/access_token.dart';
@@ -14,7 +11,6 @@ import 'package:wutsi_wallet/src/device.dart';
 import 'package:wutsi_wallet/src/environment.dart';
 import 'package:wutsi_wallet/src/event.dart';
 import 'package:sdui/sdui.dart' as sdui;
-import 'package:wutsi_wallet/src/http.dart';
 
 final Logger _logger = LoggerFactory.create('firebase');
 String? _token;
@@ -34,73 +30,12 @@ void _initMessaging(Environment env) async {
 
   // Event handlers
   sdui.sduiFirebaseIconAndroid = '@mipmap/logo_192';
-  sdui.sduiFirebaseMessageHandler = (msg, foreground){
-    _onRemoteMessage(msg, foreground);
-  };
-  sdui.sduiFirebaseOpenAppHandler = (msg, context){
-    _onOpenApp(msg, context);
-  };
   sdui.sduiFirebaseTokenHandler = (token){
     _onToken(token);
   };
 
   // Login event handler
   registerLoginEventHanlder((env) => _onLogin(env));
-}
-
-void _onRemoteMessage(RemoteMessage message, bool foreground) async{
-  _logger.i('_onRemoteMessage foreground=$foreground notification=${message.notification} data=${message.data}');
-
-  // Show notification
-  await sduiLocalNotificationsPlugin.show(
-      message.hashCode,
-      message.notification?.title,
-      message.notification?.body,
-      const NotificationDetails(
-          android: AndroidNotificationDetails(
-              'wutsi_channel',
-              'wutsi_channel',
-              priority: Priority.max,
-              importance: Importance.max,
-              playSound: true,
-              icon: '@mipmap/logo_192'
-          )
-      ),
-      payload: jsonEncode(message.data)
-  ).then((value) => _track('/firebase/on-message', message, foreground));
-}
-
-void _onOpenApp(RemoteMessage message, BuildContext context) async{
-  _logger.i('_onOpenApp data=${message.data}');
-
-  // Handle
-  String? url = sdui.sduiDeeplinkHandler(message.data['url']);
-  if (url != null) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-          builder: (context) =>
-              DynamicRoute(
-                  provider: HttpRouteContentProvider(url))),
-    ).whenComplete(() => _track('/firebase/on-select', message, true));
-  }
-}
-
-void _track(String endpoint, RemoteMessage message, bool foreground){
-  Environment.get().then((env) {
-    if (!foreground) initHttp(env); // Init HTTP when handling background event
-
-    Http.getInstance().post(
-      '${env.getShellUrl()}$endpoint',
-      {
-        'title': message.notification?.title,
-        'body': message.notification?.body,
-        'imageUrl': message.notification?.android?.imageUrl,
-        'data': message.data,
-        'background': !foreground
-      }
-    );
-  });
 }
 
 void _onToken(String? token) {
