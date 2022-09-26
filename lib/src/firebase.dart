@@ -59,14 +59,14 @@ void _onRemoteMessage(RemoteMessage message, bool foreground) async {
             playSound: true,
             icon: '@mipmap/logo_192'),
         iOS: IOSNotificationDetails(
-            presentAlert: true,
-            presentBadge: true,
-            presentSound: true,
-            badgeNumber: 1
-            // attachments: List<IOSNotificationAttachment>?
-            // subtitle: String?,
-            // threadIdentifier: String?
-            ),
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
+          badgeNumber: 1,
+          // attachments: List<IOSNotificationAttachment>?
+          // subtitle: String?,
+          // threadIdentifier: String?
+        ),
       ),
       payload: jsonEncode(message.data));
 
