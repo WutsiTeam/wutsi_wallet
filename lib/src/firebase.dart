@@ -37,8 +37,8 @@ void _initMessaging(Environment env) async {
   sdui.sduiFirebaseMessageHandler = (msg, foreground){
     _onRemoteMessage(msg, foreground);
   };
-  sdui.sduiSelectionHandler = (payload, context){
-    _onRemoteMessageSelected(payload, context);
+  sdui.sduiFirebaseOpenAppHandler = (msg, context){
+    _onOpenApp(msg, context);
   };
   sdui.sduiFirebaseTokenHandler = (token){
     _onToken(token);
@@ -67,13 +67,31 @@ void _onRemoteMessage(RemoteMessage message, bool foreground) async{
           )
       ),
       payload: jsonEncode(message.data)
-  );
+  ).then((value) => _track('/firebase/on-message', message, foreground));
+}
 
-  // Track
-  Environment env = await Environment.get();
-  if (!foreground) initHttp(env); // Init HTTP when handling background event
-  Http.getInstance().post(
-      '${env.getShellUrl()}/firebase/on-message',
+void _onOpenApp(RemoteMessage message, BuildContext context) async{
+  _logger.i('_onOpenApp data=${message.data}');
+
+  // Handle
+  String? url = sdui.sduiDeeplinkHandler(message.data['url']);
+  if (url != null) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+          builder: (context) =>
+              DynamicRoute(
+                  provider: HttpRouteContentProvider(url))),
+    ).whenComplete(() => _track('/firebase/on-select', message, true));
+  }
+}
+
+void _track(String endpoint, RemoteMessage message, bool foreground){
+  Environment.get().then((env) {
+    if (!foreground) initHttp(env); // Init HTTP when handling background event
+
+    Http.getInstance().post(
+      '${env.getShellUrl()}$endpoint',
       {
         'title': message.notification?.title,
         'body': message.notification?.body,
@@ -81,26 +99,8 @@ void _onRemoteMessage(RemoteMessage message, bool foreground) async{
         'data': message.data,
         'background': !foreground
       }
-  );
-}
-
-void _onRemoteMessageSelected(String? payload, BuildContext context){
-  _logger.i('onRemoteMessageSelected $payload');
-
-  if (payload == null) return;
-
-  var json = jsonDecode(payload);
-  if (json is Map<String, dynamic>){
-    String? url = sdui.sduiDeeplinkHandler(json['url']);
-    if (url != null){
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => DynamicRoute(
-                provider: HttpRouteContentProvider(url))),
-      );
-    }
-  }
+    );
+  });
 }
 
 void _onToken(String? token) {

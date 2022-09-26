@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.0.130
+- CHANGE: Improve error page
+- CHANGE: Upgrade to sdui-0.1.129 to handle open-app on selection of push notification
+
 ## 0.0.129
 - CHANGE: Improve URL handling
 
