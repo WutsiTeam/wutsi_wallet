@@ -32,13 +32,13 @@ void _initMessaging(Environment env) async {
 
   // Event handlers
   sdui.sduiFirebaseIconAndroid = '@mipmap/logo_192';
-  sdui.sduiFirebaseMessageHandler = (msg, foreground){
+  sdui.sduiFirebaseMessageHandler = (msg, foreground) {
     _onRemoteMessage(msg, foreground);
   };
-  sdui.sduiSelectionHandler = (payload, context){
+  sdui.sduiSelectionHandler = (payload, context) {
     _onRemoteMessageSelected(payload, context);
   };
-  sdui.sduiFirebaseTokenHandler = (token){
+  sdui.sduiFirebaseTokenHandler = (token) {
     _onToken(token);
   };
 
@@ -46,54 +46,53 @@ void _initMessaging(Environment env) async {
   registerLoginEventHanlder((env) => _onLogin(env));
 }
 
-void _onRemoteMessage(RemoteMessage message, bool foreground) async{
+void _onRemoteMessage(RemoteMessage message, bool foreground) async {
   // Show notification
   await sduiLocalNotificationsPlugin.show(
       message.hashCode,
       message.notification?.title,
       message.notification?.body,
       const NotificationDetails(
-          android: AndroidNotificationDetails(
-              'wutsi_channel',
-              'wutsi_channel',
-              priority: Priority.max,
-              importance: Importance.max,
-              playSound: true,
-              icon: '@mipmap/logo_192'
-          )
+        android: AndroidNotificationDetails('wutsi_channel', 'wutsi_channel',
+            priority: Priority.max,
+            importance: Importance.max,
+            playSound: true,
+            icon: '@mipmap/logo_192'),
+        iOS: IOSNotificationDetails(
+            presentAlert: true,
+            presentBadge: true,
+            presentSound: true,
+            badgeNumber: 1
+            // attachments: List<IOSNotificationAttachment>?
+            // subtitle: String?,
+            // threadIdentifier: String?
+            ),
       ),
-      payload: jsonEncode(message.data)
-  );
+      payload: jsonEncode(message.data));
 
   // Track
-  Environment.get().then((env) =>
-      Device.get().then((device) =>
-          Http.getInstance().post(
-              '${env.getShellUrl()}/firebase/on-message',
-              {
-                'title': message.notification?.title,
-                'body': message.notification?.body,
-                'imageUrl': message.notification?.android?.imageUrl,
-                'data': message.data,
-                'background': !foreground
-              }
-          )
-      )
-  );
+  Environment.get().then((env) => Device.get().then((device) =>
+      Http.getInstance().post('${env.getShellUrl()}/firebase/on-message', {
+        'title': message.notification?.title,
+        'body': message.notification?.body,
+        'imageUrl': message.notification?.android?.imageUrl,
+        'data': message.data,
+        'background': !foreground
+      })));
 }
 
-void _onRemoteMessageSelected(String? payload, BuildContext context){
+void _onRemoteMessageSelected(String? payload, BuildContext context) {
   if (payload == null) return;
 
   var json = jsonDecode(payload);
-  if (json is Map<String, dynamic>){
+  if (json is Map<String, dynamic>) {
     String? url = sdui.sduiDeeplinkHandler(json['url']);
-    if (url != null){
+    if (url != null) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-            builder: (context) => DynamicRoute(
-                provider: HttpRouteContentProvider(url))),
+            builder: (context) =>
+                DynamicRoute(provider: HttpRouteContentProvider(url))),
       );
     }
   }
@@ -102,8 +101,8 @@ void _onRemoteMessageSelected(String? payload, BuildContext context){
 void _onToken(String? token) {
   _token = token;
   Environment.get().then((env) {
-    String url = '${env
-        .getShellUrl()}/commands/update-profile-attribute?name=fcm-token';
+    String url =
+        '${env.getShellUrl()}/commands/update-profile-attribute?name=fcm-token';
     Http.getInstance().post(url, {'value': token});
   });
 }
@@ -141,8 +140,7 @@ class HttpCrashlyticsInterceptor extends HttpInterceptor {
   final AccessToken _accessToken;
   final Environment _environment;
 
-  HttpCrashlyticsInterceptor(
-      this._accessToken, this._environment);
+  HttpCrashlyticsInterceptor(this._accessToken, this._environment);
 
   @override
   void onRequest(RequestTemplate request) {
@@ -186,4 +184,3 @@ class HttpCrashlyticsInterceptor extends HttpInterceptor {
     }
   }
 }
-
