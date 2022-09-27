@@ -10,12 +10,12 @@ import 'device.dart';
 import 'environment.dart';
 import 'language.dart';
 
-void initHttp(
-    AccessToken accessToken,
-    Device device,
-    Language language,
-    PackageInfo packageInfo,
-    Environment environment) {
+Future<void> initHttp(Environment environment) async {
+  AccessToken accessToken = await AccessToken.get();
+  Device device = await Device.get();
+  Language language = await Language.get();
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
   Http.getInstance().interceptors = [
     HttpJsonInterceptor(),
     HttpTracingInterceptor(environment, device, packageInfo),

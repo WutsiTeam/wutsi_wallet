@@ -1,24 +1,16 @@
 import 'dart:async';
 
-// import 'firebase_options.dart';
-
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sdui/sdui.dart';
-import 'package:wutsi_wallet/firebase_options.dart';
-import 'package:wutsi_wallet/src/access_token.dart';
 import 'package:wutsi_wallet/src/analytics.dart';
-import 'package:wutsi_wallet/src/device.dart';
 import 'package:wutsi_wallet/src/environment.dart';
 import 'package:wutsi_wallet/src/error.dart';
 import 'package:wutsi_wallet/src/event.dart';
 import 'package:wutsi_wallet/src/firebase.dart';
 import 'package:wutsi_wallet/src/http.dart';
-import 'package:wutsi_wallet/src/language.dart';
 import 'package:wutsi_wallet/src/loading.dart';
 import 'package:wutsi_wallet/src/deeplink.dart';
 import 'package:wutsi_wallet/src/login.dart';
@@ -27,9 +19,6 @@ import 'package:wutsi_wallet/src/login.dart';
 final Logger logger = LoggerFactory.create('main');
 
 Environment environment = Environment(Environment.defaultEnvironment);
-Device device = Device('');
-AccessToken accessToken = AccessToken(null, {});
-Language language = Language('en');
 bool useDeeplink = true;
 
 void main() async {
@@ -51,26 +40,16 @@ void main() async {
 void _launch() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // await Firebase.initializeApp(
-  //   options: DefaultFirebaseOptions.currentPlatform,
-  // );
-
   environment = await Environment.get();
-  device = await Device.get();
-  accessToken = await AccessToken.get();
-  language = await Language.get();
-  logger.i(
-      'device-id=${device.id} access-token=${accessToken.value} language=${language.value} environment=${environment.value}');
 
   logger.i('Initializing HTTP');
-  PackageInfo packageInfo = await PackageInfo.fromPlatform();
-  initHttp(accessToken, device, language, packageInfo, environment);
+  await initHttp(environment);
 
   logger.i('Initializing Events');
   initEvents(environment);
 
   logger.i('Initializing Firebase');
-  initFirebase(device, environment);
+  initFirebase(environment);
 
   logger.i('Initializing Analytics');
   initAnalytics(environment);

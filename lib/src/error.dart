@@ -86,7 +86,7 @@ class SDUIErrorWidget extends StatelessWidget{
                 child: _toErrorWidget(
                     const Icon(Icons.error, color: Color(0xff8B0000), size: 80),
                     'Error',
-                    'An unexpected error has occurred.',
+                    getErrorMessage(),
                     null,
                     null,
                     context
@@ -96,6 +96,10 @@ class SDUIErrorWidget extends StatelessWidget{
       );
 
   bool _is401Error() => (error is ClientException) && ((error as ClientException).message == '401');
+
+  String getErrorMessage() => (error is ClientException)
+      ? (error as ClientException).message
+      : 'An unexpected error has occurred.';
 }
 
 Widget _toErrorWidget(
