@@ -9,6 +9,42 @@
       "client_info": {
         "mobilesdk_app_id": "1:4026312901:android:7e8af1efed2958faada8ac",
         "android_client_info": {
+          "package_name": "com.wutsi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "4026312901-kf2ur4v64fedkgatn5bu38g14eq1nv8e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAHuyuwpAFBxZWq4RyEda_3xDScrO4VgU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "4026312901-kf2ur4v64fedkgatn5bu38g14eq1nv8e.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "4026312901-bc0e1ergj9i81r4sdopgltg32mrfjk0n.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.wutsi.wutsiWallet"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:4026312901:android:0f42eb0b91381a46ada8ac",
+        "android_client_info": {
           "package_name": "com.wutsi.wutsi_wallet"
         }
       },
@@ -29,6 +65,13 @@
             {
               "client_id": "4026312901-kf2ur4v64fedkgatn5bu38g14eq1nv8e.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "4026312901-bc0e1ergj9i81r4sdopgltg32mrfjk0n.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.wutsi.wutsiWallet"
+              }
             }
           ]
         }
