@@ -43,8 +43,8 @@ void _onToken(String? token) {
 
   _token = token;
   Environment.get().then((env) {
-    String url = '${env
-        .getShellUrl()}/commands/update-profile-attribute?name=fcm-token';
+    String url =
+        '${env.getShellUrl()}/commands/update-profile-attribute?name=fcm-token';
     Http.getInstance().post(url, {'value': token});
   });
 }
@@ -86,8 +86,7 @@ class HttpCrashlyticsInterceptor extends HttpInterceptor {
   final AccessToken _accessToken;
   final Environment _environment;
 
-  HttpCrashlyticsInterceptor(
-      this._accessToken, this._environment);
+  HttpCrashlyticsInterceptor(this._accessToken, this._environment);
 
   @override
   void onRequest(RequestTemplate request) {
@@ -131,4 +130,3 @@ class HttpCrashlyticsInterceptor extends HttpInterceptor {
     }
   }
 }
-
