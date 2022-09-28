@@ -1,11 +1,21 @@
 # CHANGELOG
 
+## 0.0.131
+- CHANGE: Add permission `com.google.android.gms.permission.AD_ID`
+
+## 0.0.130
+- CHANGE: Improve error page
+- CHANGE: Upgrade to sdui-0.1.129 to handle open-app on selection of push notification
+
+## 0.0.129
+- CHANGE: Improve URL handling
+
 ## 0.0.128
 - CHANGE: Add notification for iOS
 
 ## 0.0.127
-- CHANGE: Handle deeeplink click
-- FIX: Do not open deeplinks from another environment
+- CHANGE: Handle deeplink click
+- FIX: Do not open deeplink from another environment
 
 ## 0.0.126
 - CHANGE: Send push notification message to wutsi-shell-bff
