@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.133
+- CHANGE: IOS push notification
+
 ## 0.0.131
 - CHANGE: Add permission `com.google.android.gms.permission.AD_ID`
 
