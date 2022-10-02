@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.134
+- CHANGE: Chat integration
+
 ## 0.0.133
 - CHANGE: IOS push notification
 
