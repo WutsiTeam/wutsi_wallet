@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.0.135
+- CHANGE: Handle chat deeplink
+- CHANGE: Chat UI improvements
+
 ## 0.0.134
 - CHANGE: Chat integration
 

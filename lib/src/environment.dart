@@ -41,17 +41,19 @@ class Environment {
 
   String getGatewayUrl() => 'https://wutsi-gateway-$value.herokuapp.com';
 
-  String getLoginUrl() =>  '${getGatewayUrl()}/login';
+  String getLoginUrl() =>  'https://wutsi-login-bff-$value.herokuapp.com/login';
 
   String getOnboardUrl() => '${getLoginUrl()}/onboard';
 
-  String getShellUrl() =>  '${getGatewayUrl()}/shell';
+  String getChatUrl() =>  'https://wutsi-chat-bff-$value.herokuapp.com';
 
-  String getCashUrl() =>  '${getGatewayUrl()}/cash';
+  String getShellUrl() =>  'https://wutsi-shell-bff-$value.herokuapp.com';
 
-  String getStoreUrl() => '${getGatewayUrl()}/store';
+  String getCashUrl() =>  'https://wutsi-cash-bff-$value.herokuapp.com';
 
-  String getNewsUrl() => '${getGatewayUrl()}/news';
+  String getStoreUrl() => 'https://wutsi-catalog-bff-$value.herokuapp.com';
+
+  String getNewsUrl() => 'https://wutsi-news-bff-$value.herokuapp.com';
 
   String getDeeplinkUrl() => value == 'test'
       ? 'https://wutsi-web-test.herokuapp.com'

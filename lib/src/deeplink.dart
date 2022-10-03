@@ -8,12 +8,21 @@ void initDeeplink(Environment environment){
       return null;
     }
 
-    // ID
+    // Chat
+    if (uri.path == '/messages') {
+      var recipientId = uri.queryParameters['recipient-id'];
+      if (recipientId != null){
+        return '${environment.getChatUrl()}/messages?recipient-id=$recipientId';
+      } else {
+        return null;
+      }
+    }
+
+    // ID based URL
     var id = uri.queryParameters['id'];
     if (id == null) {
       return null;
     }
-
     if (uri.path == '/profile') {
       return '${environment.getShellUrl()}/profile?id=$id';
     } else if (uri.path == '/product') {
