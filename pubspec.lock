@@ -932,7 +932,7 @@ packages:
       name: sdui
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.146"
+    version: "0.1.150"
   search_choices:
     dependency: transitive
     description:
@@ -1309,6 +1309,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.0"
+  web_socket_channel:
+    dependency: transitive
+    description:
+      name: web_socket_channel
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.0"
   webview_flutter:
     dependency: transitive
     description:
