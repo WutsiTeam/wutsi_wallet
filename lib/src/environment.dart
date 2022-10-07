@@ -41,7 +41,7 @@ class Environment {
 
   String getGatewayUrl() => 'https://wutsi-gateway-$value.herokuapp.com';
 
-  String getLoginUrl() =>  'https://wutsi-login-bff-$value.herokuapp.com/login';
+  String getLoginUrl() =>  'https://wutsi-login-bff-$value.herokuapp.com';
 
   String getOnboardUrl() => 'https://wutsi-login-bff-$value.herokuapp.com/onboard';
 

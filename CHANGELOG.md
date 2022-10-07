@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.137
+- FIX: Fix the login URL
+
 ## 0.0.136
 - CHANGE: Disable crashlytics in debug mode
 - CHANGE: Improvement on chat
