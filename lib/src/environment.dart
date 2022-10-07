@@ -43,7 +43,7 @@ class Environment {
 
   String getLoginUrl() =>  'https://wutsi-login-bff-$value.herokuapp.com/login';
 
-  String getOnboardUrl() => '${getLoginUrl()}/onboard';
+  String getOnboardUrl() => 'https://wutsi-login-bff-$value.herokuapp.com/onboard';
 
   String getChatUrl() =>  'https://wutsi-chat-bff-$value.herokuapp.com';
 

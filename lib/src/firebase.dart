@@ -59,6 +59,8 @@ void _onLogin(Environment env) async {
 /// CRASHLYTICS
 ///
 void _initCrashlytics() async {
+  if (kDebugMode) return;
+
   _logger.i('Initializing FirebaseCrashlytics');
 
   Device device = await Device.get();
@@ -73,11 +75,6 @@ void _initCrashlytics() async {
       errorAndStacktrace.last,
     );
   }).sendPort);
-
-  if (kDebugMode) {
-    // Force disable Crashlytics collection while doing every day development.
-    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
-  }
 }
 
 /// HTTP interceptor for Crashlytics integration
@@ -90,6 +87,8 @@ class HttpCrashlyticsInterceptor extends HttpInterceptor {
 
   @override
   void onRequest(RequestTemplate request) {
+    if (kDebugMode) return;
+
     try {
       var crashlytics = FirebaseCrashlytics.instance;
       if (crashlytics.isCrashlyticsCollectionEnabled) {
@@ -106,6 +105,8 @@ class HttpCrashlyticsInterceptor extends HttpInterceptor {
 
   @override
   void onResponse(ResponseTemplate response) async {
+    if (kDebugMode) return;
+
     var crashlytics = FirebaseCrashlytics.instance;
     if (crashlytics.isCrashlyticsCollectionEnabled &&
         response.statusCode / 100 > 2) {

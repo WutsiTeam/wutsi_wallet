@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.0.136
+- CHANGE: Disable crashlytics in debug mode
+- CHANGE: Improvement on chat
+
 ## 0.0.135
 - CHANGE: Handle chat deeplink
 - CHANGE: Chat UI improvements
