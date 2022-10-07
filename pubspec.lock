@@ -932,7 +932,14 @@ packages:
       name: sdui
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.158"
+    version: "0.1.159"
+  search_choices:
+    dependency: transitive
+    description:
+      name: search_choices
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.4"
   share_plus:
     dependency: transitive
     description:
