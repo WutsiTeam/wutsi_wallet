@@ -1,7 +1,8 @@
 # CHANGELOG
 
-## 0.0.138
+## 0.0.139
 - CHANGE: Update sdui
+- CHANGE: Replace logo_192 by ic_launcher
 
 ## 0.0.137
 - FIX: Fix the login URL

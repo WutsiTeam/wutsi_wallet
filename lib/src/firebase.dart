@@ -29,7 +29,6 @@ void _initMessaging(Environment env) async {
   _logger.i('Initializing FirebaseMessaging');
 
   // Event handlers
-  sdui.sduiFirebaseIconAndroid = '@mipmap/logo_192';
   sdui.sduiFirebaseTokenHandler = (token){
     _onToken(token);
   };
