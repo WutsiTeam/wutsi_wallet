@@ -5,16 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sdui/sdui.dart' as sdui;
 import 'package:http/http.dart';
-import 'package:wutsi_wallet/src/environment.dart';
 import 'package:wutsi_wallet/src/login.dart';
 import 'package:wutsi_wallet/src/access_token.dart';
 
 import 'device.dart';
 
-Environment environment = Environment(Environment.defaultEnvironment);
-
 void setupErrorHandling() async {
-  environment = await Environment.get();
   sdui.sduiErrorState = (context, error) => SDUIErrorWidget(error: error).build(context);
 
   // Flutter Screen of Death
@@ -89,7 +85,6 @@ class SDUIErrorWidget extends StatelessWidget{
             if (snapshot.hasData){
               return sdui.DynamicRoute(
                 provider: LoginContentProvider(context,
-                    environment,
                     phoneNumber: snapshot.data?.phoneNumber(),
                     hideBackButton: true
                 ),
