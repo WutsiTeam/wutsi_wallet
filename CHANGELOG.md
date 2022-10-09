@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.140
+- CHANGE: Improve error reporting
+
 ## 0.0.139
 - CHANGE: Update sdui
 - CHANGE: Replace logo_192 by ic_launcher

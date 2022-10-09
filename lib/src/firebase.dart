@@ -2,6 +2,7 @@ import 'dart:isolate';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -32,6 +33,9 @@ void _initMessaging(Environment env) async {
   sdui.sduiFirebaseTokenHandler = (token){
     _onToken(token);
   };
+  sdui.sduiFirebaseMessageHandler = (msg) {
+    _onMessage(msg);
+  };
 
   // Login event handler
   registerLoginEventHanlder((env) => _onLogin(env));
@@ -46,6 +50,11 @@ void _onToken(String? token) {
         '${env.getShellUrl()}/commands/update-profile-attribute?name=fcm-token';
     Http.getInstance().post(url, {'value': token});
   });
+}
+
+void _onMessage(RemoteMessage message){
+  _logger.i(
+      '_onMessage id=${message.messageId} data=${message.data}');
 }
 
 void _onLogin(Environment env) async {

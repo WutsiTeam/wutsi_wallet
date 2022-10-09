@@ -1,3 +1,6 @@
+import 'dart:ui';
+
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sdui/sdui.dart' as sdui;
@@ -10,9 +13,31 @@ import 'device.dart';
 
 Environment environment = Environment(Environment.defaultEnvironment);
 
-void initError() async {
+void setupErrorHandling() async {
   environment = await Environment.get();
   sdui.sduiErrorState = (context, error) => SDUIErrorWidget(error: error).build(context);
+
+  // Flutter Screen of Death
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    return FlutterErrorWidget(details: details);
+  };
+  FlutterError.onError = (details){
+    // Default behaviour
+    FlutterError.presentError(details);
+
+    // Push errors Crashlytics
+    if (FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled){
+      FirebaseCrashlytics.instance.recordFlutterError(details, fatal: true);
+    }
+  };
+
+  PlatformDispatcher.instance.onError = (error, stack) {
+    if (FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled){
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    }
+    return true;
+  };
+
 }
 
 ///
