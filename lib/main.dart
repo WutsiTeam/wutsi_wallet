@@ -20,12 +20,12 @@ bool useDeeplink = true;
 
 void main() async {
   setupErrorHandling();
+  WidgetsFlutterBinding.ensureInitialized();
+
   _launch();
 }
 
 void _launch() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
   environment = await Environment.get();
 
   logger.i('Initializing HTTP');

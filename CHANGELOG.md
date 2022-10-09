@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.143
+- FIX: Resolution of environment
+
 ## 0.0.142
 - CHANGE: Improve error reporting
 
