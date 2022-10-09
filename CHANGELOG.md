@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 0.0.140
+## 0.0.141
 - CHANGE: Improve error reporting
 
 ## 0.0.139
