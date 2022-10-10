@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.144
+- CHANGE: Update to sdui 0.0.174
+
 ## 0.0.143
 - FIX: Resolution of environment
 
