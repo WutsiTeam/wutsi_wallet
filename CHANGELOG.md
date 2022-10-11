@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.145
+- CHANGE: Integrate localized text
+
 ## 0.0.144
 - CHANGE: Update to sdui 0.0.174
 

@@ -11,7 +11,9 @@ class Language {
 
   String value;
 
-  Language(this.value);
+  Language(this.value) {
+    _initL10(this.value);
+  }
 
   static Future<Language> get() async {
     try {
@@ -34,7 +36,18 @@ class Language {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString(_key, value);
 
+    // Setup localization
+    _initL10(value);
+
     return this;
+  }
+
+  void _initL10(String lang){
+    if (lang.toLowerCase() == 'fr'){
+      sduiL10 = const SDUIL10nFr();
+    } else {
+      sduiL10 = const SDUIL10nFr();
+    }
   }
 }
 
