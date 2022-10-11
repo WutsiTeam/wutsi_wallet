@@ -12,7 +12,7 @@ class Language {
   String value;
 
   Language(this.value) {
-    _initL10(this.value);
+    _initL10(value);
   }
 
   static Future<Language> get() async {
@@ -43,10 +43,13 @@ class Language {
   }
 
   void _initL10(String lang){
-    if (lang.toLowerCase() == 'fr'){
-      sduiL10 = const SDUIL10nFr();
-    } else {
-      sduiL10 = const SDUIL10nFr();
+    switch(lang.toLowerCase()){
+      case 'fr':
+        sduiL10= const SDUIL10nFr();
+        break;
+
+      default:
+        sduiL10 = const SDUIL10nEn();
     }
   }
 }
