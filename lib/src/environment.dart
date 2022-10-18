@@ -14,14 +14,10 @@ class Environment {
   Environment(this.value);
 
   static Future<Environment> get() async {
-    try {
       SharedPreferences preferences = await SharedPreferences.getInstance();
-      String? value = preferences.getString(_key);
-      return Environment(value ?? defaultEnvironment);
-    } catch (e, stackTrace) {
-      _logger.e('Unable to resolve the environment', e, stackTrace);
-      return Environment(defaultEnvironment);
-    }
+      String value = (preferences.containsKey(_key) ? preferences.getString(_key) : null) ?? defaultEnvironment;
+      _logger.i('environment=$value');
+      return Environment(value);
   }
 
   Future<Environment> set(String value) async {
@@ -41,9 +37,9 @@ class Environment {
 
   String getGatewayUrl() => 'https://wutsi-gateway-$value.herokuapp.com';
 
-  String getLoginUrl() =>  'https://wutsi-login-bff-$value.herokuapp.com/login';
+  String getLoginUrl() =>  'https://wutsi-login-bff-$value.herokuapp.com';
 
-  String getOnboardUrl() => '${getLoginUrl()}/onboard';
+  String getOnboardUrl() => 'https://wutsi-login-bff-$value.herokuapp.com/onboard';
 
   String getChatUrl() =>  'https://wutsi-chat-bff-$value.herokuapp.com';
 

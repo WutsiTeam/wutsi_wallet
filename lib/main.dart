@@ -1,6 +1,3 @@
-import 'dart:async';
-
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
@@ -22,24 +19,13 @@ Environment environment = Environment(Environment.defaultEnvironment);
 bool useDeeplink = true;
 
 void main() async {
-  // Flutter Screen of Death
-  ErrorWidget.builder = (FlutterErrorDetails details) {
-    return FlutterErrorWidget(details: details);
-  };
+  setupErrorHandling();
+  WidgetsFlutterBinding.ensureInitialized();
 
-  // Run the app
-  runZonedGuarded<Future<void>>(() async {
-    _launch();
-  },
-      (error, stack) => {
-            if (FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled)
-              {FirebaseCrashlytics.instance.recordError(error, stack)}
-          });
+  _launch();
 }
 
 void _launch() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
   environment = await Environment.get();
 
   logger.i('Initializing HTTP');
@@ -56,9 +42,6 @@ void _launch() async {
 
   logger.i('Initializing Loading State');
   initLoadingState();
-
-  logger.i('Initializing Error page');
-  initError();
 
   logger.i('Initializing Deeplinks');
   initDeeplink(environment);
@@ -81,7 +64,7 @@ class WutsiApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => DynamicRoute(provider: HttpRouteContentProvider(environment.getShellUrl())),
-        '/login': (context) => DynamicRoute(provider: LoginContentProvider(context, environment), handleFirebaseMessages: false),
+        '/login': (context) => DynamicRoute(provider: LoginContentProvider(context), handleFirebaseMessages: false),
       },
     );
   }

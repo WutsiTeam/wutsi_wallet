@@ -1,5 +1,28 @@
 # CHANGELOG
 
+## 0.0.145
+- CHANGE: Integrate localized text
+
+## 0.0.144
+- CHANGE: Update to sdui 0.0.174
+
+## 0.0.143
+- FIX: Resolution of environment
+
+## 0.0.142
+- CHANGE: Improve error reporting
+
+## 0.0.139
+- CHANGE: Update sdui
+- CHANGE: Replace logo_192 by ic_launcher
+
+## 0.0.137
+- FIX: Fix the login URL
+
+## 0.0.136
+- CHANGE: Disable crashlytics in debug mode
+- CHANGE: Improvement on chat
+
 ## 0.0.135
 - CHANGE: Handle chat deeplink
 - CHANGE: Chat UI improvements

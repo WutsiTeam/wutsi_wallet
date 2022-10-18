@@ -2,6 +2,7 @@ import 'dart:isolate';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -29,9 +30,11 @@ void _initMessaging(Environment env) async {
   _logger.i('Initializing FirebaseMessaging');
 
   // Event handlers
-  sdui.sduiFirebaseIconAndroid = '@mipmap/logo_192';
   sdui.sduiFirebaseTokenHandler = (token){
     _onToken(token);
+  };
+  sdui.sduiFirebaseMessageHandler = (msg) {
+    _onMessage(msg);
   };
 
   // Login event handler
@@ -49,6 +52,11 @@ void _onToken(String? token) {
   });
 }
 
+void _onMessage(RemoteMessage message){
+  _logger.i(
+      '_onMessage id=${message.messageId} data=${message.data}');
+}
+
 void _onLogin(Environment env) async {
   _logger.i('onLogin');
 
@@ -59,6 +67,8 @@ void _onLogin(Environment env) async {
 /// CRASHLYTICS
 ///
 void _initCrashlytics() async {
+  if (kDebugMode) return;
+
   _logger.i('Initializing FirebaseCrashlytics');
 
   Device device = await Device.get();
@@ -73,11 +83,6 @@ void _initCrashlytics() async {
       errorAndStacktrace.last,
     );
   }).sendPort);
-
-  if (kDebugMode) {
-    // Force disable Crashlytics collection while doing every day development.
-    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
-  }
 }
 
 /// HTTP interceptor for Crashlytics integration
@@ -90,6 +95,8 @@ class HttpCrashlyticsInterceptor extends HttpInterceptor {
 
   @override
   void onRequest(RequestTemplate request) {
+    if (kDebugMode) return;
+
     try {
       var crashlytics = FirebaseCrashlytics.instance;
       if (crashlytics.isCrashlyticsCollectionEnabled) {
@@ -106,6 +113,8 @@ class HttpCrashlyticsInterceptor extends HttpInterceptor {
 
   @override
   void onResponse(ResponseTemplate response) async {
+    if (kDebugMode) return;
+
     var crashlytics = FirebaseCrashlytics.instance;
     if (crashlytics.isCrashlyticsCollectionEnabled &&
         response.statusCode / 100 > 2) {
