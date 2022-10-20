@@ -19,8 +19,11 @@ Future<void> restoreFlutterError(Future<void> Function() call) async {
 
 Future<void> main() async {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  if (binding is LiveTestWidgetsFlutterBinding) {
     binding.framePolicy = LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;
-  group(('WU-105'), () {
+  }
+
+  group(('WU-105 normal user account update'), () {
 
     testWidgets('normal user account update WU-105',
             (WidgetTester tester) async {
@@ -39,7 +42,8 @@ Future<void> main() async {
 //do
           await Future.delayed(const Duration(seconds: 1));
           await tester.enterText(phonefield, "693842356");
-          await Future.delayed(const Duration(seconds: 1));
+              await tester.pumpAndSettle();
+              await Future.delayed(const Duration(seconds: 1));
           await tester.tap(nextbutton);
           await Future.delayed(const Duration(seconds: 5));
           await tester.pumpAndSettle();
@@ -58,15 +62,10 @@ Future<void> main() async {
           final Finder paramIcon = find.descendant(
               of: find.byType(NavigationToolbar), matching: find.byType(Icon)
           );
-          final Finder paramIcon1 = find
-              .byType(Icon)
-              .first;
-
           await tester.tap(paramIcon);
           await tester.pumpAndSettle();
 //test
-          await Future.delayed(const Duration(seconds: 3));
-          await tester.pumpAndSettle();
+
 
           expect(find.text('Profile'), findsOneWidget);
         });
