@@ -19,10 +19,7 @@ Future<void> restoreFlutterError(Future<void> Function() call) async {
 
 Future<void> main() async {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  if (binding is LiveTestWidgetsFlutterBinding) {
     binding.framePolicy = LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;
-  }
-
   group(('WU-105'), () {
 
     testWidgets('normal user account update WU-105',

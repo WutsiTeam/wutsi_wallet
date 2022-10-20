@@ -19,8 +19,7 @@ Future<void> restoreFlutterError(Future<void> Function() call) async {
 
 Future<void> main() async {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  if (binding is LiveTestWidgetsFlutterBinding) {
-    binding.framePolicy = LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;}
+  binding.framePolicy = LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;
 
   group (('WU-84'),(){
   testWidgets('User enter a valid phone Number WU-84 E1', (tester) async {
@@ -97,8 +96,7 @@ Future<void> main() async {
 
 
     //test
-      expect (find.text('Create your PIN', findRichText: true), findsWidgets);
-  });
+      expect (find.text('Create your PIN', findRichText: true), findsWidgets);});
   });
   group (('WU-114'),(){
       testWidgets('The user enter an Incorrect OTP',
@@ -648,7 +646,6 @@ Future<void> main() async {
           // expect (find.text('Error'), findsOneWidget);
         });
   });
-
   group (('WU-112'),(){
       testWidgets('The user enter a correct OTP and an correct PIN',
               (WidgetTester tester) async {
