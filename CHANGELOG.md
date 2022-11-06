@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.146
+- CHANGE: Move all BFF logic to wutsi-shell-bff
+
 ## 0.0.145
 - CHANGE: Integrate localized text
 

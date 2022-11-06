@@ -35,19 +35,17 @@ class Environment {
 
   int tenantId() => 1;
 
-  String getGatewayUrl() => 'https://wutsi-gateway-$value.herokuapp.com';
-
-  String getLoginUrl() =>  'https://wutsi-login-bff-$value.herokuapp.com';
-
-  String getOnboardUrl() => 'https://wutsi-login-bff-$value.herokuapp.com/onboard';
-
-  String getChatUrl() =>  'https://wutsi-chat-bff-$value.herokuapp.com';
-
   String getShellUrl() =>  'https://wutsi-shell-bff-$value.herokuapp.com';
 
-  String getCashUrl() =>  'https://wutsi-cash-bff-$value.herokuapp.com';
+  String getLoginUrl() =>  '${getShellUrl()}/login';
 
-  String getStoreUrl() => 'https://wutsi-catalog-bff-$value.herokuapp.com';
+  String getOnboardUrl() => '${getShellUrl()}/onboard';
+
+  String getCashUrl() =>  getShellUrl();
+
+  String getStoreUrl() => getShellUrl();
+
+  String getChatUrl() =>  'https://wutsi-chat-bff-$value.herokuapp.com';
 
   String getNewsUrl() => 'https://wutsi-news-bff-$value.herokuapp.com';
 
