@@ -17,10 +17,14 @@ final Logger _logger = LoggerFactory.create('firebase');
 String? _token;
 
 void initFirebase(Environment env) async {
-  await Firebase.initializeApp();
+  try {
+    await Firebase.initializeApp();
 
-  _initCrashlytics();
-  _initMessaging(env);
+    _initCrashlytics();
+    _initMessaging(env);
+  } catch(ex){
+    _logger.e('Firebase initialization error', ex);
+  }
 }
 
 ///
@@ -70,19 +74,22 @@ void _initCrashlytics() async {
   if (kDebugMode) return;
 
   _logger.i('Initializing FirebaseCrashlytics');
+  try {
+    Device device = await Device.get();
 
-  Device device = await Device.get();
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+    FirebaseCrashlytics.instance.setCustomKey("device_id", device.id);
 
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-  FirebaseCrashlytics.instance.setCustomKey("device_id", device.id);
-
-  Isolate.current.addErrorListener(RawReceivePort((pair) async {
-    final List<dynamic> errorAndStacktrace = pair;
-    await FirebaseCrashlytics.instance.recordError(
-      errorAndStacktrace.first,
-      errorAndStacktrace.last,
-    );
-  }).sendPort);
+    Isolate.current.addErrorListener(RawReceivePort((pair) async {
+      final List<dynamic> errorAndStacktrace = pair;
+      await FirebaseCrashlytics.instance.recordError(
+        errorAndStacktrace.first,
+        errorAndStacktrace.last,
+      );
+    }).sendPort);
+  } catch(ex){
+    _logger.w("Unable to initialize Crashlytics", ex);
+  }
 }
 
 /// HTTP interceptor for Crashlytics integration

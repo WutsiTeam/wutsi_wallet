@@ -63,7 +63,7 @@ class WutsiApp extends StatelessWidget {
       navigatorObservers: [sduiRouteObserver],
       initialRoute: '/',
       routes: {
-        '/': (context) => DynamicRoute(provider: HttpRouteContentProvider(environment.getShellUrl())),
+        '/': (context) => DynamicRoute(provider: HttpRouteContentProvider(environment.getHomeUrl())),
         '/login': (context) => DynamicRoute(provider: LoginContentProvider(context), handleFirebaseMessages: false),
       },
     );
