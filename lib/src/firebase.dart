@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:isolate';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -45,14 +46,13 @@ void _initMessaging(Environment env) async {
   registerLoginEventHanlder((env) => _onLogin(env));
 }
 
-void _onToken(String? token) {
+void _onToken(String? token) async {
   _logger.i('onToken $token');
 
   _token = token;
   Environment.get().then((env) {
-    String url =
-        '${env.getShellUrl()}/commands/update-profile-attribute?name=fcm-token';
-    Http.getInstance().post(url, {'value': token});
+    String url = '${env.getShellUrl()}/firebase/token';
+    Http.getInstance().post(url, {'token': token!});
   });
 }
 

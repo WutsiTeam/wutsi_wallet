@@ -37,11 +37,11 @@ class Environment {
 
   String getShellUrl() =>  'https://wutsi-shell-bff-$value.herokuapp.com';
 
-  String getHomeUrl() => value == 'test' ? "${getShellUrl()}/2" : getShellUrl();
+  String getHomeUrl() => "${getShellUrl()}/2";
 
-  String getLoginUrl() =>  value == 'test' ? '${getShellUrl()}/login/2' : '${getShellUrl()}/login';
+  String getLoginUrl() =>  '${getShellUrl()}/login/2';
 
-  String getOnboardUrl() => value == 'test' ? '${getShellUrl()}/onboard/2' : '${getShellUrl()}/onboard';
+  String getOnboardUrl() => '${getShellUrl()}/onboard/2';
 
   String getCashUrl() =>  getShellUrl();
 
