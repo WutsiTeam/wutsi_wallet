@@ -1,5 +1,5 @@
 import 'package:wutsi_wallet/src/environment.dart';
-import 'package:sdui/sdui.dart' as sdui;
+// import 'package:sdui/sdui.dart' as sdui;
 
 void initDeeplink(Environment environment){
   // sdui.sduiDeeplinkHandler = (uri) {

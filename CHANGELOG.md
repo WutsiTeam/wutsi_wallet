@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.148
+- CHANGE: Integration with new backend
+
 ## 0.0.146
 - CHANGE: Move all BFF logic to wutsi-shell-bff
 
