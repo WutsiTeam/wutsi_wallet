@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.149
+- CHANGE: Update to sdui 0.0.181
+
 ## 0.0.148
 - CHANGE: Integration with new backend
 
