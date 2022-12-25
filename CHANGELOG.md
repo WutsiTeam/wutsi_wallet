@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.151
+- CHANGE: Update to sdui 0.0.192
+
 ## 0.0.150
 - CHANGE: Update to sdui 0.0.191
 
