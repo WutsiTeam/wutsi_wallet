@@ -3,7 +3,7 @@ name: master
 on: [ pull_request ]
 
 env:
-  FLUTTER_VERSION: "3.3.8"
+  FLUTTER_VERSION: "3.3.10"
   PROPERTIES_PATH: "./android/key.properties"
   #--------------------------
   # SECRETS
