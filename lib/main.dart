@@ -58,7 +58,7 @@ class WutsiApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Wutsi Wallet',
+      title: 'Wutsi',
       debugShowCheckedModeBanner: false,
       navigatorObservers: [sduiRouteObserver],
       initialRoute: '/',

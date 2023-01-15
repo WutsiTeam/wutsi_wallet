@@ -1,6 +1,6 @@
 {
-    "name": "wutsi wallet",
-    "short_name": "wutsi wallet",
+    "name": "Wutsi",
+    "short_name": "Wutsi",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

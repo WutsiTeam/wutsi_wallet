@@ -2,7 +2,7 @@
 ![](https://img.shields.io/badge/language-dart-darkblue.svg)
 ![](https://img.shields.io/badge/framework-flutter-darkblue.svg)
 
-Wutsi Wallet App
+Wutsi App
 
 # Installation
 

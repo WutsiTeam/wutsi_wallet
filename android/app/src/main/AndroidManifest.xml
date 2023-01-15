@@ -27,7 +27,7 @@
 
   <application
     android:usesCleartextTraffic="false"
-    android:label="Wutsi Wallet"
+    android:label="Wutsi"
     android:icon="@mipmap/ic_launcher">
     <activity
       android:name=".MainActivity"
