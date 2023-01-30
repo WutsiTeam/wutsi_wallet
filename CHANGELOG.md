@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.156
+- CHANGE: Recover the phone number on login
+
 ## 0.0.155
 - CHANGE: Update to sdui 0.0.198
 

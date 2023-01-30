@@ -6,7 +6,6 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sdui/sdui.dart' as sdui;
 import 'package:http/http.dart';
 import 'package:wutsi_wallet/src/login.dart';
-import 'package:wutsi_wallet/src/access_token.dart';
 
 import 'device.dart';
 
@@ -79,21 +78,9 @@ class SDUIErrorWidget extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) => _is401Error()
-      ? FutureBuilder<AccessToken>(
-          future: AccessToken.get(),
-          builder: (BuildContext context, AsyncSnapshot<AccessToken> snapshot){
-            if (snapshot.hasData){
-              return sdui.DynamicRoute(
-                provider: LoginContentProvider(context,
-                    phoneNumber: snapshot.data?.phoneNumber(),
-                    hideBackButton: true
-                ),
-                handleFirebaseMessages: false
-              );
-            } else{
-              return Container();
-            }
-          }
+      ? sdui.DynamicRoute(
+            provider: LoginContentProvider(context, hideBackButton: true),
+            handleFirebaseMessages: false
       )
       : SafeArea(
           child: Scaffold(
