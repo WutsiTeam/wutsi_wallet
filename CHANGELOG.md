@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.160
+- CHANGE: Disable deelink configuration
+
 ## 0.0.159
 - CHANGE: Update to sdui 0.0.199
 
