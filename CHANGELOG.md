@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.161
+- CHANGE: Remove Contact permission
+
 ## 0.0.160
 - CHANGE: Disable deelink configuration
 
