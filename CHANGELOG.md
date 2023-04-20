@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.162
+- CHANGE: Update to sdui 0.0.200
+
 ## 0.0.161
 - CHANGE: Remove Contact permission
 
