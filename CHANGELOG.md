@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.163
+- CHANGE: Add back CONTACT permission
+
 ## 0.0.162
 - CHANGE: Update to sdui 0.0.200
 
